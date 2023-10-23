@@ -1,0 +1,24 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    restart: always
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: postgres-dev
+      POSTGRES_PASSWORD: uhSU2sasS7
+      POSTGRES_DB: windelcrm-dev
+  crm-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crm-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - db
