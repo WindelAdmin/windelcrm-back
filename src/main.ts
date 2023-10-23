@@ -8,7 +8,6 @@ async function bootstrap(): Promise<void> {
   await app.enableCors()
   await app.listen(3000)
 
-  // Pipes
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -18,16 +17,13 @@ async function bootstrap(): Promise<void> {
   )
 
   const config = new DocumentBuilder()
-    .setTitle('Microserviço de Autenticação - Documentação da API')
-    .setDescription(
-      'Bem-vindo à documentação da API do Microserviço de Autenticação! Este microserviço é responsável pela autenticação de usuários, fornecendo funcionalidades de login seguro e geração de tokens JWT. Navegue pela documentação abaixo para entender como usar os endpoints disponíveis para autenticar usuários e obter tokens de acesso. A autenticação é um componente fundamental da segurança do seu ecossistema de serviços, e este guia ajudará você a integrar e utilizar esse serviço de forma eficaz. Se surgirem dúvidas ou preocupações, sinta-se à vontade para entrar em contato. Vamos começar a explorar a autenticação de forma segura e simplificada!'
-    )
+    .setTitle('Windel CRM Back-End - Documentação da API')
+    .setDescription('Bem-vindo à documentação da API do Windel CRM Back-End')
     .setVersion('1.0')
     .addTag('login')
     .addTag('user')
     .build()
   const document = SwaggerModule.createDocument(app, config)
-
   SwaggerModule.setup('swagger', app, document)
 }
 

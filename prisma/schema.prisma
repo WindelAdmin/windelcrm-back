@@ -17,4 +17,30 @@ model User {
   email String  @unique
   password String
   name  String?
+  employee Employee?
+}
+
+model Employee {
+  @@map("employee")
+  id    Int     @id @default(autoincrement())
+  firstName String
+  lastname String
+  address Address[]
+  userId Int @unique
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Address {
+  @@map("address")
+  id Int @id @default(autoincrement())
+  cep String
+  street String
+  number String
+  district String
+  city String
+  uf String
+  isResidential Boolean
+  addressType String
+  employeeId Int @unique
+  employee Employee @relation(fields: [employeeId], references: [id])
 }

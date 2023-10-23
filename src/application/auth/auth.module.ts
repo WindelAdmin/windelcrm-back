@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
-import { AuthController } from '@src/adapters/http/auth/auth.controller'
+import { AuthController } from '@src/adapters/controllers/auth/auth.controller'
 import { UserModule } from '@src/application/user/user.module'
 import { LoginValidationMiddleware } from '@src/infra/http/middleware/login-validation.middleware'
 import { JwtStrategy } from '@src/infra/http/strategies/jwt.strategy'

@@ -1,5 +1,5 @@
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator'
-import { User } from '../entities/user.entity'
+import { User } from '../user.entity'
 
 export class UserDto extends User {
   /**

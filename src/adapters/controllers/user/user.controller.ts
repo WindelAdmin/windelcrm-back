@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { UserService } from '@src/application/user/user.service'
 import { UserDto } from '@src/domain/user/dto/user.dto'
-import { User } from '@src/domain/user/entities/user.entity'
+import { User } from '@src/domain/user/user.entity'
 import { CurrentUser } from '@src/shared/decorators/current-user.decorator'
 import { IsPublic } from '@src/shared/decorators/is-public.decorator'
 
