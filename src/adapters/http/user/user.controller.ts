@@ -6,7 +6,7 @@ import { User } from '@src/domain/user/entities/user.entity'
 import { CurrentUser } from '@src/shared/decorators/current-user.decorator'
 import { IsPublic } from '@src/shared/decorators/is-public.decorator'
 
-@ApiTags('users')
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

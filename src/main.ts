@@ -24,7 +24,7 @@ async function bootstrap(): Promise<void> {
     )
     .setVersion('1.0')
     .addTag('login')
-    .addTag('users')
+    .addTag('user')
     .build()
   const document = SwaggerModule.createDocument(app, config)
 
