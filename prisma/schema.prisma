@@ -18,6 +18,21 @@ model User {
   password String
   name  String?
   employee Employee?
+  lastAccess DateTime
+  isActive Boolean
+  createAt DateTime
+  updatedAt DateTime
+}
+
+model Permission {
+  @@map("permission")
+  id Int @id @default(autoincrement())
+  description String
+  type String
+  parentId Int @unique
+  parent Permission? @relation("SubPermission", fields: [parentId], references: [id])
+  subPermissions Permission[]  @relation("SubPermission")
+  isActive Boolean
 }
 
 model Employee {
@@ -26,8 +41,15 @@ model Employee {
   firstName String
   lastname String
   address Address[]
+  corporatePhone String
+  personalPhone String
+  corporateEmail String
+  personalEmail String
   userId Int @unique
   user User @relation(fields: [userId], references: [id])
+  isActive Boolean
+  createAt DateTime
+  updatedAt DateTime
 }
 
 model Address {
@@ -39,8 +61,11 @@ model Address {
   district String
   city String
   uf String
-  isResidential Boolean
   addressType String
+  isResidential Boolean
+  isMain Boolean
   employeeId Int @unique
   employee Employee @relation(fields: [employeeId], references: [id])
+  createAt DateTime
+  updatedAt DateTime
 }
