@@ -12,13 +12,13 @@ export class UserService {
     const data: Prisma.UserCreateInput = {
       ...record,
       password: await bcrypt.hash(record.password, 10),
-      lastAccess: '',
-      isActive: false,
-      createAt: '',
-      updatedAt: ''
+      lastAccess: null,
+      isActive: true,
+      createAt: new Date(),
+      updatedAt: null
     }
 
-    const createdUser = await this.prisma.user.create({ data })
+    const createdUser = await this.prisma.user.create({ data})
 
     return {
       ...createdUser,

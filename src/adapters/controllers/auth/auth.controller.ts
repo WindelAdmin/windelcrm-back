@@ -1,12 +1,12 @@
 import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { AuthService } from '@src/application/auth/auth.service'
+import { AuthLoginDto } from '@src/domain/auth/dto/auth/auth-login.dto'
+import { AuthRequest } from '@src/domain/auth/dto/auth/auth-request.dto'
+import { AuthTokenResponseDto } from '@src/domain/auth/dto/auth/auth-tokenResponse.dto'
+import { UserToken } from '@src/domain/auth/dto/auth/user-token.dto'
 import { LocalAuthGuard } from '@src/infra/http/guards/local-auth.guard'
 import { IsPublic } from '@src/shared/decorators/is-public.decorator'
-import { AuthLoginDto } from '@src/shared/dto/auth/auth-login.dto'
-import { AuthRequest } from '@src/shared/dto/auth/auth-request.dto'
-import { AuthTokenResponseDto } from '@src/shared/dto/auth/auth-tokenResponse.dto'
-import { UserToken } from '@src/shared/dto/auth/user-token.dto'
 
 @Controller()
 export class AuthController {

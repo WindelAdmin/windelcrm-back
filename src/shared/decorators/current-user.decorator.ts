@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import { AuthRequest } from '@src/domain/auth/dto/auth/auth-request.dto'
 import { User } from '@src/domain/user/user.entity'
-import { AuthRequest } from '@src/shared/dto/auth/auth-request.dto'
 
 export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext): User => {
   const request = context.switchToHttp().getRequest<AuthRequest>()

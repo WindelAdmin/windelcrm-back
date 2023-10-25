@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NestMiddleware } from '@nestjs/common'
-import { LoginRequestBody } from '@src/shared/dto/auth/login-request-body.dto'
+import { LoginRequestBody } from '@src/domain/auth/dto/auth/login-request-body.dto'
 import { validate } from 'class-validator'
 import { NextFunction, Request, Response } from 'express'
 

@@ -41,6 +41,7 @@ model Permission {
 }
 
 model Person {
+  @@map("person")
   id        Int       @id @default(autoincrement())
   firstName String
   lastname  String
@@ -58,6 +59,7 @@ model Employee {
   corporatePhone String
   corporateEmail String
   wage           Decimal
+  workSchedule   Json
   personId       Int     @unique
   person         Person  @relation(fields: [personId], references: [id])
   userId         Int     @unique
