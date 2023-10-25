@@ -1,16 +1,14 @@
-import { Prisma } from '@prisma/client'
+import { User } from '../user/user.entity'
 
-export class Employee implements Prisma.EmployeeUncheckedCreateInput {
+export class Employee {
+  id: number
   corporatePhone: string
   corporateEmail: string
-  wage: string | number
-  personId: number
-  userId: number
-  lastAccess: string | Date
+  wage: number
+  person: number
+  user: User
+  lastAccess?: Date
   isActive: boolean
-  createAt: string | Date
-  updatedAt: string | Date
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutUserInput
-  id?: number
+  createAt: Date
+  updatedAt?: Date
 }

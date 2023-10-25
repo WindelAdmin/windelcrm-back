@@ -1,14 +1,14 @@
-import { Prisma } from '@prisma/client'
+import { Employee } from '@prisma/client'
 
 export class User{
-  lastAccess: string | Date
-  isActive: boolean
-  createAt: string | Date
-  updatedAt: string | Date
-  employee?: Prisma.EmployeeUncheckedCreateNestedOneWithoutUserInput
-  permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutUserInput
-  id?: number
+  id: number
+  name?: string
   email: string
   password: string
-  name?: string
+  employee?: Employee
+  isLogged: boolean
+  isActive: boolean
+  lastAccess?: Date
+  createAt: Date
+  updatedAt?: Date
 }
