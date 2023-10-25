@@ -1,10 +1,10 @@
 import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { AuthService } from '@src/application/auth/auth.service'
-import { AuthLoginDto } from '@src/domain/auth/dto/auth/auth-login.dto'
-import { AuthRequest } from '@src/domain/auth/dto/auth/auth-request.dto'
-import { AuthTokenResponseDto } from '@src/domain/auth/dto/auth/auth-tokenResponse.dto'
-import { UserToken } from '@src/domain/auth/dto/auth/user-token.dto'
+import { AuthService } from '@src/application/auth-module/auth.service'
+import { AuthLoginDto } from '@src/domain/actors/user/dto/auth-login.dto'
+import { AuthRequestDto } from '@src/domain/actors/user/dto/auth-request.dto'
+import { AuthTokenResponseDto } from '@src/domain/actors/user/dto/auth-tokenResponse.dto'
+import { UserTokenDto } from '@src/domain/actors/user/dto/user-token.dto'
 import { LocalAuthGuard } from '@src/infra/http/guards/local-auth.guard'
 import { IsPublic } from '@src/shared/decorators/is-public.decorator'
 
@@ -31,7 +31,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Request() req: AuthRequest): Promise<UserToken> {
+  async login(@Request() req: AuthRequestDto): Promise<UserTokenDto> {
     return this.authService.login(req.user)
   }
 }
