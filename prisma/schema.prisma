@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
- binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -12,60 +12,75 @@ datasource db {
 }
 
 model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String
+  name        String?
+  employee    Employee?
+  permissions Permission[]
+  lastAccess  DateTime
+  isActive    Boolean
+  createAt    DateTime
+  updatedAt   DateTime
+
   @@map("user")
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  password String
-  name  String?
-  employee Employee?
-  lastAccess DateTime
-  isActive Boolean
-  createAt DateTime
-  updatedAt DateTime
 }
 
 model Permission {
+  id             Int          @id @default(autoincrement())
+  description    String
+  type           String
+  parentId       Int          @unique
+  parent         Permission?  @relation("SubPermission", fields: [parentId], references: [id])
+  subPermissions Permission[] @relation("SubPermission")
+  userId         Int          @unique
+  user           User         @relation(fields: [userId], references: [id])
+  isActive       Boolean
+
   @@map("permission")
-  id Int @id @default(autoincrement())
-  description String
-  type String
-  parentId Int @unique
-  parent Permission? @relation("SubPermission", fields: [parentId], references: [id])
-  subPermissions Permission[]  @relation("SubPermission")
-  isActive Boolean
+}
+
+model Person {
+  id        Int       @id @default(autoincrement())
+  firstName String
+  lastname  String
+  phone     String
+  email     String
+  address   Address[]
+  employee  Employee?
+  isActive  Boolean
+  createAt  DateTime
+  updatedAt DateTime
 }
 
 model Employee {
-  @@map("employee")
-  id    Int     @id @default(autoincrement())
-  firstName String
-  lastname String
-  address Address[]
+  id             Int     @id @default(autoincrement())
   corporatePhone String
-  personalPhone String
   corporateEmail String
-  personalEmail String
-  userId Int @unique
-  user User @relation(fields: [userId], references: [id])
-  isActive Boolean
-  createAt DateTime
-  updatedAt DateTime
+  wage           Decimal
+  personId       Int     @unique
+  person         Person  @relation(fields: [personId], references: [id])
+  userId         Int     @unique
+  user           User    @relation(fields: [userId], references: [id])
+
+  @@map("employee")
 }
 
 model Address {
-  @@map("address")
-  id Int @id @default(autoincrement())
-  cep String
-  street String
-  number String
-  district String
-  city String
-  uf String
-  addressType String
+  id            Int      @id @default(autoincrement())
+  cep           String
+  street        String
+  number        String
+  district      String
+  city          String
+  uf            String
+  addressType   String
   isResidential Boolean
-  isMain Boolean
-  employeeId Int @unique
-  employee Employee @relation(fields: [employeeId], references: [id])
-  createAt DateTime
-  updatedAt DateTime
+  isMain        Boolean
+  personId      Int      @unique
+  person        Person   @relation(fields: [personId], references: [id])
+  createAt      DateTime
+  updatedAt     DateTime
+
+  @@map("address")
 }
