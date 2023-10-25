@@ -1,14 +1,14 @@
-import { Employee } from '@prisma/client'
+import { Prisma } from '@prisma/client';
 
-export class User{
-  id: number
-  name?: string
-  email: string
-  password: string
-  employee?: Employee
-  isLogged: boolean
-  isActive: boolean
-  lastAccess?: Date
-  createAt: Date
-  updatedAt?: Date
+export class User implements Prisma.UserCreateInput {
+  email: string;
+  password: string;
+  name?: string;
+  permissions: Prisma.NullTypes.JsonNull | Prisma.InputJsonValue;
+  isLogged: boolean;
+  lastAccess: string | Date;
+  isActive: boolean;
+  createAt: string | Date;
+  updatedAt: string | Date;
+  employee?: Prisma.EmployeeCreateNestedOneWithoutUserInput;
 }

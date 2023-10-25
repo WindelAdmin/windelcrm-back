@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { UserService } from '@src/application/actors-module/user-module/user.service'
+import { UserService } from '@src/application/actorsContext/user-module/user.service'
 
 import { UserPayloadDto } from '@src/domain/actors/user/dto/user-payload.dto'
 import { UserTokenDto } from '@src/domain/actors/user/dto/user-token.dto'

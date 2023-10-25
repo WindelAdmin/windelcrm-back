@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { UserService } from '@src/application/actors-module/user-module/user.service'
+import { UserService } from '@src/application/actorsContext/user-module/user.service'
 import { UserDto } from '@src/domain/actors/user/dto/user.dto'
 import { User } from '@src/domain/actors/user/user.entity'
 import { CurrentUser } from '@src/shared/decorators/current-user.decorator'
