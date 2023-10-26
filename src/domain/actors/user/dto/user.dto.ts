@@ -1,7 +1,6 @@
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator'
-import { User } from '../user.entity'
 
-export class UserDto extends User {
+export class UserDto {
   /**
    * O e-mail é necessário apra o login, mas não necessariamente precisa ser o mesmo e-mail da
    * rede social que estiver conectada. Login sem rede social precisa de uma senha.
@@ -29,5 +28,5 @@ export class UserDto extends User {
    * @example "Luciano Alves"
    */
   @IsString()
-  name?: string
+  name: string
 }

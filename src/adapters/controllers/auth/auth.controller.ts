@@ -1,6 +1,6 @@
 import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { AuthService } from '@src/application/authContext/auth.service'
+import { AuthService } from '@src/application/actorsUseCase/authUseCase/auth.service'
 import { AuthLoginDto } from '@src/domain/actors/user/dto/auth-login.dto'
 import { AuthRequestDto } from '@src/domain/actors/user/dto/auth-request.dto'
 import { AuthTokenResponseDto } from '@src/domain/actors/user/dto/auth-tokenResponse.dto'

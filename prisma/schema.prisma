@@ -11,18 +11,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  id          Int          @id @default(autoincrement())
+  name String
+  fantasyName String
+  cpfCnpj String
+  phone String
+  email String
+  cep  String
+  street String
+  number String
+  complement String
+  city String
+  uf String
+  parentCompanyId      Int?     @map("parentCompany")
+  parentCompany Company? @relation("ChildCompanies", fields: [parentCompanyId], references: [id])
+  childCompanies Company[] @relation("ChildCompanies")
+  isActive Boolean
+  createdAt DateTime
+  updatedAt DateTime
+}
+
 model User {
   id          Int          @id @default(autoincrement())
   email       String       @unique
   password    String
-  name        String?
-  employee    Employee?
+  name        String
+  profilePhoto String?
+  isLogged Boolean? @default(false)
+  lastAccess  DateTime?
   permissions Json
-  isLogged Boolean
-  lastAccess  DateTime
-  isActive    Boolean
-  createAt    DateTime
-  updatedAt   DateTime
+  employee    Employee?
+  isActive    Boolean @default(true)
+  createAt    DateTime @default(now())
+  updatedAt   DateTime?
 
   @@map("user")
 }
@@ -39,14 +61,14 @@ model Person {
   @@map("person")
   id        Int       @id @default(autoincrement())
   firstName String
-  lastname  String
-  phone     String
-  email     String
+  lastname  String?
+  phone     String?
+  email     String?
   address   Address[]
   employee  Employee?
-  isActive  Boolean
-  createAt  DateTime
-  updatedAt DateTime
+  isActive  Boolean? @default(false)
+  createAt  DateTime @default(now())
+  updatedAt DateTime?
 }
 
 model Employee {
@@ -63,21 +85,36 @@ model Employee {
   @@map("employee")
 }
 
+model Department {
+  id Int @id @default(autoincrement())
+  description String
+  roles Role[]
+  isActive Boolean? @default(false)
+  createAt DateTime @default(now())
+  updatedAt DateTime?
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  description String
+  departmentId Int @unique
+  department Department @relation(fields: [departmentId], references: [id])
+}
+
 model Address {
   id            Int      @id @default(autoincrement())
-  cep           String
-  street        String
-  number        String
-  district      String
+  cep           String?
+  street        String?
+  number        String? @default("S/N")
+  district      String?
   city          String
   uf            String
-  addressType   String
   isResidential Boolean
-  isMain        Boolean
+  isMain        Boolean? @default(true)
   personId      Int      @unique
   person        Person   @relation(fields: [personId], references: [id])
-  createAt      DateTime
-  updatedAt     DateTime
+  createAt      DateTime? @default(now())
+  updatedAt     DateTime?
 
   @@map("address")
 }

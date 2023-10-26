@@ -1,23 +1,25 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, HttpException, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { UserService } from '@src/application/actorsContext/user-module/user.service'
+import UserCreateUseCase from '@src/application/actorsUseCase/userUseCase/userCreate'
 import { UserDto } from '@src/domain/actors/user/dto/user.dto'
-import { User } from '@src/domain/actors/user/user.entity'
-import { CurrentUser } from '@src/shared/decorators/current-user.decorator'
 import { IsPublic } from '@src/shared/decorators/is-public.decorator'
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userCreateUseCase: UserCreateUseCase) {}
 
   @IsPublic()
   @Post()
-  async create(@Body() createUserDto: UserDto): Promise<User> {
-    return this.userService.create(createUserDto)
+  async create(@Body() createUserDto: UserDto): Promise<void> {
+    try {
+      await this.userCreateUseCase.execute(createUserDto)
+    }catch(err){
+      new HttpException('algo de errado ocorreu', 500)
+    }
   }
 
-  @Get()
+  /* @Get()
   findAll(): Promise<User[]> {
     return this.userService.findAll()
   }
@@ -30,5 +32,5 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOne(+id)
-  }
+  } */
 }

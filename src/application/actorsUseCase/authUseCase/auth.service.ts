@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { UserService } from '@src/application/actorsContext/user-module/user.service'
 
+import UserFindByEmailUseCase from '@src/application/actorsUseCase/userUseCase/findByEmail'
 import { UserPayloadDto } from '@src/domain/actors/user/dto/user-payload.dto'
 import { UserTokenDto } from '@src/domain/actors/user/dto/user-token.dto'
+import { UserDto } from '@src/domain/actors/user/dto/user.dto'
 import { User } from '@src/domain/actors/user/user.entity'
+import { UnauthorizedError } from '@src/shared/errors/unauthorized.error'
 import * as bcrypt from 'bcrypt'
-import { UnauthorizedError } from '../../shared/errors/unauthorized.error'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService, private readonly userService: UserService) {}
+  constructor(private readonly jwtService: JwtService, private readonly userfindByEmail: UserFindByEmailUseCase) {}
 
   async login(user: User): Promise<UserTokenDto> {
     const payload: UserPayloadDto = {
@@ -24,8 +25,8 @@ export class AuthService {
     }
   }
 
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userService.findByEmail(email)
+  async validateUser(email: string, password: string): Promise<UserDto> {
+    const user = await this.userfindByEmail.execute(email)
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password)
