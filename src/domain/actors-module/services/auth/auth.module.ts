@@ -1,11 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
-import { AuthController } from '@src/adapters/controllers/auth/auth.controller'
-import { UserModule } from '@src/application/actorsUseCase/userUseCase/user.module'
+import { AuthController } from '@src/application/api/auth/auth.controller'
 import { LoginValidationMiddleware } from '@src/infra/http/middleware/login-validation.middleware'
 import { JwtStrategy } from '@src/infra/http/strategies/jwt.strategy'
 import { LocalStrategy } from '@src/infra/http/strategies/local.strategy'
+import { UserModule } from '../user/user.module'
 import { AuthService } from './auth.service'
 
 @Module({

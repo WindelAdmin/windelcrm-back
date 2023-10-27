@@ -12,107 +12,154 @@ datasource db {
 }
 
 model Company {
-  id          Int          @id @default(autoincrement())
-  name String
-  fantasyName String
-  cpfCnpj String
-  phone String
-  email String
-  cep  String
-  street String
-  number String
-  complement String
-  city String
-  uf String
-  parentCompanyId      Int?     @map("parentCompany")
-  parentCompany Company? @relation("ChildCompanies", fields: [parentCompanyId], references: [id])
-  childCompanies Company[] @relation("ChildCompanies")
-  isActive Boolean
-  createdAt DateTime
-  updatedAt DateTime
+  id              Int          @id @default(autoincrement())
+  name            String
+  fantasyName     String
+  cpfCnpj         String
+  phone           String
+  email           String
+  cep             String
+  street          String
+  number          String
+  complement      String
+  city            String
+  uf              String
+  parentCompanyId Int?         @map("parentCompany")
+  parentCompany   Company?     @relation("ChildCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
+  childCompanies  Company[]    @relation("ChildCompanies")
+  users           User[]
+  permissions     Permission[]
+  persons         Person[]
+  deparments      Department[]
+  isActive        Boolean
+  createdAt       DateTime
+  updatedAt       DateTime
+
+  @@map("company")
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  email       String       @unique
-  password    String
-  name        String
-  profilePhoto String?
-  isLogged Boolean? @default(false)
-  lastAccess  DateTime?
-  permissions Json
-  employee    Employee?
-  isActive    Boolean @default(true)
-  createAt    DateTime @default(now())
-  updatedAt   DateTime?
+  id              Int              @id @default(autoincrement())
+  companyId       Int
+  company         Company?         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  email           String           @unique
+  password        String
+  name            String
+  profilePhoto    String?
+  isLogged        Boolean?         @default(false)
+  lastAccess      DateTime?
+  employee        Employee?
+  userPermissions UserPermission[]
+  isActive        Boolean          @default(true)
+  createAt        DateTime         @default(now())
+  updatedAt       DateTime?
 
   @@map("user")
 }
 
 model Permission {
-  id             Int          @id @default(autoincrement())
-  description    String
-  type           String
-  isActive       Boolean
+  id              Int              @id @default(autoincrement())
+  companyId       Int
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  description     String
+  type            String
+  isActive        Boolean
+  userPermissions UserPermission[]
+
   @@map("permission")
 }
 
+model UserPermission {
+  id           Int        @id @default(autoincrement())
+  userId       Int        @unique
+  user         User       @relation(fields: [userId], references: [id])
+  permissionId Int        @unique
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@map("user_permission")
+}
+
 model Person {
-  @@map("person")
   id        Int       @id @default(autoincrement())
+  companyId Int
+  company   Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   firstName String
   lastname  String?
   phone     String?
   email     String?
   address   Address[]
   employee  Employee?
-  isActive  Boolean? @default(false)
-  createAt  DateTime @default(now())
+  isActive  Boolean?  @default(false)
+  createAt  DateTime  @default(now())
   updatedAt DateTime?
+
+  @@map("person")
 }
 
 model Employee {
-  id             Int     @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   corporatePhone String
   corporateEmail String
   wage           Decimal
-  workSchedule   Json
-  personId       Int     @unique
-  person         Person  @relation(fields: [personId], references: [id])
-  userId         Int     @unique
-  user           User    @relation(fields: [userId], references: [id])
+  workSchedule   WorkSchedule?
+  personId       Int           @unique
+  person         Person        @relation(fields: [personId], references: [id], onDelete: Cascade)
+  userId         Int           @unique
+  user           User          @relation(fields: [userId], references: [id])
+  roleId         Int           @unique
+  role           Role          @relation(fields: [roleId], references: [id])
 
   @@map("employee")
 }
 
+model WorkSchedule {
+  id                Int      @id @default(autoincrement())
+  day               String
+  morningTimeInit   Int
+  morningTimeEnd    Int
+  afternoonTimeInit Int
+  afternoonTimeEnd  Int
+  employeeId        Int      @unique
+  employee          Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("work_schedule")
+}
+
 model Department {
-  id Int @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
+  companyId   Int
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   description String
-  roles Role[]
-  isActive Boolean? @default(false)
-  createAt DateTime @default(now())
-  updatedAt DateTime?
+  roles       Role[]
+  isActive    Boolean?  @default(false)
+  createAt    DateTime  @default(now())
+  updatedAt   DateTime?
+
+  @@map("deparment")
 }
 
 model Role {
-  id Int @id @default(autoincrement())
-  description String
-  departmentId Int @unique
-  department Department @relation(fields: [departmentId], references: [id])
+  id           Int        @id @default(autoincrement())
+  description  String
+  departmentId Int        @unique
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  employee     Employee[]
+
+  @@map("role")
 }
 
 model Address {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   cep           String?
   street        String?
-  number        String? @default("S/N")
+  number        String?   @default("S/N")
   district      String?
   city          String
   uf            String
   isResidential Boolean
-  isMain        Boolean? @default(true)
-  personId      Int      @unique
-  person        Person   @relation(fields: [personId], references: [id])
+  isMain        Boolean?  @default(true)
+  personId      Int       @unique
+  person        Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
   createAt      DateTime? @default(now())
   updatedAt     DateTime?
 

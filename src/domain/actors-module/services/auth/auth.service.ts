@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 
-import UserFindByEmailUseCase from '@src/application/actorsUseCase/userUseCase/findByEmail'
-import { UserPayloadDto } from '@src/domain/actors/user/dto/user-payload.dto'
-import { UserTokenDto } from '@src/domain/actors/user/dto/user-token.dto'
-import { UserDto } from '@src/domain/actors/user/dto/user.dto'
-import { User } from '@src/domain/actors/user/user.entity'
+import { UserPayloadDto } from '@src/application/api/auth/dto/user-payload.dto'
+import { UserTokenDto } from '@src/application/api/auth/dto/user-token.dto'
+import { UserDto } from '@src/application/api/user/dto/user.dto'
 import { UnauthorizedError } from '@src/shared/errors/unauthorized.error'
 import * as bcrypt from 'bcrypt'
+import { User } from '../../entities/user.entity'
+import UserFindByEmailService from '../user/findByEmail'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService, private readonly userfindByEmail: UserFindByEmailUseCase) {}
+  constructor(private readonly jwtService: JwtService, private readonly userfindByEmail: UserFindByEmailService) {}
 
   async login(user: User): Promise<UserTokenDto> {
     const payload: UserPayloadDto = {

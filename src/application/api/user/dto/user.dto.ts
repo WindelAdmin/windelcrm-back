@@ -1,6 +1,7 @@
+import EntityBaseDto from '@src/shared/dto/entity-base.dto'
 import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator'
 
-export class UserDto {
+export class UserDto extends EntityBaseDto{
   /**
    * O e-mail é necessário apra o login, mas não necessariamente precisa ser o mesmo e-mail da
    * rede social que estiver conectada. Login sem rede social precisa de uma senha.
