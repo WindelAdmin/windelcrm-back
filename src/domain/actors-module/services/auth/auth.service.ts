@@ -7,11 +7,11 @@ import { UserDto } from '@src/application/api/user/dto/user.dto'
 import { UnauthorizedError } from '@src/shared/errors/unauthorized.error'
 import * as bcrypt from 'bcrypt'
 import { User } from '../../entities/user.entity'
-import UserFindByEmailService from '../user/findByEmail'
+import UserQueryService from '../user/userQuery'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService, private readonly userfindByEmail: UserFindByEmailService) {}
+  constructor(private readonly jwtService: JwtService, private readonly userQueryService: UserQueryService) {}
 
   async login(user: User): Promise<UserTokenDto> {
     const payload: UserPayloadDto = {
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<UserDto> {
-    const user = await this.userfindByEmail.execute(email)
+    const user = await this.userQueryService.findOneByField('email', email)
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password)

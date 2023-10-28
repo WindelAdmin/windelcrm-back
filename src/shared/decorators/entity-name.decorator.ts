@@ -1,5 +1,3 @@
-export const EntityName = (name: string) => {
-  return (target: Function) => {
-    Reflect.defineMetadata('entityName', name, target);
-  };
-};
+import { SetMetadata } from '@nestjs/common'
+
+export const EntityName = (entityName: string) => SetMetadata('entityName', entityName)

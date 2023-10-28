@@ -1,20 +1,22 @@
-import { PrismaAdapter } from '@src/adapters/database/prisma.adapter';
-import { User } from '../entities/user.entity';
+import { Injectable } from '@nestjs/common'
+import AbstractRepository from '@src/domain/AbstractRepository'
+import IRepository from '@src/domain/IRepository'
+import { User } from '../entities/user.entity'
 
-export default class UserRepository {
-  constructor(private readonly prismaAdapter: PrismaAdapter){}
-
- async save(user: User): Promise<void>{
-    this.prismaAdapter.user.create({
-      data: user
-    })
+@Injectable()
+export default class UserRepository extends AbstractRepository<User> implements IRepository<User> {
+  constructor() {
+    super('user')
   }
-
-  findByEmail(email: string): Promise<User>{
-    return this.prismaAdapter.user.findFirst({
-      where: {
-        email
-      }
+  update(id: number, data: User): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+  delete(id: number): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+  async save(entity: User): Promise<void> {
+    this.prismaAdapter.user.create({
+      data: entity
     })
   }
 }
