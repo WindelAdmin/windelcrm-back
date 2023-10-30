@@ -1,8 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
-import { AuthRequestDto } from '@src/application/api/auth/dto/auth-request.dto'
-import { User } from '@src/domain/actors-module/entities/user.entity'
+import { AuthRequestDto, AuthUserDto } from '@src/modules/auth/dtos/auth-request.dto'
 
-export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext): User => {
+export const CurrentUser = createParamDecorator((data: unknown, context: ExecutionContext): AuthUserDto => {
   const request = context.switchToHttp().getRequest<AuthRequestDto>()
   return request.user
 })
