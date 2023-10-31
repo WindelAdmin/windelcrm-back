@@ -1,9 +1,11 @@
-import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
 
-export class UserDto{
+export class UserDto {
+  @IsNumber()
+  id?: number
 
   @IsNumber()
-  companyId: number;
+  companyId: number
 
   /**
    * O e-mail será usado como usuário para acesso ao sistema.
@@ -39,16 +41,10 @@ export class UserDto{
   isLogged?: boolean
 
   @IsArray({})
-  permissions?: [{
-    id: number,
-    companyId: number,
-    description: string,
-    type: string,
-    isActive: boolean,
-  }]
+  userPermissions?: any[]
 
   isActive?: boolean
-  
+
   @IsDate()
   lastAccess?: string | Date
 

@@ -10,6 +10,6 @@ export default class UserService extends AbstractService<UserRepository> {
   }
 
   async findByEmail(email: string): Promise<UserDto> {
-    return this.userRepository.findByEmail(email)
+    return (await this.userRepository.findByEmail(email)) as UserDto
   }
 }

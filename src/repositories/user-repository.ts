@@ -5,7 +5,7 @@ import { UserDto } from '@src/modules/person/user/dtos/user.dto'
 import { User } from '@src/modules/person/user/user.entity'
 
 @Injectable()
-export default class UserRepository extends AbstractRepository{
+export default class UserRepository extends AbstractRepository {
   constructor() {
     super(Prisma.ModelName.User)
   }

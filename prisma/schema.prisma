@@ -37,8 +37,9 @@ model Company {
   isActive        Boolean
   createdAt       DateTime
   updatedAt       DateTime
-  Employee        Employee[]
-  WorkSchedule    WorkSchedule[]
+  employee        Employee[]
+  workSchedule    WorkSchedule[]
+  audit           Audit[]
 
   @@map("company")
 }
@@ -55,6 +56,7 @@ model User {
   lastAccess      DateTime?
   employee        Employee?
   userPermissions UserPermission[]
+  audits          Audit[]
   isActive        Boolean          @default(true)
   createAt        DateTime         @default(now())
   updatedAt       DateTime?
@@ -179,4 +181,18 @@ model PersonAddress {
   updatedAt     DateTime?
 
   @@map("person_address")
+}
+
+model Audit {
+  id        Int       @id @default(autoincrement())
+  companyId Int
+  company   Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userEmail String
+  before    Json?
+  after     Json
+  createAt  DateTime? @default(now())
+
+  @@map("audit")
 }

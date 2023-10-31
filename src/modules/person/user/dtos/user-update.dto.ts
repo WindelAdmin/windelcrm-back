@@ -1,6 +1,8 @@
-import { IsArray, IsBoolean, IsDate, IsEmail, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString } from 'class-validator'
 
-export class UserUpdateDto{
+export class UserUpdateDto {
+  @IsNumber()
+  id: number
   /**
    * O e-mail será usado como usuário para acesso ao sistema.
    * @example jhon@email.com
@@ -21,12 +23,14 @@ export class UserUpdateDto{
   isLogged?: boolean
 
   @IsArray({})
-  permissions?: [{
-    id: number
-  }]
+  permissions?: [
+    {
+      id: number
+    }
+  ]
 
   isActive?: boolean
-  
+
   @IsDate()
   lastAccess?: string | Date
 

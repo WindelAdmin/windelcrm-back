@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common'
+import CurrentUserContext from '@src/modules/person/user/dtos/current-user.dto'
 import AbstractRepository from './AbstractRepository'
 
 @Injectable()
 export default abstract class AbstractService<Repository extends AbstractRepository> {
   constructor(private readonly repository: Repository) {}
 
-  async create(entity: any): Promise<void> {
-    this.repository.create(entity)
+  async create(entity: any, userContext?: CurrentUserContext): Promise<void> {
+    this.repository.create(entity, userContext)
   }
 
-  async update(id: number, companyId: number, data: any): Promise<any> {
-    this.repository.update(id, companyId, data)
+  async update(companyId: number, data: any, userContext?: CurrentUserContext): Promise<any> {
+    this.repository.update(companyId, data, userContext)
   }
 
   async delete(id: number): Promise<any> {

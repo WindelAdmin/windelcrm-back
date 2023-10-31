@@ -1,10 +1,12 @@
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import * as moment from 'moment-timezone'
 import { AppModule } from './app.module'
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
+  moment.tz.setDefault('America/Sao_Paulo')
 
   await app.enableCors()
   await app.listen(3000)
@@ -13,7 +15,7 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({
       transform: true,
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: true
     })
   )
 
