@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common'
 import { PrismaService } from '@src/infra/persistence/prisma-service'
-import CurrentUserContext from '@src/modules/person/user/dtos/current-user.dto'
-import { now } from '@src/shared/utils/Date'
+import { AuthUserDto } from '@src/modules/auth/dtos/auth-request.dto'
+import { now } from '@src/shared/utils/date-utils'
 
 export default abstract class AbstractRepository {
   protected entityName: string
@@ -17,21 +17,20 @@ export default abstract class AbstractRepository {
     this.prismaService = new PrismaService()
   }
 
-  async create(data: any, userContext?: CurrentUserContext): Promise<any> {
+  async create(data: any, userContextData?: AuthUserDto): Promise<any> {
     try {
       const resultData = await this.prismaService[this.entityName].create({
         data
       })
-
-      this.logger.log(`CREATE: ${JSON.stringify(data)}`)
-
-      if (userContext) {
+      
+      if (userContextData) {
         await this.prismaService.audit.create({
           data: {
-            userId: userContext.id,
-            userEmail: userContext.email,
-            companyId: userContext.companyId,
-            after: resultData
+            userId: userContextData.id,
+            userEmail: userContextData.email,
+            companyId: userContextData.companyId,
+            after: resultData,
+            createdAt: now()
           }
         })
       }
@@ -40,37 +39,34 @@ export default abstract class AbstractRepository {
     }
   }
 
-  async update(companyId: number, data: any, userContext?: CurrentUserContext): Promise<void> {
-    const resultData = await this.prismaService[this.entityName].update({
+  async update(data: any, userContextData?: AuthUserDto): Promise<void> {
+    const updatedData = await this.prismaService[this.entityName].update({
       where: {
-        companyId: companyId,
+        companyId: 1,
         id: data.id
       },
-      data: { ...data, updatedAt: now() }
+      data: data
     })
 
-    this.logger.log(`[UPDATE]: \n
-        [BEFORE]: ${JSON.stringify(data)}
-        [AFTER]: ${JSON.stringify(resultData)}
-      `)
-
-    if (userContext) {
+    if (userContextData) {
       await this.prismaService.audit.create({
         data: {
-          userId: userContext.id,
-          userEmail: userContext.email,
-          companyId: userContext.companyId,
+            userId: userContextData.id,
+            userEmail: userContextData.email,
+            companyId: userContextData.companyId,
           before: data,
-          after: resultData
+          after: updatedData,
+          createdAt: now()
         }
       })
     }
   }
 
-  async delete(id: number): Promise<any> {
+  async delete(id: number, userContextData?: AuthUserDto): Promise<any> {
     try {
-      this.prismaService[this.entityName].delete({
+      await this.prismaService[this.entityName].delete({
         where: {
+          companyId: userContextData.companyId,
           id: id
         }
       })
@@ -152,7 +148,7 @@ export default abstract class AbstractRepository {
     return results
   }
 
-  protected async resolveIgnoredFields(data, ignoreFields?: string[]) {
+  protected async resolveIgnoredFields(data, ignoreFields?: string[]): Promise<void> {
     if (ignoreFields?.length > 0)
       for (const field of ignoreFields) {
         delete data[field]

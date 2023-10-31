@@ -1,36 +1,35 @@
-import { Injectable } from '@nestjs/common'
-import CurrentUserContext from '@src/modules/person/user/dtos/current-user.dto'
-import AbstractRepository from './AbstractRepository'
+import { UserContext } from '@src/modules/context/UserContext';
+import AbstractRepository from './AbstractRepository';
 
-@Injectable()
-export default abstract class AbstractService<Repository extends AbstractRepository> {
-  constructor(private readonly repository: Repository) {}
-
-  async create(entity: any, userContext?: CurrentUserContext): Promise<void> {
-    this.repository.create(entity, userContext)
+export default class AbstractService<Repository extends AbstractRepository> {
+  constructor(private readonly repository: Repository, protected readonly userContext: UserContext) {
   }
 
-  async update(companyId: number, data: any, userContext?: CurrentUserContext): Promise<any> {
-    this.repository.update(companyId, data, userContext)
+  async create(entity: any): Promise<void> {
+    this.repository.create(entity, this.userContext.getUserContext())
+  }
+
+  async update(data: any): Promise<any> {
+    this.repository.update(data, this.userContext.getUserContext())
   }
 
   async delete(id: number): Promise<any> {
-    this.repository.delete(id)
+    this.repository.delete(id, this.userContext.getUserContext())
   }
 
   async findById(id: number, ignoreFields?: string[]): Promise<any> {
     return this.repository.findById(id, ignoreFields)
   }
 
-  async findAll(companyId: number, ignoreFields?: string[]): Promise<any[]> {
-    return this.repository.findAll(companyId, ignoreFields)
+  async findAll(ignoreFields?: string[]): Promise<any[]> {
+    return this.repository.findAll(this.userContext.getUserContext().companyId, ignoreFields)
   }
 
-  async findOneByField(field: string, value: any, companyId: number, ignoreFields?: string[]): Promise<any> {
-    return this.repository.findOneByField(field, value, companyId, ignoreFields)
+  async findOneByField(field: string, value: any, ignoreFields?: string[]): Promise<any> {
+    return this.repository.findOneByField(field, value, this.userContext.getUserContext().companyId, ignoreFields)
   }
 
-  async findManyByField(field: string, value: any, companyId: number, ignoreFields?: string[]): Promise<any[]> {
-    return this.repository.findManyByField(field, value, companyId, ignoreFields)
+  async findManyByField(field: string, value: any, ignoreFields?: string[]): Promise<any[]> {
+    return this.repository.findManyByField(field, value, this.userContext.getUserContext().companyId, ignoreFields)
   }
 }

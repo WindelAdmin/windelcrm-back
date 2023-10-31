@@ -8,9 +8,6 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   moment.tz.setDefault('America/Sao_Paulo')
 
-  await app.enableCors()
-  await app.listen(3000)
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -23,11 +20,12 @@ async function bootstrap(): Promise<void> {
     .setTitle('Windel CRM Back-End - Documentação da API')
     .setDescription('Bem-vindo à documentação da API do Windel CRM Back-End')
     .setVersion('1.0')
-    .addTag('login')
-    .addTag('user')
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, document)
+
+  await app.enableCors()
+  await app.listen(3000)
 }
 
 bootstrap()

@@ -1,7 +1,6 @@
-import { Body, Delete, Get, Injectable, Param, Patch, Post, Query } from '@nestjs/common'
-import CurrentUserContext from '@src/modules/person/user/dtos/current-user.dto'
-import { CurrentUser } from '@src/shared/decorators/current-user.decorator'
-import { IsPublic } from '@src/shared/decorators/is-public.decorator'
+import { Body, Delete, Get, HttpStatus, Injectable, Param, Patch, Post, Query, Res } from '@nestjs/common'
+import HttpResponseDto from '@src/shared/dtos/HttpResponseDto'
+import { Response } from 'express'
 import AbstractRepository from './AbstractRepository'
 import AbstractService from './AbstractService'
 
@@ -10,54 +9,59 @@ export default abstract class AbstractController<
   Service extends AbstractService<Repository>,
   Repository extends AbstractRepository
 > {
-  constructor(private readonly service: Service) {}
+
+  constructor(private readonly service: Service, private readonly entityContext?: string) {
+    if(!entityContext) entityContext = 'Registro'
+  }
 
   @Post()
-  @IsPublic()
-  async create(@CurrentUser() currentUser: CurrentUserContext, @Body() data: any): Promise<void> {
-    return this.service.create({
-      data: data,
-      companyId: currentUser.companyId
-    })
+  async create(@Body() data: any, @Res() res: Response): Promise<void> {
+      await this.service.create(data)
+      res.status(HttpStatus.CREATED).json(
+        new HttpResponseDto(`${this.entityContext} criado com sucesso`)
+      )
   }
 
   @Patch()
-  async update(@CurrentUser() currentUser: CurrentUserContext, @Body() data: any): Promise<void> {
-    return this.service.update(currentUser.companyId, data, currentUser)
+  async update(@Body() data: any, @Res() res: Response): Promise<void> {
+    return this.service.update(data)
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
-    return this.service.delete(+id)
+  async delete(@Param('id') id: number, @Res() res: Response): Promise<void> {
+    await this.service.delete(+id)
+    res.status(HttpStatus.OK).json(
+      new HttpResponseDto(`${this.entityContext} deletado com sucesso.`)
+    )
   }
 
   @Get('/findOneByField')
   async findOneByField(
-    @CurrentUser() currentUser: CurrentUserContext,
     @Query('field') field: string,
     @Query('value') value: string,
-    @Query('ignoreFields') ignoreFields: string[]
+    @Query('ignoreFields') ignoreFields: string[],
+    @Res() res: Response
   ): Promise<any> {
-    return this.service.findOneByField(field, value, currentUser.companyId, ignoreFields)
+    return this.service.findOneByField(field, value, ignoreFields)
   }
 
   @Get('/findManyByField')
   async findManyByField(
-    @CurrentUser() currentUser: CurrentUserContext,
     @Query('field') field: string,
     @Query('value') value: string,
-    @Query('ignoreFields') ignoreFields: string[]
+    @Query('ignoreFields') ignoreFields: string[],
+    @Res() res: Response
   ): Promise<any[]> {
-    return this.service.findManyByField(field, value, currentUser.companyId, ignoreFields)
+    return this.service.findManyByField(field, value, ignoreFields)
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number): Promise<any> {
+  async findById(@Param('id') id: number, @Res() res: Response): Promise<any> {
     return this.service.findById(+id)
   }
 
   @Get()
-  async findAll(@CurrentUser() currentUser: CurrentUserContext): Promise<any[]> {
-    return this.service.findAll(currentUser.companyId)
+  async findAll( @Res() res: Response): Promise<any[]> {
+    return this.service.findAll()
   }
 }

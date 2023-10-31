@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import AbstractRepository from '@src/interfaces/AbstractRepository'
-import { UserDto } from '@src/modules/person/user/dtos/user.dto'
-import { User } from '@src/modules/person/user/user.entity'
+import { UserDto } from '@src/modules/person/user/dtos/User.dto'
+import { User } from '@src/modules/person/user/User.entity'
 
 @Injectable()
 export default class UserRepository extends AbstractRepository {

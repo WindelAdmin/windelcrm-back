@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
+import { IsArray, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
 
 export class UserCreateDto {
   @IsNumber()
@@ -31,10 +31,8 @@ export class UserCreateDto {
   @IsString()
   name: string
 
-  @IsString()
   profilePhoto?: string
 
-  @IsBoolean()
   isLogged?: boolean
 
   @IsArray({})
@@ -49,13 +47,7 @@ export class UserCreateDto {
   ]
 
   isActive?: boolean
-
-  @IsDate()
-  lastAccess?: string | Date
-
-  @IsDate()
-  createAt?: string | Date
-
-  @IsDate()
-  updatedAt?: string | Date
+  lastAccess?: string
+  createAt?: string
+  updatedAt?: string
 }
