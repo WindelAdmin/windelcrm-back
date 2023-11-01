@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "generate:module": "yarn run generate:module-script",
-    "generate:module-script": "read -p 'Destino do Módulo: ' moduleName && nest generate module $moduleName && nest generate controller $moduleName/$moduleNameController --no-spec --flat && nest generate repositories $moduleName/context --no-spec --flat && nest generate service $moduleName/rules/rule --no-spec --flat"
+    "generate:module-script": "read -p 'Destino do Módulo: ' moduleName && nest generate module $moduleName && nest generate controller $moduleName/$moduleNameController --no-spec --flat && nest generate repositories $moduleName/context --no-spec --flat && nest generate service $moduleName/rules/rule --no-spec --flat",
+    "gcrud": "node src/shared/utils/RepositoryGenerator.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -45,7 +46,7 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^9.0.0",
+    "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",

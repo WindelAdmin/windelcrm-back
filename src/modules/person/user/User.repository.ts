@@ -1,28 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
-import AbstractRepository from '@src/interfaces/AbstractRepository'
-import { UserDto } from '@src/modules/person/user/dtos/User.dto'
-import { User } from '@src/modules/person/user/User.entity'
+import AbstractRepository from '@src/interfaces/Repository.abstract'
+import UserModel from './User.model'
 
 @Injectable()
-export default class UserRepository extends AbstractRepository {
+export default class UserRepository extends AbstractRepository<UserModel>{
   constructor() {
-    super(Prisma.ModelName.User)
+   super(Prisma.ModelName.User)
   }
 
-  override async findById(id: number): Promise<UserDto> {
-    const result = await this.prismaService.user.findFirst({
-      where: {
-        id: id
-      }
-    })
-
-    await this.resolveIgnoredFields(result, ['password'])
-    return result
-  }
-
-  async findByEmail(email: string): Promise<User> {
-    return this.prismaService.user.findFirst({
+  async findByEmail(email: string): Promise<UserModel> {
+    return await this.prismaService[this.entityName].findUnique({
       where: {
         email
       }

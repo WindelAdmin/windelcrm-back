@@ -23,7 +23,7 @@ export class UserUpdateDto {
   isLogged?: boolean
 
   @IsArray({})
-  permissions?: [
+  userPermissions?: [
     {
       id: number
     }

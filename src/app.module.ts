@@ -4,13 +4,12 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { JwtAuthGuard } from './infra/http/guards/jwt-auth.guard'
 import { AuthModule } from './modules/auth/auth.module'
-import EmployeeModule from './modules/person/employee/Employee.module'
 import { UserModule } from './modules/person/user/User.module'
+
 
 @Module({
   imports: [
     AuthModule,
-    EmployeeModule,
     RouterModule.register([
       {
         path: 'person',
@@ -30,6 +29,6 @@ import { UserModule } from './modules/person/user/User.module'
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     }
-  ]
+  ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-export class User implements Prisma.UserUncheckedCreateInput {
+export default class UserModel implements Prisma.UserUncheckedCreateInput {
   id?: number
   companyId: number
   email: string
