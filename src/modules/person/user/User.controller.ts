@@ -10,27 +10,31 @@ import UserUpdateService from './use-cases/UserUpdate'
 
 @ApiTags('user')
 @Controller()
-export class UserController{
-
-  constructor(private readonly userCreateService: UserCreateService, private readonly userUpdateService: UserUpdateService, private readonly userFindById: UserFindByIdService, private readonly userDeleteService: UserDeleteService) {}
+export class UserController {
+  constructor(
+    private readonly userCreateService: UserCreateService,
+    private readonly userUpdateService: UserUpdateService,
+    private readonly userFindById: UserFindByIdService,
+    private readonly userDeleteService: UserDeleteService
+  ) {}
 
   @Post()
   async create(data: UserCreateDto): Promise<void> {
-      await this.userCreateService.execute(data)
+    await this.userCreateService.execute(data)
   }
 
   @Patch()
   async update(@Query('id') id: number, data: UserUpdateDto): Promise<void> {
-    await this.userUpdateService.execute({id, data})
+    await this.userUpdateService.execute({ id, data })
   }
 
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {
-     await this.userDeleteService.execute(id)
+    await this.userDeleteService.execute(id)
   }
 
   @Get(':id')
   async findById(@Param('id') id: number): Promise<UserDto> {
-     return await this.userFindById.execute(id)
+    return await this.userFindById.execute(id)
   }
 }

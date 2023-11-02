@@ -6,7 +6,7 @@ function generateRepositoryClass(className) {
   const entityTemplate = `
   import { Prisma } from '@prisma/client'
 
-  export default class ${className} implements Prisma.${className}UncheckedCreateInput {}
+  export default class ${className}Model implements Prisma.${className}UncheckedCreateInput {}
 `
   const dtoCreateTemplate = `
 export default class ${className}CreateDto {}
@@ -18,7 +18,7 @@ export default class ${className}CreateDto {}
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import AbstractRepository from '@src/interfaces/Repository.abstract'
-import { ${className} } from './${className}.model'
+import  ${className}  from './${className}.model'
 
 @Injectable()
 export default class  ${className}Repository extends AbstractRepository<${className} >{
@@ -30,64 +30,93 @@ export default class  ${className}Repository extends AbstractRepository<${classN
 
   const createTemplate = `
 import { Injectable } from '@nestjs/common';
-import ${className}Repository from './${className}.repository';
+import ${className}Repository from '../${className}.repository';
 import IUseCase from '@src/interfaces/IUseCase';
+import ${className}CreateDto from '../dtos/${className}Create.dto'
+import { Builder } from 'builder-pattern'
+import ${className}Model from '../${className}.model'
 
 @Injectable()
-export default class ${className}CreateService implements IUseCase<any, void>{
+export default class ${className}CreateService implements IUseCase<${className}CreateDto, void>{
   constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
-  async execute(inputData: any): Promise<void> {
-    await this.${classNameLowerCase}Repository.create(input)
+  async execute(input: ${className}CreateDto): Promise<void> {
+    const model = Builder<${className}Model>()
+    //dto to model
+    .build();
+    await this.${classNameLowerCase}Repository.create(model)
   }
 }
 `
 
   const updateTemplate = `
 import { Injectable } from '@nestjs/common';
-import ${className}Repository from '@src/domain/repositories/${className}.repository';
+import ${className}Repository from '../${className}.repository';
 import IUseCase from '@src/interfaces/IUseCase';
+import ${className}UpdateDto from '../dtos/${className}Update.dto'
+import { Builder } from 'builder-pattern'
+import ${className}Model from '../${className}.model'
+
+interface Input {
+  id: number;
+  data: ${className}UpdateDto
+}
 
 @Injectable()
-export default class ${className}UpdateService implements IUseCase<any, void>{
+export default class ${className}UpdateService implements IUseCase<Input, void>{
   constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
-  async execute(inputData: any): Promise<void> {
-    await this.${classNameLowerCase}Repository.update(inputData)
+  async execute(input: Input): Promise<void> {
+    const model = Builder<${className}Model>()
+    //dto to model
+    .build();
+    await this.${classNameLowerCase}Repository.update(input.id, model)
   }
 }
 `
 
   const deleteTemplate = `
 import { Injectable } from '@nestjs/common';
-import ${className}Repository from '@src/domain/repositories/${className}.repository';
+import ${className}Repository from '../${className}.repository';
 import IUseCase from '@src/interfaces/IUseCase';
 
 @Injectable()
 export default class ${className}UpdateService implements IUseCase<number, void>{
   constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
-  async execute(inputData: number): Promise<void> {
-    await this.${classNameLowerCase}Repository.delete(inputData)
+  async execute(id: number): Promise<void> {
+    await this.${classNameLowerCase}Repository.delete(id)
   }
 }`
 
-  const queryTemplate = `
+  const findByIdTemplate = `
 import { Injectable } from '@nestjs/common';
 import ${className}Repository from '../${className}.repository';
 import IUseCase from '@src/interfaces/IUseCase';
-import ${className} from '../${className}.,model';
+import ${className}ResponseDto from '../dtos/${className}Response.dto'
 
 @Injectable()
-export default class ${className}QueryService {
+export default class ${className}FindByIdService implements IUseCase<number, ${className}ResponseDto>{
   constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
-  async findById(id: number): Promise<${className}> {
-    return await this.${classNameLowerCase}Repository.findById(id)
+  async execute(id: number): Promise<${className}ResponseDto> {
+    return await this.${classNameLowerCase}Repository.findById(id) as ${className}ResponseDto;
   }
+}
+`
 
-  async findAll(): Promise<${className}[]> {
-    return await this.${classNameLowerCase}Repository.findAll()
+  const findAllTemplate = `
+import { Injectable } from '@nestjs/common';
+import ${className}Repository from '../${className}.repository';
+import IUseCase from '@src/interfaces/IUseCase';
+import ${className}ResponseDto from '../dtos/${className}Response.dto'
+
+@Injectable()
+export default class ${className}FindAllService implements IUseCase<void, ${className}ResponseDto[]>{
+  constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
+
+  async execute(): Promise<${className}ResponseDto[]> {
+    return await this.${classNameLowerCase}Repository.findAll() as ${className}ResponseDto[]
   }
 }
 `
@@ -95,16 +124,22 @@ export default class ${className}QueryService {
   const controllerTemplate = `
 import { Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import ${className}CreateService from './use-cases/${className}Create'
-import ${className}DeleteService from './use-cases/${className}Delete'
-import ${className}FindByIdService from './use-cases/${className}FindById'
-import ${className}UpdateService from './use-cases/${className}Update'
+import ${className}CreateService from './use-cases/${className}Create.service'
+import ${className}DeleteService from './use-cases/${className}Delete.service'
+import ${className}UpdateService from './use-cases/${className}Update.service'
+import ${className}FindByIdService from './use-cases/${className}FindById.service'
+import ${className}FindAllService from './use-cases/${className}FindAll.service'
 
-@ApiTags(${classNameLowerCase})
+@ApiTags('${classNameLowerCase}')
 @Controller()
-export class ${className}Controller{
+export default class ${className}Controller{
 
-  constructor(private readonly ${classNameLowerCase}CreateService: ${className}CreateService, private readonly ${classNameLowerCase}UpdateService: ${className}UpdateService, private readonly ${classNameLowerCase}FindById: ${className}FindByIdService, private readonly ${classNameLowerCase}DeleteService: ${className}DeleteService) {}
+  constructor(
+    private readonly ${classNameLowerCase}CreateService: ${className}CreateService, 
+    private readonly ${classNameLowerCase}UpdateService: ${className}UpdateService, 
+    private readonly ${classNameLowerCase}DeleteService: ${className}DeleteService,
+    private readonly ${classNameLowerCase}FindById: ${className}FindByIdService, 
+    private readonly ${classNameLowerCase}FindAll: ${className}FindAllService) {}
 
   @Post()
   async create(data: any): Promise<void> {
@@ -131,15 +166,21 @@ export class ${className}Controller{
   const moduleTemplate = `
   import { Module } from '@nestjs/common';
   import ${className}Controller from './${className}.controller';
-  import ${className}CreateService from './use-cases/${className}Create';
-  import ${className}UpdateService from './use-cases/${className}Update';
-  import ${className}DeleteService from './use-cases/${className}Delete';
-  import ${className}FindByIdService from './use-cases/${className}FindById';
+  import ${className}CreateService from './use-cases/${className}Create.service';
+  import ${className}UpdateService from './use-cases/${className}Update.service';
+  import ${className}DeleteService from './use-cases/${className}Delete.service';
+  import ${className}FindByIdService from './use-cases/${className}FindById.service';
   import ${className}Repository from './${className}.repository';
 
   @Module({
     controllers: [${className}Controller],
-    providers: [${className}CreateService, ${className}UpdateService, ${className}DeleteService, ${className}FindByIdService, ${className}Repository],
+    providers: [
+      ${className}CreateService, 
+      ${className}UpdateService, 
+      ${className}DeleteService, 
+      ${className}FindByIdService, 
+      ${className}Repository
+    ],
   })
   export default class ${className}Module {}
   `
@@ -173,14 +214,17 @@ export class ${className}Controller{
     fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Delete.service.ts`, deleteTemplate, 'utf-8')
     console.log(`${className}Delete gerado com sucesso.`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Query.service.ts`, queryTemplate, 'utf-8')
-    console.log(`${className}Query gerado com sucesso.`)
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}FindById.service.ts`, findByIdTemplate, 'utf-8')
+    console.log(`${className}FindById gerado com sucesso.`)
+
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}FindAll.service.ts`, findAllTemplate, 'utf-8')
+    console.log(`${className}FindAll gerado com sucesso.`)
 
     fs.writeFileSync(`./src/${classNameLowerCase}/${className}.controller.ts`, controllerTemplate, 'utf-8')
     console.log(`${className}Controller gerado com sucesso.`)
 
-     fs.writeFileSync(`./src/${classNameLowerCase}/${className}.module.ts`, moduleTemplate, 'utf-8');
-    console.log(`${className}Module gerado com sucesso.`);
+    fs.writeFileSync(`./src/${classNameLowerCase}/${className}.module.ts`, moduleTemplate, 'utf-8')
+    console.log(`${className}Module gerado com sucesso.`)
   } catch (err) {
     console.error('Error generating class:', err)
   }
