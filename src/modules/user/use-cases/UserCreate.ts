@@ -27,13 +27,13 @@ export default class UserCreateService implements IUseCase<UserCreateDto, void> 
       .name(data.name)
       .email(data.email)
       .password(await bcrypt.hash(data.password, 10))
-      .companyId(this.userContext.getUserContext().companyId)
+      .companyId(1)
       .userPermissions({
         createMany: {
           data: data.userPermissions.map((permission) => {
             return {
               permissionId: permission.id,
-              companyId: this.userContext.getUserContext().companyId
+              companyId: 1
             }
           })
         }

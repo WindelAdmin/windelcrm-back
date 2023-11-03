@@ -4,8 +4,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { JwtAuthGuard } from './infra/http/guards/jwt-auth.guard'
 import { AuthModule } from './modules/auth/auth.module'
-import { UserModule } from './modules/person/user/User.module'
-
+import { UserModule } from './modules/user/User.module'
 
 @Module({
   imports: [
@@ -15,12 +14,12 @@ import { UserModule } from './modules/person/user/User.module'
         path: 'person',
         children: [
           {
-          path: 'user',
-          module: UserModule,
-        },
+            path: 'user',
+            module: UserModule
+          }
         ]
       }
-    ]),
+    ])
   ],
   controllers: [AppController],
   providers: [
@@ -29,6 +28,6 @@ import { UserModule } from './modules/person/user/User.module'
       provide: APP_GUARD,
       useClass: JwtAuthGuard
     }
-  ],
+  ]
 })
 export class AppModule {}

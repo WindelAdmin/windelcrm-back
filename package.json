@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "generate:module": "yarn run generate:module-script",
     "generate:module-script": "read -p 'Destino do Módulo: ' moduleName && nest generate module $moduleName && nest generate controller $moduleName/$moduleNameController --no-spec --flat && nest generate repositories $moduleName/context --no-spec --flat && nest generate service $moduleName/rules/rule --no-spec --flat",
-    "gcrud": "node src/shared/utils/RepositoryGenerator.ts"
+    "gcrud": "node src/shared/utils/CrudGenerator.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

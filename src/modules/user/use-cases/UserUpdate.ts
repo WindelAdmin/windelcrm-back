@@ -20,28 +20,17 @@ export default class UserUpdateService implements IUseCase<Input, void> {
   constructor(private readonly userRepository: UserRepository, private readonly userContext: UserContext) {}
 
   async execute(input: Input): Promise<void> {
-    const data = input.data
-
     try {
       const exist = await this.userRepository.findById(input.id)
-      if (exist) {
+
+      if (!exist) {
         throw new HttpException(DONT_EXISTS, 400)
       }
 
       const newUser = Builder<UserModel>()
-        .name(data.name)
-        .email(data.email)
+        .name(input.data.name)
+        .email(input.data.email)
         .companyId(this.userContext.getUserContext().companyId)
-        .userPermissions({
-          createMany: {
-            data: data.userPermissions.map((permission) => {
-              return {
-                permissionId: permission.id,
-                companyId: this.userContext.getUserContext().companyId
-              }
-            })
-          }
-        })
         .isLogged(false)
         .build()
 

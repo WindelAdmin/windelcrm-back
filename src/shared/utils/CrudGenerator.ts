@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-function generateRepositoryClass(className) {
+function generate(className) {
   const classNameLowerCase = className.charAt(0).toLowerCase() + className.slice(1)
 
   const entityTemplate = `
@@ -41,9 +41,7 @@ export default class ${className}CreateService implements IUseCase<${className}C
   constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
   async execute(input: ${className}CreateDto): Promise<void> {
-    const model = Builder<${className}Model>()
-    //dto to model
-    .build();
+    const model = Builder<${className}Model>(input).build();
     await this.${classNameLowerCase}Repository.create(model)
   }
 }
@@ -67,9 +65,7 @@ export default class ${className}UpdateService implements IUseCase<Input, void>{
   constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
   async execute(input: Input): Promise<void> {
-    const model = Builder<${className}Model>()
-    //dto to model
-    .build();
+    const model = Builder<${className}Model>(input.data).build();
     await this.${classNameLowerCase}Repository.update(input.id, model)
   }
 }
@@ -122,63 +118,65 @@ export default class ${className}FindAllService implements IUseCase<void, ${clas
 `
 
   const controllerTemplate = `
-import { Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import { Controller, Delete, Get, Param, Patch, Post, Query, Body } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import AbstractController from '@src/interfaces/Controller.abstract'
 import ${className}CreateService from './use-cases/${className}Create.service'
 import ${className}DeleteService from './use-cases/${className}Delete.service'
 import ${className}UpdateService from './use-cases/${className}Update.service'
 import ${className}FindByIdService from './use-cases/${className}FindById.service'
 import ${className}FindAllService from './use-cases/${className}FindAll.service'
+import ${className}CreateDto from './dtos/${className}Create.dto'
+import ${className}UpdateDto from './dtos/${className}Update.dto'
+import ${className}ResponseDto from './dtos/${className}Response.dto'
 
 @ApiTags('${classNameLowerCase}')
 @Controller()
-export default class ${className}Controller{
+export default class ${className}Controller extends AbstractController<${className}CreateDto, ${className}UpdateDto, ${className}ResponseDto> {
 
   constructor(
-    private readonly ${classNameLowerCase}CreateService: ${className}CreateService, 
-    private readonly ${classNameLowerCase}UpdateService: ${className}UpdateService, 
-    private readonly ${classNameLowerCase}DeleteService: ${className}DeleteService,
-    private readonly ${classNameLowerCase}FindById: ${className}FindByIdService, 
-    private readonly ${classNameLowerCase}FindAll: ${className}FindAllService) {}
-
-  @Post()
-  async create(data: any): Promise<void> {
-      await this.${classNameLowerCase}CreateService.execute(data)
-  }
-
-  @Patch()
-  async update(@Query('id') id: number, data: any): Promise<void> {
-    await this.${classNameLowerCase}UpdateService.execute({id, data})
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
-     await this.${classNameLowerCase}DeleteService.execute(id)
-  }
-
-  @Get(':id')
-  async findById(@Param('id') id: number): Promise<any> {
-     return await this.${classNameLowerCase}FindById.execute(id)
-  }
+    readonly ${classNameLowerCase}CreateService: ${className}CreateService, 
+    readonly ${classNameLowerCase}UpdateService: ${className}UpdateService, 
+    readonly ${classNameLowerCase}DeleteService: ${className}DeleteService,
+    readonly ${classNameLowerCase}FindByIdService: ${className}FindByIdService, 
+    readonly ${classNameLowerCase}FindAllService: ${className}FindAllService) {
+      super(${classNameLowerCase}CreateService, 
+        ${classNameLowerCase}UpdateService, 
+        ${classNameLowerCase}DeleteService, 
+        ${classNameLowerCase}FindAllService, 
+        ${classNameLowerCase}FindByIdService)
+    }
 }
 `
 
   const moduleTemplate = `
   import { Module } from '@nestjs/common';
+  import PrismaModule from '@src/infra/persistence/Prisma.module'
   import ${className}Controller from './${className}.controller';
   import ${className}CreateService from './use-cases/${className}Create.service';
   import ${className}UpdateService from './use-cases/${className}Update.service';
   import ${className}DeleteService from './use-cases/${className}Delete.service';
   import ${className}FindByIdService from './use-cases/${className}FindById.service';
+  import ${className}FindAllService from './use-cases/${className}FindAll.service';
   import ${className}Repository from './${className}.repository';
 
   @Module({
+    imports: [PrismaModule],
+    providers: [
+      ${className}CreateService,
+      ${className}UpdateService,
+      ${className}DeleteService,
+      ${className}FindByIdService,
+      ${className}FindAllService,
+      ${className}Repository
+    ],
     controllers: [${className}Controller],
     providers: [
       ${className}CreateService, 
       ${className}UpdateService, 
       ${className}DeleteService, 
       ${className}FindByIdService, 
+      ${className}FindAllService,
       ${className}Repository
     ],
   })
@@ -226,14 +224,14 @@ export default class ${className}Controller{
     fs.writeFileSync(`./src/${classNameLowerCase}/${className}.module.ts`, moduleTemplate, 'utf-8')
     console.log(`${className}Module gerado com sucesso.`)
   } catch (err) {
-    console.error('Error generating class:', err)
+    console.error('Erro ao gerar a classe :', err)
   }
 }
 
 const className = process.argv[2]
 
 if (!className) {
-  console.error('Please provide a class name as an argument.')
+  console.error('É necessário informar um parâmetro para o nome da Entidade do CRUD.')
 } else {
-  generateRepositoryClass(className)
+  generate(className)
 }

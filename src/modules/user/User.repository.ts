@@ -4,9 +4,9 @@ import AbstractRepository from '@src/interfaces/Repository.abstract'
 import UserModel from './User.model'
 
 @Injectable()
-export default class UserRepository extends AbstractRepository<UserModel>{
+export default class UserRepository extends AbstractRepository<UserModel> {
   constructor() {
-   super(Prisma.ModelName.User)
+    super(Prisma.ModelName.User)
   }
 
   async findByEmail(email: string): Promise<UserModel> {

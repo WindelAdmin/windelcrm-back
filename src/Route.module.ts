@@ -1,7 +1,6 @@
-import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
-import { UserModule } from './modules/person/user/User.module';
-
+import { Module } from '@nestjs/common'
+import { RouterModule } from '@nestjs/core'
+import { UserModule } from './modules/user/User.module'
 
 @Module({
   imports: [
@@ -10,12 +9,12 @@ import { UserModule } from './modules/person/user/User.module';
         path: 'person',
         children: [
           {
-          path: 'user',
-          module: UserModule,
-        }
+            path: 'user',
+            module: UserModule
+          }
         ]
       }
-    ]),
+    ])
   ]
 })
 export class RouteModule {}

@@ -24,6 +24,9 @@ model Company {
   complement      String?
   city            String
   uf              String
+  isActive        Boolean
+  createdAt       DateTime?        @db.Timestamptz(3)
+  updatedAt       DateTime?        @db.Timestamptz(3)
   parentCompanyId Int?             @map("parentCompany")
   parentCompany   Company?         @relation("ChildCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
   childCompanies  Company[]        @relation("ChildCompanies")
@@ -33,9 +36,6 @@ model Company {
   roles           Role[]
   userPermissions UserPermission[]
   personAddress   PersonAddress[]
-  isActive        Boolean
-  createdAt       DateTime         @db.Timestamptz(3)
-  updatedAt       DateTime         @db.Timestamptz(3)
   employee        Employee[]
   workSchedule    WorkSchedule[]
   audit           Audit[]
