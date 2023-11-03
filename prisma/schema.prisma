@@ -16,7 +16,7 @@ model Company {
   name            String
   fantasyName     String
   cpfCnpj         String
-  phone           String
+  phone           String?
   email           String
   cep             String
   street          String
@@ -24,12 +24,13 @@ model Company {
   complement      String?
   city            String
   uf              String
-  isActive        Boolean
-  createdAt       DateTime?        @db.Timestamptz(3)
+  isActive        Boolean?
+  createdAt       DateTime?        @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime?        @db.Timestamptz(3)
   parentCompanyId Int?             @map("parentCompany")
   parentCompany   Company?         @relation("ChildCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
   childCompanies  Company[]        @relation("ChildCompanies")
+  isReseller      Boolean?         @default(false)
   users           User[]
   persons         Person[]
   deparments      Department[]
@@ -45,7 +46,7 @@ model Company {
 
 model User {
   id              Int              @id @default(autoincrement())
-  companyId       Int
+  companyId       Int?
   company         Company?         @relation(fields: [companyId], references: [id], onDelete: Cascade)
   email           String           @unique
   password        String

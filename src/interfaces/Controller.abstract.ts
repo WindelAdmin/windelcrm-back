@@ -1,5 +1,7 @@
-import { Body, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
-import IUseCase from './IUseCase'
+import { Body, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { IsPublic } from '@src/shared/decorators/is-public.decorator';
+import IUseCase from './IUseCase';
+
 
 export default abstract class AbstractController<C, U, R> {
   constructor(
@@ -11,6 +13,7 @@ export default abstract class AbstractController<C, U, R> {
   ) {}
 
   @Post()
+  @IsPublic()
   async create(@Body() data: C): Promise<void> {
     await this.createService.execute(data)
   }
@@ -25,12 +28,12 @@ export default abstract class AbstractController<C, U, R> {
     await this.deleteService.execute(id)
   }
 
-  @Get()
+ @Get()
   async findAll(): Promise<R[]> {
     return await this.findAllService.execute()
   }
 
-  @Get(':id')
+ @Get(':id')
   async findById(@Param('id') id: number): Promise<R> {
     return await this.findByIdService.execute(id)
   }

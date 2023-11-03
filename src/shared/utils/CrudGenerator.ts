@@ -152,6 +152,7 @@ export default class ${className}Controller extends AbstractController<${classNa
   const moduleTemplate = `
   import { Module } from '@nestjs/common';
   import PrismaModule from '@src/infra/persistence/Prisma.module'
+  import { UserContext } from '@src/modules/context/UserContext';
   import ${className}Controller from './${className}.controller';
   import ${className}CreateService from './use-cases/${className}Create.service';
   import ${className}UpdateService from './use-cases/${className}Update.service';
@@ -169,7 +170,8 @@ export default class ${className}Controller extends AbstractController<${classNa
       ${className}DeleteService, 
       ${className}FindByIdService, 
       ${className}FindAllService,
-      ${className}Repository
+      ${className}Repository,
+      UserContext
     ],
   })
   export default class ${className}Module {}

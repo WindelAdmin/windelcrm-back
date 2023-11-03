@@ -1,6 +1,7 @@
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@src/infra/persistence/Prisma.service'
 import { UserContext } from '@src/modules/context/UserContext'
+import { now } from '@src/shared/utils/DateUtils'
 
 export default abstract class AbstractRepository<E> {
   protected entityName: string
@@ -26,7 +27,7 @@ export default abstract class AbstractRepository<E> {
       where: {
         id: id
       },
-      data
+      data: {...data, updatedAt: now()}
     })
   }
 
