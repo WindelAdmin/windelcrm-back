@@ -162,14 +162,6 @@ export default class ${className}Controller extends AbstractController<${classNa
 
   @Module({
     imports: [PrismaModule],
-    providers: [
-      ${className}CreateService,
-      ${className}UpdateService,
-      ${className}DeleteService,
-      ${className}FindByIdService,
-      ${className}FindAllService,
-      ${className}Repository
-    ],
     controllers: [${className}Controller],
     providers: [
       ${className}CreateService, 
