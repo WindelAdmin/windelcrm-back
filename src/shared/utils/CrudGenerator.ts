@@ -120,7 +120,7 @@ export default class ${className}FindAllService implements IUseCase<void, ${clas
   const controllerTemplate = `
 import { Controller, Delete, Get, Param, Patch, Post, Query, Body } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import AbstractController from '@src/interfaces/Controller.abstract'
+import  IController from '@src/interfaces/Controller.interface'
 import ${className}CreateService from './use-cases/${className}Create.service'
 import ${className}DeleteService from './use-cases/${className}Delete.service'
 import ${className}UpdateService from './use-cases/${className}Update.service'
@@ -132,20 +132,39 @@ import ${className}ResponseDto from './dtos/${className}Response.dto'
 
 @ApiTags('${classNameLowerCase}')
 @Controller()
-export default class ${className}Controller extends AbstractController<${className}CreateDto, ${className}UpdateDto, ${className}ResponseDto> {
+export default class ${className}Controller implements IController<${className}CreateDto, ${className}UpdateDto, ${className}ResponseDto> {
 
   constructor(
     readonly ${classNameLowerCase}CreateService: ${className}CreateService, 
     readonly ${classNameLowerCase}UpdateService: ${className}UpdateService, 
     readonly ${classNameLowerCase}DeleteService: ${className}DeleteService,
     readonly ${classNameLowerCase}FindByIdService: ${className}FindByIdService, 
-    readonly ${classNameLowerCase}FindAllService: ${className}FindAllService) {
-      super(${classNameLowerCase}CreateService, 
-        ${classNameLowerCase}UpdateService, 
-        ${classNameLowerCase}DeleteService, 
-        ${classNameLowerCase}FindAllService, 
-        ${classNameLowerCase}FindByIdService)
-    }
+    readonly ${classNameLowerCase}FindAllService: ${className}FindAllService) {}
+}
+
+@Post()
+async create(@Body() data: ${className}CreateDto): Promise<void> {
+  await this.${classNameLowerCase}CreateService.execute(data)
+}
+
+@Patch()
+async update(@Query('id') id: number, @Body() data: ${className}UpdateDto): Promise<void> {
+  await this.${classNameLowerCase}UpdateService.execute({ id, data })
+}
+
+@Delete(':id')
+async delete(@Query('id') id: number): Promise<void> {
+  await this.${classNameLowerCase}DeleteService.execute(id)
+}
+
+@Get(':id')
+async findById(@Query('id') id: number): Promise<${className}ResponseDto> {
+  return await this.${classNameLowerCase}FindByIdService.execute(id)
+}
+
+@Get()
+async findAll(): Promise<${className}ResponseDto[]> {
+  return await this.${classNameLowerCase}FindAllService.execute()
 }
 `
 

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import UserRepository from '../User.repository'
-import { UserDto } from '../dtos/User.dto'
+import { UserResponseDto } from '../dtos/UserResponse.dto'
 
 @Injectable()
-export default class UserFindByEmailService implements IUseCase<string, UserDto> {
+export default class UserFindByEmailService implements IUseCase<string, UserResponseDto> {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(input: string): Promise<UserDto> {
-    return (await this.userRepository.findByEmail(input)) as UserDto
+  async execute(input: string): Promise<UserResponseDto> {
+    return (await this.userRepository.findByEmail(input)) as UserResponseDto
   }
 }

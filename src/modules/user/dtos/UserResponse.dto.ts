@@ -1,6 +1,6 @@
 import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
 
-export class UserDto {
+export class UserResponseDto {
   @IsNumber()
   id?: number
 

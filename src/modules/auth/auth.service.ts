@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt'
 import { PrismaService } from '@src/infra/persistence/Prisma.service'
 import { UnauthorizedError } from '@src/shared/errors/unauthorized.error'
 import * as bcrypt from 'bcrypt'
-import { UserDto } from '../user/dtos/User.dto'
+import { UserResponseDto } from '../user/dtos/UserResponse.dto'
 import { AuthUserDto } from './dtos/auth-request.dto'
 import { UserPayloadDto } from './dtos/user-payload.dto'
 import { UserTokenDto } from './dtos/user-token.dto'
@@ -26,12 +26,12 @@ export class AuthService {
     }
   }
 
-  async validateUser(email: string, password: string): Promise<UserDto> {
+  async validateUser(email: string, password: string): Promise<UserResponseDto> {
     const user = (await this.prismaService.user.findUnique({
       where: {
         email: email
       }
-    })) as UserDto
+    })) as UserResponseDto
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password)
