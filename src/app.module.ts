@@ -8,10 +8,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import CompanyModule from './modules/company/Company.module'
 
 @Module({
-  imports: [
-    AuthModule,
-    CompanyModule,
-    RouteModule],
+  imports: [AuthModule, CompanyModule, RouteModule],
   controllers: [AppController],
   providers: [
     AppService,
