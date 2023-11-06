@@ -32,8 +32,8 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   }
 
   @Delete(':id')
-  async delete(@Query('id') id: number): Promise<void> {
-    await this.companyDeleteService.execute(id)
+  async delete(@Param('id') id: number): Promise<void> {
+    await this.companyDeleteService.execute(+id)
   }
 
   @Get()

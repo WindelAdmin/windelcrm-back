@@ -157,14 +157,14 @@ async delete(@Query('id') id: number): Promise<void> {
   await this.${classNameLowerCase}DeleteService.execute(id)
 }
 
-@Get(':id')
-async findById(@Query('id') id: number): Promise<${className}ResponseDto> {
-  return await this.${classNameLowerCase}FindByIdService.execute(id)
-}
-
 @Get()
 async findAll(): Promise<${className}ResponseDto[]> {
   return await this.${classNameLowerCase}FindAllService.execute()
+}
+
+@Get(':id')
+async findById(@Param('id') id: number): Promise<${className}ResponseDto> {
+  return await this.${classNameLowerCase}FindByIdService.execute(+id)
 }
 `
 

@@ -54,4 +54,8 @@ export default abstract class AbstractRepository<E> {
       }
     })
   }
+
+  async findOneByFilters<F>(filters: F): Promise<E> {
+    return await this.prismaService[this.entityName].findFirst(filters)
+  }
 }
