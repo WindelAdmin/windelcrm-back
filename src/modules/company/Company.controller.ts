@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import IController from '@src/interfaces/Controller.interface'
 import CompanyCreateDto from './dtos/CompanyCreate.dto'
@@ -36,13 +36,13 @@ export default class CompanyController implements IController<CompanyCreateDto, 
     await this.companyDeleteService.execute(id)
   }
 
-  @Get(':id')
-  async findById(@Query('id') id: number): Promise<CompanyResponseDto> {
-    return await this.companyFindByIdService.execute(id)
-  }
-
   @Get()
   async findAll(): Promise<CompanyResponseDto[]> {
     return await this.companyFindAllService.execute()
+  }
+
+  @Get(':id')
+  async findById(@Param('id') id: number): Promise<CompanyResponseDto> {
+    return await this.companyFindByIdService.execute(+id)
   }
 }
