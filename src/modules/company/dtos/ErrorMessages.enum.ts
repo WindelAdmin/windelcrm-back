@@ -1,4 +1,5 @@
 export enum CompanyDtoErrorMessages {
+  ID_IS_NOT_EMPTY = 'Campo id é obrigatório.',
   NAME_IS_STRING = 'Campo name precisa ser uma string.',
   NAME_IS_NOT_EMPTY = 'Campo name é obrigatório.',
   FANTASY_NAME_IS_STRING = 'Campo name precisa ser uma string.',
@@ -7,7 +8,7 @@ export enum CompanyDtoErrorMessages {
   EMAIL_IS_STRING = 'Campo email precisa ser uma string.',
   EMAIL_INVALID = 'Campo email inválido.',
   PHONE_IS_STRING = 'Campo phone precisa ser uma string.',
-  PHONE_IS_STRING_NUMBER = 'Campo phone deve conter apenas números.',
+  PHONE_INVALID = 'Campo phone inválido.',
   CPF_CNPJ_IS_NOT_EMPTY = 'Campo cpfCnpj é obrigatório.',
   CPF_CNPJ_INVALID = 'Campo cpfCnpj inválido.',
   CNPJ_IS_STRING = 'Campo cnpj precisa ser uma string.',

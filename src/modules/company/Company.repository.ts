@@ -13,7 +13,7 @@ export default class CompanyRepository extends AbstractRepository<Company> {
     return await this.prismaService.company.findMany()
   }
 
-  async validateName(name: string): Promise<Boolean> {
+  async validateExistName(name: string): Promise<Boolean> {
     return (await this.prismaService.company.findFirst({
       where: {
         name
@@ -23,7 +23,7 @@ export default class CompanyRepository extends AbstractRepository<Company> {
       : false
   }
 
-  async validateCfpCnpj(cpfCnpj: string): Promise<Boolean> {
+  async validateExistCfpCnpj(cpfCnpj: string): Promise<Boolean> {
     return (await this.prismaService.company.findFirst({
       where: {
         cpfCnpj
@@ -33,10 +33,20 @@ export default class CompanyRepository extends AbstractRepository<Company> {
       : false
   }
 
-  async validateEmail(email: string): Promise<Boolean> {
+  async validateExistEmail(email: string): Promise<Boolean> {
     return (await this.prismaService.company.findFirst({
       where: {
         email
+      }
+    }))
+      ? true
+      : false
+  }
+
+  async validateExistPhone(phone: string): Promise<Boolean> {
+    return (await this.prismaService.company.findFirst({
+      where: {
+        phone
       }
     }))
       ? true

@@ -12,7 +12,7 @@ import UserUpdateService from './use-cases/UserUpdate'
 
 @ApiTags('user')
 @Controller()
-export class UserController implements IController<UserCreateDto, UserUpdateDto, UserResponseDto> {
+export class UserController implements IController<UserCreateDto, UserUpdateDto, any, UserResponseDto> {
   constructor(
     readonly userCreateService: UserCreateService,
     readonly userUpdateService: UserUpdateService,

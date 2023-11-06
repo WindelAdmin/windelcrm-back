@@ -1,0 +1,6 @@
+export enum HttpCompanyMessages {
+  NAME_ALREADY_EXISTS = 'Nome da empresa já existe na base de dados.',
+  CPF_CNPJ_ALREADY_EXISTS = 'CPF ou CNPJ da empresa já existe na base de dados.',
+  EMAIL_ALREADY_EXISTS = 'E-mail da empresa já existe na base de dados.',
+  PHONE_ALREADY_EXISTS = 'Número de telefone da empresa já existe na base de dados.'
+}

@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { ApiTags } from '@nestjs/swagger'
 import IController from '@src/interfaces/Controller.interface'
 import CompanyCreateDto from './dtos/CompanyCreate.dto'
+import { CompanyDeleteDto } from './dtos/CompanyDeleteDto'
 import CompanyResponseDto from './dtos/CompanyResponse.dto'
 import CompanyUpdateDto from './dtos/CompanyUpdate.dto'
 import CompanyCreateService from './use-cases/CompanyCreate.service'
@@ -12,7 +13,7 @@ import CompanyUpdateService from './use-cases/CompanyUpdate.service'
 
 @ApiTags('company')
 @Controller()
-export default class CompanyController implements IController<CompanyCreateDto, CompanyUpdateDto, CompanyResponseDto> {
+export default class CompanyController implements IController<CompanyCreateDto, CompanyUpdateDto, CompanyDeleteDto, CompanyResponseDto> {
   constructor(
     readonly companyCreateService: CompanyCreateService,
     readonly companyUpdateService: CompanyUpdateService,
@@ -32,8 +33,8 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
-    await this.companyDeleteService.execute(+id)
+  async delete(@Param() params: CompanyDeleteDto): Promise<void> {
+    await this.companyDeleteService.execute(+params.id)
   }
 
   @Get()
