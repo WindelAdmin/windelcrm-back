@@ -1,6 +1,7 @@
 
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import IUseCase from '@src/interfaces/IUseCase';
+import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessages';
 import { HttpMessages } from '@src/shared/http-messages/HttpMessages';
 import { Builder } from 'builder-pattern';
 import CompanyModel from '../Company.model';
@@ -22,6 +23,22 @@ export default class CompanyUpdateService implements IUseCase<Input, void>{
 
     if(!await this.companyRepository.validateExistById(input.id)){
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
+    }
+
+    if (await this.companyRepository.validateExistName(model.name)) {
+      throw new HttpException(HttpCompanyMessages.NAME_DUPLICATED, HttpStatus.CONFLICT)
+    }
+
+    if (await this.companyRepository.validateExistCfpCnpj(model.cpfCnpj)) {
+      throw new HttpException(HttpCompanyMessages.CPF_CNPJ_DUPLICATED, HttpStatus.CONFLICT)
+    }
+
+    if (await this.companyRepository.validateExistEmail(model.email)) {
+      throw new HttpException(HttpCompanyMessages.EMAIL_DUPLICATED, HttpStatus.CONFLICT)
+    }
+
+    if (await this.companyRepository.validateExistPhone(model.phone)) {
+      throw new HttpException(HttpCompanyMessages.PHONE_DUPLICATED, HttpStatus.CONFLICT)
     }
 
     await this.companyRepository.update(input.id, model).catch((err) => {

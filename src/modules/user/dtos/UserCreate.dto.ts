@@ -1,7 +1,8 @@
-import { HttpException } from '@nestjs/common'
-import { IsArray, IsEmail, IsString, Matches, MinLength, Validate } from 'class-validator'
+import { IsArray, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
 
 export default class UserCreateDto {
+  @IsNumber()
+  companyId: number
   @IsEmail()
   email: string
 
@@ -23,23 +24,10 @@ export default class UserCreateDto {
 
   isLogged?: boolean
 
-  @IsArray()
-  @Validate((value: {id: number}[]) => {
-     if (!Array.isArray(value)) {
-      return 'Deve ser um array';
-    }
-
-    for (const item of value) {
-      if (typeof item !== 'object' || !('id' in item) || typeof item.id !== 'number') {
-        throw new HttpException('Cada elemento deve ser um objeto com uma propriedade "id" do tipo número', 500)
-      }
-    }
+  @IsArray({
+    message: 'O campo userPermissions deve ser um array de id (number)',
   })
-  userPermissions?: [
-    {
-      id: number
-    }
-  ]
+  userPermissions?: [number]
 
   isActive?: boolean
   lastAccess?: string

@@ -32,7 +32,7 @@ export default class UserCreateService implements IUseCase<UserCreateDto, void> 
         createMany: {
           data: data.userPermissions.map((permission) => {
             return {
-              permissionId: permission.id,
+              permissionId: permission,
               companyId: this.userContext.getUserContext().companyId
             }
           })
