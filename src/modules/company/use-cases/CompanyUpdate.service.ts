@@ -25,19 +25,19 @@ export default class CompanyUpdateService implements IUseCase<Input, void>{
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
-    if (await this.companyRepository.validateExistName(model.name)) {
+    if (model.name && await this.companyRepository.validateExistName(model.name)) {
       throw new HttpException(HttpCompanyMessages.NAME_DUPLICATED, HttpStatus.CONFLICT)
     }
 
-    if (await this.companyRepository.validateExistCfpCnpj(model.cpfCnpj)) {
+    if (model.cpfCnpj && await this.companyRepository.validateExistCfpCnpj(model.cpfCnpj)) {
       throw new HttpException(HttpCompanyMessages.CPF_CNPJ_DUPLICATED, HttpStatus.CONFLICT)
     }
 
-    if (await this.companyRepository.validateExistEmail(model.email)) {
+    if (model.email && await this.companyRepository.validateExistEmail(model.email)) {
       throw new HttpException(HttpCompanyMessages.EMAIL_DUPLICATED, HttpStatus.CONFLICT)
     }
 
-    if (await this.companyRepository.validateExistPhone(model.phone)) {
+    if (model.phone && await this.companyRepository.validateExistPhone(model.phone)) {
       throw new HttpException(HttpCompanyMessages.PHONE_DUPLICATED, HttpStatus.CONFLICT)
     }
 
