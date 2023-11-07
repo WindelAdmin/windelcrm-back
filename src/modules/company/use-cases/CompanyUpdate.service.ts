@@ -20,7 +20,7 @@ export default class CompanyUpdateService implements IUseCase<Input, void>{
   async execute(input: Input): Promise<void> {
     const model = Builder<CompanyModel>(input.data).build();
 
-    if(!await this.companyRepository.findById(input.id)){
+    if(!await this.companyRepository.validateExistById(input.id)){
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 

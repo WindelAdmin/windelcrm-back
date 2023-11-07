@@ -75,7 +75,7 @@ export default abstract class AbstractRepository<E> {
     })
   }
 
-  async findById(id: number): Promise<any> {
+  async findById(id: number): Promise<E> {
     return await this.prismaService[this.entityName].findUnique({
       where: {
         id

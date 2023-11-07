@@ -10,7 +10,7 @@ export default class CompanyDeleteService implements IUseCase<number, void> {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
   async execute(id: number): Promise<void> {
-    if (!this.companyRepository.validateExistById(id)) {
+    if (!await this.companyRepository.validateExistById(id)) {
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
