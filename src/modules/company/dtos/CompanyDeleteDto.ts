@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString } from 'class-validator';
-import { CompanySwaggerProperties } from './CompanySwaggerProperties';
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum';
+import { CompanySwaggerProperties } from './SwaggerProperties';
 
 export class CompanyDeleteDto {
   @IsNumberString()
