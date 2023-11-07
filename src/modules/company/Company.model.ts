@@ -17,6 +17,9 @@
     isActive?: boolean;
     createdAt?: string | Date;
     updatedAt?: string | Date;
+    parentCompanyId?: number;
+    isReseller?: boolean;
+    childCompanies?: Prisma.CompanyUncheckedCreateNestedManyWithoutParentCompanyInput;
     users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput;
     persons?: Prisma.PersonUncheckedCreateNestedManyWithoutCompanyInput;
     deparments?: Prisma.DepartmentUncheckedCreateNestedManyWithoutCompanyInput;
@@ -26,4 +29,5 @@
     employee?: Prisma.EmployeeUncheckedCreateNestedManyWithoutCompanyInput;
     workSchedule?: Prisma.WorkScheduleUncheckedCreateNestedManyWithoutCompanyInput;
     audit?: Prisma.AuditUncheckedCreateNestedManyWithoutCompanyInput;
+    
 }

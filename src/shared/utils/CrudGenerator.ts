@@ -9,9 +9,26 @@ function generate(className) {
   export default class ${className}Model implements Prisma.${className}UncheckedCreateInput {}
 `
   const dtoCreateTemplate = `
-export default class ${className}CreateDto {}
-`
-  const dtoUpdateTemplate = `export default class ${className}UpdateDto {}`
+  import { ApiProperty } from '@nestjs/swagger'
+  import { IsNotEmpty } from 'class-validator'
+  import { ${className}SwaggerProperties } from './SwaggerProperties'
+
+  export default class ${className}CreateDto {
+    @IsNotEmpty()
+    @ApiProperty(${className}SwaggerProperties.field)
+    field: any
+  }
+  `
+  const dtoUpdateTemplate = `
+  import { ApiProperty } from '@nestjs/swagger'
+  import { IsOptional } from 'class-validator'
+  import { ${className}SwaggerProperties } from './SwaggerProperties'
+
+  export default class ${className}UpdateDto {
+    @IsOptional()
+    @ApiProperty(${className}SwaggerProperties.field)
+    field: any
+  }`
   const dtoDeleteTemplate = `
   import { IsNotEmpty, IsNumberString } from 'class-validator';
   import { ${className}DtoErrorMessages } from './ErrorMessages.enum';
@@ -25,6 +42,9 @@ export default class ${className}CreateDto {}
     id: number;
   }`
   const dtoResponseTemplate = `export default class ${className}ResponseDto {}`
+  const dtoSwaggerProperties = `export const ${className}SwaggerProperties = {
+    field: { example: 'Jhon Wick', description: 'Example description' }
+  }`
   const dtoErrorMessages = `export enum ${className}DtoErrorMessages {
     ID_IS_NOT_EMPTY = 'Campo id é obrigatório.'
   }`
@@ -156,7 +176,7 @@ export default class ${className}CreateDto {}
 
   const controllerTemplate = `
   import { Controller, Delete, Get, Param, Patch, Post, Query, Body } from '@nestjs/common'
-  import { ApiTags } from '@nestjs/swagger'
+  import { ApiBody, ApiTags } from '@nestjs/swagger'
   import  IController from '@src/interfaces/Controller.interface'
   import ${className}CreateService from './use-cases/${className}Create.service'
   import ${className}DeleteService from './use-cases/${className}Delete.service'
@@ -180,16 +200,19 @@ export default class ${className}CreateDto {}
       readonly ${classNameLowerCase}FindAllService: ${className}FindAllService) {}
 
     @Post()
+    @ApiBody({ type: ${className}CreateDto })
     async create(@Body() data: ${className}CreateDto): Promise<void> {
       await this.${classNameLowerCase}CreateService.execute(data)
     }
 
     @Patch()
+    @ApiBody({ type: ${className}UpdateDto })
     async update(@Query('id') id: number, @Body() data: ${className}UpdateDto): Promise<void> {
       await this.${classNameLowerCase}UpdateService.execute({ id, data })
     }
 
     @Delete(':id')
+    @ApiBody({ type: ${className}DeleteDto })
     async delete(@Param() params: ${className}DeleteDto): Promise<void> {
       await this.${classNameLowerCase}DeleteService.execute(+params.id)
     }
@@ -253,6 +276,9 @@ export default class ${className}CreateDto {}
 
     fs.writeFileSync(`./src/${classNameLowerCase}/dtos/${className}Response.dto.ts`, dtoResponseTemplate, 'utf-8')
     console.log(`${className}ResponseDto gerado com sucesso.`)
+
+    fs.writeFileSync(`./src/${classNameLowerCase}/dtos/SwaggerProperties.ts`, dtoSwaggerProperties, 'utf-8')
+    console.log(`${className}DtoSwaggerProperties gerado com sucesso.`)
 
     fs.writeFileSync(`./src/${classNameLowerCase}/dtos/ErrorMessages.enum.ts`, dtoErrorMessages, 'utf-8')
     console.log(`${className}DtoErrorMessages gerado com sucesso.`)

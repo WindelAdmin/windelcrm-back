@@ -24,6 +24,7 @@ model Company {
   complement      String?
   city            String
   uf              String
+  type            String
   isActive        Boolean?
   createdAt       DateTime?        @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime?        @db.Timestamptz(3)

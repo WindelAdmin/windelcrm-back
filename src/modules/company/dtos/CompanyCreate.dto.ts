@@ -2,16 +2,18 @@ import { ApiProperty } from '@nestjs/swagger'
 import { RegexCpfCnpj, RegexEmail, RegexPhone, RegexStringNumber } from '@src/shared/types/Regex.type'
 import { IsNotEmpty, IsOptional, IsString, Length, Matches } from 'class-validator'
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum'
+import { CompanySwaggerProperties } from './SwaggerProperties'
 
 export default class CompanyCreateDto {
+
   @IsString({ message: CompanyDtoErrorMessages.NAME_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.NAME_IS_NOT_EMPTY })
-  @ApiProperty({ example: 'Empresa Exemplo', description: 'Razão Social da Empresa' })
+  @ApiProperty(CompanySwaggerProperties.name)
   name: string
 
   @IsString({ message: CompanyDtoErrorMessages.FANTASY_NAME_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.FANTASY_NAME_IS_NOT_EMPTY })
-  @ApiProperty({ example: 'Empresa Exemplo Fantasia', description: 'Nome fantasia da empresa' })
+  @ApiProperty(CompanySwaggerProperties.fantasyName)
   fantasyName: string
 
   @IsString()
@@ -21,50 +23,50 @@ export default class CompanyCreateDto {
   @Matches(RegexCpfCnpj, {
     message: CompanyDtoErrorMessages.CPF_CNPJ_INVALID
   })
-  @ApiProperty({ example: '14258896000101', description: 'CPF ou CNPJ da empresa' })
+  @ApiProperty(CompanySwaggerProperties.cpfCnpj)
   cpfCnpj: string
 
   @IsOptional()
   @IsString({ message: CompanyDtoErrorMessages.PHONE_IS_STRING })
   @Matches(RegexPhone, { message: CompanyDtoErrorMessages.PHONE_INVALID })
-  @ApiProperty({ example: '99999999999', description: 'Número para contato da empresa' })
+  @ApiProperty(CompanySwaggerProperties.phone)
   phone?: string
 
   @IsString({ message: CompanyDtoErrorMessages.EMAIL_INVALID })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.EMAIL_IS_NOT_EMPTY })
   @Matches(RegexEmail, { message: CompanyDtoErrorMessages.EMAIL_INVALID })
-  @ApiProperty({ example: 'jhon@example.com', description: 'E-mail para contato da empresa' })
+  @ApiProperty(CompanySwaggerProperties.email)
   email: string
 
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_NOT_EMPTY })
   @Matches(RegexStringNumber, { message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_STRING_NUMBER })
-  @ApiProperty({ example: '65765000', description: 'Cep do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.cep)
   cep: string
 
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_STREET_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.ADDRESS_STREET_IS_NOT_EMPTY })
-  @ApiProperty({ example: 'Rua Jorge Fernandes', description: 'Rua do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.street)
   street: string
 
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_NUMBER_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.ADDRESS_NUMBER_IS_NOT_EMPTY })
-  @ApiProperty({ example: '105 (ou S/N)', description: 'Número do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.number)
   number: string
 
   @IsOptional()
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_COMPLEMENT_IS_STRING })
-  @ApiProperty({ example: 'próximo ao hospital', description: 'Complemento do endereço da empresa (opcional)' })
+  @ApiProperty(CompanySwaggerProperties.complement)
   complement?: string
 
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_CITY_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.ADDRESS_CITY_IS_NOT_EMPTY })
-  @ApiProperty({ example: 'Caxias do Sul', description: 'Cidade do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.city)
   city: string
 
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_UF_IS_STRING })
   @IsNotEmpty({ message: CompanyDtoErrorMessages.ADDRESS_UF_IS_NOT_EMPTY })
   @Length(2, 2, { message: CompanyDtoErrorMessages.ADDRESS_UF_MIN_MAX_LENGTH })
-  @ApiProperty({ example: 'RS', description: 'Unidade Federativa do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.uf)
   uf: string
 }

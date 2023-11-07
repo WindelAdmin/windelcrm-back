@@ -33,7 +33,7 @@ export default abstract class AbstractRepository<E> {
   }
 
   async update(id: number, data: E): Promise<void> {
-    const beforeData = await this.prismaService[this.entityName].findById({ where: id })
+    const beforeData = await this.prismaService[this.entityName].findUnique({ where: { id } })
 
     await this.prismaService[this.entityName].update({
       where: {

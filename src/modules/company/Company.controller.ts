@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import { ApiBody, ApiTags } from '@nestjs/swagger'
 import IController from '@src/interfaces/Controller.interface'
+import { BodyChecked } from '@src/shared/decorators/BodyChecked.decorator'
 import CompanyCreateDto from './dtos/CompanyCreate.dto'
 import { CompanyDeleteDto } from './dtos/CompanyDeleteDto'
 import CompanyResponseDto from './dtos/CompanyResponse.dto'
@@ -23,16 +24,19 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   ) {}
 
   @Post()
-  async create(@Body() data: CompanyCreateDto): Promise<void> {
+  @ApiBody({ type: CompanyCreateDto })
+  async create(@BodyChecked() data: CompanyCreateDto): Promise<void> {
     await this.companyCreateService.execute(data)
   }
 
   @Patch()
-  async update(@Query('id') id: number, @Body() data: CompanyUpdateDto): Promise<void> {
+  @ApiBody({ type: CompanyUpdateDto })
+  async update(@Query('id') id: number, @BodyChecked() data: CompanyUpdateDto): Promise<void> {
     await this.companyUpdateService.execute({ id, data })
   }
 
   @Delete(':id')
+  @ApiBody({ type: CompanyDeleteDto })
   async delete(@Param() params: CompanyDeleteDto): Promise<void> {
     await this.companyDeleteService.execute(+params.id)
   }

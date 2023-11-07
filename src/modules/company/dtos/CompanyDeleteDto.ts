@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumberString } from 'class-validator';
+import { CompanySwaggerProperties } from './CompanySwaggerProperties';
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum';
 
 export class CompanyDeleteDto {
@@ -7,6 +8,6 @@ export class CompanyDeleteDto {
   @IsNotEmpty({
     message: CompanyDtoErrorMessages.ID_IS_NOT_EMPTY
   })
-  @ApiProperty({ example: '1', description: 'Id do registro a ser deletado' })
+  @ApiProperty(CompanySwaggerProperties.id)
   id: number;
 }
