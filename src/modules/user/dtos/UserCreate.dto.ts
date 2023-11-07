@@ -1,19 +1,10 @@
-import { IsArray, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
+import { HttpException } from '@nestjs/common'
+import { IsArray, IsEmail, IsString, Matches, MinLength, Validate } from 'class-validator'
 
-export class UserCreateDto {
-  @IsNumber()
-  companyId: number
-
-  /**
-   * O e-mail será usado como usuário para acesso ao sistema.
-   * @example jhon@email.com
-   */
+export default class UserCreateDto {
   @IsEmail()
   email: string
 
-  /**
-   * @example Hey@1234
-   */
   @IsString({
     message: 'O campo senha precisa ser uma string.'
   })
@@ -25,9 +16,6 @@ export class UserCreateDto {
   })
   password: string
 
-  /**
-   * @example "Jhon Wick"
-   */
   @IsString()
   name: string
 
@@ -35,14 +23,21 @@ export class UserCreateDto {
 
   isLogged?: boolean
 
-  @IsArray({})
+  @IsArray()
+  @Validate((value: {id: number}[]) => {
+     if (!Array.isArray(value)) {
+      return 'Deve ser um array';
+    }
+
+    for (const item of value) {
+      if (typeof item !== 'object' || !('id' in item) || typeof item.id !== 'number') {
+        throw new HttpException('Cada elemento deve ser um objeto com uma propriedade "id" do tipo número', 500)
+      }
+    }
+  })
   userPermissions?: [
     {
       id: number
-      companyId: number
-      description: string
-      type: string
-      isActive: boolean
     }
   ]
 

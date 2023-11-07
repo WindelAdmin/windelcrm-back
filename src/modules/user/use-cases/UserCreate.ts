@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt'
 import { Builder } from 'builder-pattern'
 import UserModel from '../User.model'
 import UserRepository from '../User.repository'
-import { UserCreateDto } from '../dtos/UserCreate.dto'
+import UserCreateDto from '../dtos/UserCreate.dto'
 
 const EMAIL_ALREADY_EXISTS = 'E-mail já existe.'
 
@@ -33,7 +33,7 @@ export default class UserCreateService implements IUseCase<UserCreateDto, void> 
           data: data.userPermissions.map((permission) => {
             return {
               permissionId: permission.id,
-              companyId: 1
+              companyId: this.userContext.getUserContext().companyId
             }
           })
         }

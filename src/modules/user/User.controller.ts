@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiTags } from '@nestjs/swagger'
 import IController from '@src/interfaces/Controller.interface'
-import { UserCreateDto } from './dtos/UserCreate.dto'
+import { BodyChecked } from '@src/shared/decorators/BodyChecked.decorator'
+import UserCreateDto from './dtos/UserCreate.dto'
 import { UserResponseDto } from './dtos/UserResponse.dto'
 import { UserUpdateDto } from './dtos/UserUpdate.dto'
 import UserCreateService from './use-cases/UserCreate'
@@ -22,12 +23,14 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
   ) {}
 
   @Post()
-  async create(@Body() data: UserCreateDto): Promise<void> {
+  @ApiBody({ type: UserCreateDto })
+  async create(@Body() @BodyChecked() data: UserCreateDto): Promise<void> {
     await this.userCreateService.execute(data)
   }
 
   @Patch()
-  async update(@Query('id') id: number, @Body() data: UserUpdateDto): Promise<void> {
+    @ApiBody({ type: UserUpdateDto })
+  async update(@Query('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
     await this.userUpdateService.execute({ id, data })
   }
 
