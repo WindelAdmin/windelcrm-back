@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
+import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
 import CompanyRepository from '../Company.repository'
 import CompanyResponseDto from '../dtos/CompanyResponse.dto'
 
@@ -10,8 +11,12 @@ export default class CompanyFindByIdService implements IUseCase<number, CompanyR
   constructor(private readonly companyRepository: CompanyRepository) {}
 
   async execute(id: number): Promise<CompanyResponseDto> {
-    return (await this.companyRepository.findById(id).catch((err) => {
+    const company = await this.companyRepository.findById(id).catch((err) => {
       this.logger.error(err)
-    })) as CompanyResponseDto
+    }) as CompanyResponseDto
+
+    if(!company) throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND) 
+
+    return company
   }
 }
