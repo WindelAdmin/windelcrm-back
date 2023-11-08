@@ -13,10 +13,10 @@ export default class CompanyFindByIdService implements IUseCase<number, CompanyR
   async execute(id: number): Promise<CompanyResponseDto> {
     const company = await this.companyRepository.findById(id).catch((err) => {
       this.logger.error(err)
-    }) as CompanyResponseDto
+    })
 
     if(!company) throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND) 
-
-    return company
+    
+    return company as any
   }
 }

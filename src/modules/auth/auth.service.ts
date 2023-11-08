@@ -31,15 +31,21 @@ export class AuthService {
       where: {
         email: email
       }
-    })) as UserResponseDto
+    }))
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password)
 
       if (isPasswordValid) {
         return {
-          ...user,
-          password: undefined
+          id: user.id,
+          companyId: user.companyId,
+          name: user.name,
+          email: user.email,
+          isActive: user.isActive,
+          isLogged: user.isLogged,
+          permissions: undefined,
+          createdAt: user.createdAt.toISOString(),
         }
       }
     }

@@ -1,8 +1,6 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { UserContext } from '@src/modules/context/UserContext'
-import { Builder } from 'builder-pattern'
-import UserModel from '../User.model'
 import UserRepository from '../User.repository'
 import { UserUpdateDto } from '../dtos/UserUpdate.dto'
 
@@ -27,14 +25,7 @@ export default class UserUpdateService implements IUseCase<Input, void> {
         throw new HttpException(DONT_EXISTS, 400)
       }
 
-      const newUser = Builder<UserModel>()
-        .name(input.data.name)
-        .email(input.data.email)
-        .companyId(this.userContext.getUserContext().companyId)
-        .isLogged(false)
-        .build()
-
-      this.userRepository.update(input.id, newUser)
+      this.userRepository.update(input.id, input.data)
     } catch (err) {
       this.logger.error(err)
     }

@@ -8,6 +8,7 @@ export default class UserFindByIdService implements IUseCase<number, UserRespons
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: number): Promise<UserResponseDto> {
-    return (await this.userRepository.findById(input)) as UserResponseDto
+    //return (await this.userRepository.findById(input))
+    return
   }
 }

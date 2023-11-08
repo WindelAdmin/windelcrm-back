@@ -1,36 +1,50 @@
-import { IsArray, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { RegexEmail } from '@src/shared/types/Regex.type'
+import { IsArray, IsNotEmpty, IsString, Matches, MinLength, Validate } from 'class-validator'
+import { UserDtoErrorMessages } from './ErrorMessages.enum'
+import { UserSwaggerProperties } from './SwaggerProperties'
 
 export default class UserCreateDto {
-  @IsNumber()
+  @ApiProperty(UserSwaggerProperties.id)
+  @Validate((v) => {
+    if(typeof v !== 'number'){
+      return UserDtoErrorMessages.COMPANY_ID_IS_NUMBER 
+    }
+  })
   companyId: number
-  @IsEmail()
+  
+  @Matches(RegexEmail, { message: UserDtoErrorMessages.EMAIL_INVALID })
+  @ApiProperty(UserSwaggerProperties.email)
   email: string
 
   @IsString({
-    message: 'O campo senha precisa ser uma string.'
+    message: UserDtoErrorMessages.PASSWORD_IS_STRING
   })
   @MinLength(4, {
-    message: 'Senha muito curta.'
+    message: UserDtoErrorMessages.PASSWORD_IS_SHORT
   })
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Senha muito fraca.'
+    message: UserDtoErrorMessages.PASSWORD_TO_WEAK
   })
+  @IsNotEmpty({ message: UserDtoErrorMessages. PASSWORD_IS_NOT_EMPTY })
+  @ApiProperty(UserSwaggerProperties.password)
   password: string
 
-  @IsString()
+  @IsString(
+    {
+      message: UserDtoErrorMessages.NAME_IS_STRING
+    }
+  )
+  @IsNotEmpty({ message: UserDtoErrorMessages.NAME_IS_NOT_EMPTY })
+  @ApiProperty(UserSwaggerProperties.name)
   name: string
 
-  profilePhoto?: string
-
-  isLogged?: boolean
-
   @IsArray({
-    message: 'O campo userPermissions deve ser um array de id (number)',
+     message: UserDtoErrorMessages.PERMISSIONS_IS_INVALID
   })
-  userPermissions?: [number]
-
-  isActive?: boolean
-  lastAccess?: string
-  createAt?: string
-  updatedAt?: string
+  @IsNotEmpty({
+      message: UserDtoErrorMessages.PERMISSIONS_IS_NOT_EMPTY
+  })
+  @ApiProperty(UserSwaggerProperties.permissions)
+  permissions?: [number]
 }

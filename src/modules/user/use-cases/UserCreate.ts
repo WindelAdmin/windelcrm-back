@@ -1,13 +1,11 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { UserContext } from '@src/modules/context/UserContext'
+import { HttpUserMessages } from '@src/shared/http-messages/HttpUserMessages'
 import * as bcrypt from 'bcrypt'
 import { Builder } from 'builder-pattern'
-import UserModel from '../User.model'
 import UserRepository from '../User.repository'
 import UserCreateDto from '../dtos/UserCreate.dto'
-
-const EMAIL_ALREADY_EXISTS = 'E-mail já existe.'
 
 @Injectable()
 export default class UserCreateService implements IUseCase<UserCreateDto, void> {
@@ -20,27 +18,12 @@ export default class UserCreateService implements IUseCase<UserCreateDto, void> 
 
     const exist = await this.userRepository.findByEmail(input.email)
     if (exist) {
-      throw new HttpException(EMAIL_ALREADY_EXISTS, 400)
+      throw new HttpException(HttpUserMessages.EMAIL_ALREADY_EXISTS, 409)
     }
 
-    const newUser = Builder<UserModel>()
-      .name(data.name)
-      .email(data.email)
-      .password(await bcrypt.hash(data.password, 10))
-      .companyId(1)
-      .userPermissions({
-        createMany: {
-          data: data.userPermissions.map((permission) => {
-            return {
-              permissionId: permission,
-              companyId: this.userContext.getUserContext().companyId
-            }
-          })
-        }
-      })
-      .isLogged(false)
-      .build()
-
-    this.userRepository.create(newUser)
+    const newUser = Builder<UserCreateDto>(data)
+    .password(await bcrypt.hash(data.password, 10))
+    .build()
+    await this.userRepository.create(newUser)
   }
 }

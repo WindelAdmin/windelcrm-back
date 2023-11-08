@@ -10,5 +10,8 @@ export const CompanySwaggerProperties = {
   number: { example: '105 (ou S/N)', description: 'Número do endereço da empresa' },
   complement: { example: 'próximo ao hospital', description: 'Complemento do endereço da empresa (opcional)' },
   city: { example: 'Caxias do Sul', description: 'Cidade do endereço da empresa' },
-  uf: { example: 'RS', description: 'Unidade Federativa do endereço da empresa' }
+  uf: { example: 'RS', description: 'Unidade Federativa do endereço da empresa' },
+  isActive: { example: true, description: 'Status para ativar ou destivar a empresa do sistema' },
+  createdAt: { example: '2023-01-01', description: 'Data de criação da empresa' },
+  updatedAt: { example: '2023-01-02', description: 'Data de da última alteração da empresa' }
 }

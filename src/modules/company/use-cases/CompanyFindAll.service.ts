@@ -12,6 +12,6 @@ export default class CompanyFindAllService implements IUseCase<void, CompanyResp
   async execute(): Promise<CompanyResponseDto[]> {
     return (await this.companyRepository.findAll().catch((err) => {
       this.logger.error(err)
-    })) as CompanyResponseDto[]
+    })) as []
   }
 }

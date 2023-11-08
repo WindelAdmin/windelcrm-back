@@ -1,56 +1,39 @@
-import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString, Matches, MinLength } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { UserSwaggerProperties } from './SwaggerProperties'
 
 export class UserResponseDto {
-  @IsNumber()
-  id?: number
+  @ApiProperty(UserSwaggerProperties.id)
+  id: number
 
-  @IsNumber()
+  @ApiProperty(UserSwaggerProperties.id)
   companyId: number
 
-  /**
-   * O e-mail será usado como usuário para acesso ao sistema.
-   * @example jhon@email.com
-   */
-  @IsEmail()
+  @ApiProperty(UserSwaggerProperties.email)
   email: string
-
-  /**
-   * @example Hey@1234
-   */
-  @IsString({
-    message: 'O campo senha precisa ser uma string.'
-  })
-  @MinLength(4, {
-    message: 'Senha muito curta.'
-  })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Senha muito fraca.'
-  })
-  password: string
-
-  /**
-   * @example "Jhon Wick"
-   */
-  @IsString()
+  @ApiProperty(UserSwaggerProperties.name)
   name: string
 
-  @IsString()
+  @ApiProperty(UserSwaggerProperties.profilePhoto)
   profilePhoto?: string
 
-  @IsBoolean()
-  isLogged?: boolean
+  @ApiProperty(UserSwaggerProperties.isLogged)
+  isLogged: boolean
 
-  @IsArray({})
-  userPermissions?: any[]
+  @ApiProperty(UserSwaggerProperties.permissionsResponse)
+  permissions: {
+    id: number
+    description: string
+  }[]
 
-  isActive?: boolean
+  @ApiProperty(UserSwaggerProperties.isActive)
+  isActive: boolean
 
-  @IsDate()
-  lastAccess?: string | Date
+  @ApiProperty(UserSwaggerProperties.lastAccess)
+  lastAccess?: string
 
-  @IsDate()
-  createAt?: string | Date
+  @ApiProperty(UserSwaggerProperties.createdAt)
+  createdAt?: string
 
-  @IsDate()
-  updatedAt?: string | Date
+  @ApiProperty(UserSwaggerProperties.updatedAt)
+  updatedAt?: string
 }

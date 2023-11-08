@@ -1,30 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { CompanySwaggerProperties } from './SwaggerProperties'
 
 export default class CompanyResponseDto {
-  @ApiProperty({ example: 'Empresa Exemplo', description: 'Razão Social da Empresa' })
+  @ApiProperty(CompanySwaggerProperties.name)
   name: string
-  @ApiProperty({ example: 'Empresa Exemplo Fantasia', description: 'Nome fantasia da empresa' })
+  @ApiProperty(CompanySwaggerProperties.fantasyName)
   fantasyName: string
-  @ApiProperty({ example: '14258896000101', description: 'CPF ou CNPJ da empresa' })
+  @ApiProperty(CompanySwaggerProperties.cpfCnpj)
   cpfCnpj: string
-  @ApiProperty({ example: '99999999999', description: 'Número para contato da empresa' })
+  @ApiProperty(CompanySwaggerProperties.phone)
   phone?: string
-  @ApiProperty({ example: 'jhon@example.com', description: 'E-mail para contato da empresa' })
+  @ApiProperty(CompanySwaggerProperties.email)
   email: string
-  @ApiProperty({ example: '65765000', description: 'Cep do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.cep)
   cep: string
-  @ApiProperty({ example: 'Rua Jorge Fernandes', description: 'Rua do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.street)
   street: string
-  @ApiProperty({ example: '105 (ou S/N)', description: 'Número do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.number)
   number: string
-  @ApiProperty({ example: 'próximo ao hospital', description: 'Complemento do endereço da empresa (opcional)' })
+  @ApiProperty(CompanySwaggerProperties.complement)
   complement?: string
-  @ApiProperty({ example: 'Caxias do Sul', description: 'Cidade do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.city)
   city: string
-  @ApiProperty({ example: 'RS', description: 'Unidade Federativa do endereço da empresa' })
+  @ApiProperty(CompanySwaggerProperties.uf)
   uf: string
-  @ApiProperty({ example: '2023-05-01', description: 'Data de criação do registro' })
+  @ApiProperty(CompanySwaggerProperties.createdAt)
   createdAt: string
-  @ApiProperty({ example: '2023-05-01', description: 'Data de alteração do registro' })
+  @ApiProperty(CompanySwaggerProperties.updatedAt)
   updatedAt: string
 }

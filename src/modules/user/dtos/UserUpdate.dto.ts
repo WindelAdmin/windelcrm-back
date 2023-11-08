@@ -1,42 +1,21 @@
-import { IsArray, IsBoolean, IsDate, IsEmail, IsNumber, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsArray, IsOptional, IsString } from 'class-validator'
+import { UserDtoErrorMessages } from './ErrorMessages.enum'
+import { UserSwaggerProperties } from './SwaggerProperties'
 
 export class UserUpdateDto {
-  @IsNumber()
-  id: number
-  /**
-   * O e-mail será usado como usuário para acesso ao sistema.
-   * @example jhon@email.com
-   */
-  @IsEmail()
-  email: string
+  @IsString({ message: UserDtoErrorMessages.NAME_IS_STRING }
+  )
+  @IsOptional()
+  @ApiProperty(UserSwaggerProperties.name)
+  name?: string
 
-  /**
-   * @example "Jhon Wick"
-   */
-  @IsString()
-  name: string
+  @IsOptional()
+  @IsArray({ message: UserDtoErrorMessages.PERMISSIONS_IS_INVALID })
+  @ApiProperty(UserSwaggerProperties.permissions)
+  permissions?: [number]
 
-  @IsString()
-  profilePhoto?: string
-
-  @IsBoolean()
-  isLogged?: boolean
-
-  @IsArray({})
-  userPermissions?: [
-    {
-      id: number
-    }
-  ]
-
+  @IsOptional()
+  @ApiProperty(UserSwaggerProperties.isActive)
   isActive?: boolean
-
-  @IsDate()
-  lastAccess?: string | Date
-
-  @IsDate()
-  createAt?: string | Date
-
-  @IsDate()
-  updatedAt?: string | Date
 }

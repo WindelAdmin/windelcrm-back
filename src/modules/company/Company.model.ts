@@ -1,7 +1,7 @@
 
   import { Prisma } from '@prisma/client';
 
-  export default class CompanyModel implements Prisma.CompanyUncheckedCreateInput {
+  export default class CompanyModel {
     id?: number;
     name: string;
     fantasyName: string;
@@ -18,16 +18,6 @@
     createdAt?: string | Date;
     updatedAt?: string | Date;
     parentCompanyId?: number;
-    isReseller?: boolean;
+    type?: string;
     childCompanies?: Prisma.CompanyUncheckedCreateNestedManyWithoutParentCompanyInput;
-    users?: Prisma.UserUncheckedCreateNestedManyWithoutCompanyInput;
-    persons?: Prisma.PersonUncheckedCreateNestedManyWithoutCompanyInput;
-    deparments?: Prisma.DepartmentUncheckedCreateNestedManyWithoutCompanyInput;
-    roles?: Prisma.RoleUncheckedCreateNestedManyWithoutCompanyInput;
-    userPermissions?: Prisma.UserPermissionUncheckedCreateNestedManyWithoutCompanyInput;
-    personAddress?: Prisma.PersonAddressUncheckedCreateNestedManyWithoutCompanyInput;
-    employee?: Prisma.EmployeeUncheckedCreateNestedManyWithoutCompanyInput;
-    workSchedule?: Prisma.WorkScheduleUncheckedCreateNestedManyWithoutCompanyInput;
-    audit?: Prisma.AuditUncheckedCreateNestedManyWithoutCompanyInput;
-    
 }

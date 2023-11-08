@@ -8,6 +8,7 @@ export default class UserFindByEmailService implements IUseCase<string, UserResp
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: string): Promise<UserResponseDto> {
-    return (await this.userRepository.findByEmail(input)) as UserResponseDto
+    //return (await this.userRepository.findByEmail(input))
+    return
   }
 }
