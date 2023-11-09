@@ -92,7 +92,8 @@ export default class UserRepository extends AbstractRepository {
   async findById(id: number) {
     return await this.prismaService.user.findUnique({
       where: {
-        id
+        id,
+        companyId: this.userContext.getUserContext().companyId
       },
       include: {
         userPermissions: {

@@ -4,7 +4,7 @@ import { UserContext } from '@src/modules/context/UserContext'
 
 export default abstract class AbstractRepository {
   protected entityName: string
-  
+
   @Inject()
   protected readonly prismaService: PrismaService
 
@@ -16,6 +16,6 @@ export default abstract class AbstractRepository {
   }
 
   async validateExistById(id: number): Promise<boolean> {
-    return (await this.prismaService[this.entityName].findFirst({ where: { id } })) ? true : false
+    return (await this.prismaService[this.entityName].findFirst({ where: { id, companyId: this.userContext.getUserContext().companyId } })) ? true : false
   }
 }
