@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { ApiBody, ApiTags } from '@nestjs/swagger'
 import IController from '@src/interfaces/Controller.interface'
 import { BodyChecked } from '@src/shared/decorators/BodyChecked.decorator'
@@ -30,17 +30,17 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
 
   @Patch()
     @ApiBody({ type: UserUpdateDto })
-  async update(@Query('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
+  async update(@Param('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
     await this.userUpdateService.execute({ id, data })
   }
 
   @Delete(':id')
-  async delete(@Query('id') id: number): Promise<void> {
+  async delete(@Param('id') id: number): Promise<void> {
     await this.userDeleteService.execute(id)
   }
 
   @Get(':id')
-  async findById(@Query('id') id: number): Promise<UserResponseDto> {
+  async findById(@Param('id') id: number): Promise<UserResponseDto> {
     return await this.userFindByIdService.execute(id)
   }
 

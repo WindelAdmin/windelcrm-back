@@ -74,6 +74,13 @@ export default class UserRepository extends AbstractRepository{
     return await this.prismaService.user.findUnique({
       where: {
         id
+      },
+      include: {
+        userPermissions: {
+          include: {
+            permission: true
+          }
+        }
       }
     })
   }
@@ -103,6 +110,13 @@ export default class UserRepository extends AbstractRepository{
     return await this.prismaService.user.findUnique({
       where: {
         email
+      },
+      include: {
+        userPermissions: {
+          include: {
+            permission: true
+          }
+        }
       }
     })
   }

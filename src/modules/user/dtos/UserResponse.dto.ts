@@ -17,16 +17,16 @@ export class UserResponseDto {
   profilePhoto?: string
 
   @ApiProperty(UserSwaggerProperties.isLogged)
-  isLogged: boolean
+  isLogged?: boolean
 
   @ApiProperty(UserSwaggerProperties.permissionsResponse)
-  permissions: {
+  permissions?: {
     id: number
     description: string
   }[]
 
   @ApiProperty(UserSwaggerProperties.isActive)
-  isActive: boolean
+  isActive?: boolean
 
   @ApiProperty(UserSwaggerProperties.lastAccess)
   lastAccess?: string

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { ApiBody, ApiTags } from '@nestjs/swagger'
 import IController from '@src/interfaces/Controller.interface'
 import { BodyChecked } from '@src/shared/decorators/BodyChecked.decorator'
@@ -31,7 +31,7 @@ export default class CompanyController implements IController<CompanyCreateDto, 
 
   @Patch()
   @ApiBody({ type: CompanyUpdateDto })
-  async update(@Query('id') id: number, @Body() @BodyChecked() data: CompanyUpdateDto): Promise<void> {
+  async update(@Param('id') id: number, @Body() @BodyChecked() data: CompanyUpdateDto): Promise<void> {
     await this.companyUpdateService.execute({ id, data })
   }
 
@@ -42,11 +42,13 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   }
 
   @Get()
+  @ApiBody({ isArray: true, type: CompanyResponseDto })
   async findAll(): Promise<CompanyResponseDto[]> {
     return await this.companyFindAllService.execute()
   }
 
   @Get(':id')
+  @ApiBody({ type: CompanyResponseDto })
   async findById(@Param('id') id: number): Promise<CompanyResponseDto> {
     return await this.companyFindByIdService.execute(+id)
   }

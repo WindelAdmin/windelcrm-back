@@ -19,7 +19,7 @@ export default class CompanyResponseDto {
   @ApiProperty(CompanySwaggerProperties.number)
   number: string
   @ApiProperty(CompanySwaggerProperties.complement)
-  complement?: string
+  complement: string
   @ApiProperty(CompanySwaggerProperties.city)
   city: string
   @ApiProperty(CompanySwaggerProperties.uf)

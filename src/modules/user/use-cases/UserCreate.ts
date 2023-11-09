@@ -1,9 +1,8 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { UserContext } from '@src/modules/context/UserContext'
 import { HttpUserMessages } from '@src/shared/http-messages/HttpUserMessages'
 import * as bcrypt from 'bcrypt'
-import { Builder } from 'builder-pattern'
 import UserRepository from '../User.repository'
 import UserCreateDto from '../dtos/UserCreate.dto'
 
@@ -21,9 +20,12 @@ export default class UserCreateService implements IUseCase<UserCreateDto, void> 
       throw new HttpException(HttpUserMessages.EMAIL_ALREADY_EXISTS, 409)
     }
 
-    const newUser = Builder<UserCreateDto>(data)
-    .password(await bcrypt.hash(data.password, 10))
-    .build()
-    await this.userRepository.create(newUser)
+    try {
+      data.password = await bcrypt.hash(data.password, 10)
+      await this.userRepository.create(data)
+    } catch (err) {
+      this.logger.error(err)
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 }

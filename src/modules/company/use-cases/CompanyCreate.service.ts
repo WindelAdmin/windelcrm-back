@@ -14,7 +14,7 @@ export default class CompanyCreateService implements IUseCase<CompanyCreateDto, 
 
   async execute(input: CompanyCreateDto): Promise<void> {
     const model = Builder<CompanyModel>(input).isActive(false).build()
-    
+
     if (await this.companyRepository.validateExistName(model.name)) {
       throw new HttpException(HttpCompanyMessages.NAME_ALREADY_EXISTS, HttpStatus.CONFLICT)
     }
@@ -31,8 +31,11 @@ export default class CompanyCreateService implements IUseCase<CompanyCreateDto, 
       throw new HttpException(HttpCompanyMessages.PHONE_ALREADY_EXISTS, HttpStatus.CONFLICT)
     }
 
-    await this.companyRepository.create(model).catch((err) => {
+    try {
+      await this.companyRepository.create(model)
+    } catch (err) {
       this.logger.error(err)
-    })
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 }

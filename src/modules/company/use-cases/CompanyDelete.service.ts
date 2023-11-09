@@ -14,8 +14,11 @@ export default class CompanyDeleteService implements IUseCase<number, void> {
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
-    await this.companyRepository.delete(id).catch((err) => {
+     try {
+       await this.companyRepository.delete(id)
+    } catch (err) {
       this.logger.error(err)
-    })
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 }
