@@ -6,14 +6,33 @@ import UserCreateDto from './dtos/UserCreate.dto'
 import { UserUpdateDto } from './dtos/UserUpdate.dto'
 
 @Injectable()
-export default class UserRepository extends AbstractRepository{
-  constructor(){
+export default class UserRepository extends AbstractRepository {
+  constructor() {
     super(Prisma.ModelName.User)
   }
 
   async create(data: UserCreateDto): Promise<void> {
     await this.prismaService.user.create({
-      data
+      data: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        userPermissions: {
+          createMany: {
+            data: data.permissions.map((p) => {
+              return {
+                permissionId: p,
+                companyId: data.companyId
+              }
+            })
+          }
+        },
+        company: {
+          connect: {
+            id: data.companyId
+          }
+        }
+      }
     })
 
     const uCxt = this.userContext.getUserContext()
@@ -50,7 +69,7 @@ export default class UserRepository extends AbstractRepository{
   }
 
   async delete(id: number): Promise<void> {
-    const beforeData = await this.prismaService.user.findUnique({ where: {id} })
+    const beforeData = await this.prismaService.user.findUnique({ where: { id } })
 
     await this.prismaService.user.delete({
       where: {
@@ -70,7 +89,7 @@ export default class UserRepository extends AbstractRepository{
     })
   }
 
-  async findById(id: number){
+  async findById(id: number) {
     return await this.prismaService.user.findUnique({
       where: {
         id
@@ -85,7 +104,7 @@ export default class UserRepository extends AbstractRepository{
     })
   }
 
-  async findAll(){
+  async findAll() {
     const users = await this.prismaService.user.findMany({
       where: {
         companyId: this.userContext.getUserContext().companyId
@@ -106,7 +125,7 @@ export default class UserRepository extends AbstractRepository{
       }
     })
   }
-  async findByEmail(email: string){
+  async findByEmail(email: string) {
     return await this.prismaService.user.findUnique({
       where: {
         email

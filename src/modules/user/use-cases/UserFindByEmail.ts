@@ -18,7 +18,7 @@ export default class UserFindByEmailService implements IUseCase<string, UserResp
         ...user,
         lastAccess: user.lastAccess?.toISOString(),
         createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt.toISOString(),
+        updatedAt: user.updatedAt?.toISOString(),
         permissions: user.userPermissions.map((uP) => uP.permission)
       }
     } catch (err) {

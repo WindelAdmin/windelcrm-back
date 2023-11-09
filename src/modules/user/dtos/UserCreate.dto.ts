@@ -11,6 +11,7 @@ export default class UserCreateDto {
       return UserDtoErrorMessages.COMPANY_ID_IS_NUMBER 
     }
   })
+  @IsNotEmpty({message: UserDtoErrorMessages.COMPANY_ID_IS_NOT_EMPTY})
   companyId: number
   
   @Matches(RegexEmail, { message: UserDtoErrorMessages.EMAIL_INVALID })

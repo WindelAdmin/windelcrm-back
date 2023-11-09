@@ -1,5 +1,6 @@
 export enum UserDtoErrorMessages {
   ID_IS_NOT_EMPTY = 'Campo id é obrigatório.',
+  COMPANY_ID_IS_NOT_EMPTY = 'Campo companyId é obrigatório.',
   COMPANY_ID_IS_NUMBER = 'Campo companyId precisa ser um number.',
   NAME_IS_STRING = 'Campo name precisa ser uma string.',
   NAME_IS_NOT_EMPTY = 'Campo name é obrigatório.',

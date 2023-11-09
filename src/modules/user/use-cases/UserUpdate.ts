@@ -1,10 +1,9 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { UserContext } from '@src/modules/context/UserContext'
+import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
 import UserRepository from '../User.repository'
 import { UserUpdateDto } from '../dtos/UserUpdate.dto'
-
-const DONT_EXISTS = 'Usuário não existe.'
 
 interface Input {
   id: number
@@ -18,10 +17,8 @@ export default class UserUpdateService implements IUseCase<Input, void> {
   constructor(private readonly userRepository: UserRepository, private readonly userContext: UserContext) {}
 
   async execute(input: Input): Promise<void> {
-    const exist = await this.userRepository.findById(input.id)
-
-    if (!exist) {
-      throw new HttpException(DONT_EXISTS, 400)
+    if (!(await this.userRepository.validateExistById(input.id))) {
+      throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
     try {
