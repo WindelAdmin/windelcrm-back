@@ -1,11 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsArray, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 import { UserDtoErrorMessages } from './ErrorMessages.enum'
 import { UserSwaggerProperties } from './SwaggerProperties'
 
 export class UserUpdateDto {
-  @IsString({ message: UserDtoErrorMessages.NAME_IS_STRING }
-  )
+  @IsNotEmpty({ message: UserDtoErrorMessages.COMPANY_ID_IS_NOT_EMPTY })
+  @IsNumber({ message: UserDtoErrorMessages.COMPANY_ID_IS_NUMBER })
+  companyId: number
+
+  @IsString({ message: UserDtoErrorMessages.NAME_IS_STRING })
   @IsOptional()
   @ApiProperty(UserSwaggerProperties.name)
   name?: string

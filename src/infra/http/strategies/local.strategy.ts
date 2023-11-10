@@ -11,7 +11,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super({ usernameField: 'email' })
   }
 
-  validate(email: string, password: string): Promise<UserResponseDto> {
-    return this.authService.validateUser(email, password)
+  validate(email: string, password: string, companyId?: number): Promise<UserResponseDto> {
+    return this.authService.validateUser(email, password, companyId)
   }
 }

@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { UserContext } from '@src/modules/context/UserContext'
 import { HttpUserMessages } from '@src/shared/http-messages/HttpUserMessages'
-import * as bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt'
 import UserRepository from '../User.repository'
 import UserCreateDto from '../dtos/UserCreate.dto'
 

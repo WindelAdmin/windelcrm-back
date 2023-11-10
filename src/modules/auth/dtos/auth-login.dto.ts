@@ -9,4 +9,7 @@ export class AuthLoginDto {
 
   @ApiProperty({ example: 'senha123', description: 'Senha do usuário' })
   password: string
+
+  @ApiProperty({ example: 1, description: 'Sub-Empresa que o usuário quer se conectar' })
+  companyId?: string
 }

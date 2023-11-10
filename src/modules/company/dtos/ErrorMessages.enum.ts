@@ -12,6 +12,8 @@ export enum CompanyDtoErrorMessages {
   CPF_CNPJ_IS_NOT_EMPTY = 'Campo cpfCnpj é obrigatório.',
   CPF_CNPJ_INVALID = 'Campo cpfCnpj inválido.',
   CNPJ_IS_STRING = 'Campo cnpj precisa ser uma string.',
+  TYPE_IS_NOT_EMPTY = 'Campo type é obrigatório.',
+  TYPE_IS_INVALID = 'Campo type precisa ser M, F ou R.',
   ADDRESS_CEP_IS_NOT_EMPTY = 'Campo cep é obrigatório.',
   ADDRESS_CEP_IS_STRING = 'Campo cep precisa ser uma string.',
   ADDRESS_CEP_IS_STRING_NUMBER = 'Campo cep deve conter apenas números.',

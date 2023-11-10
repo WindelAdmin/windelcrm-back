@@ -1,12 +1,11 @@
 
-  import { Prisma } from '@prisma/client';
-
+  
   export default class CompanyModel {
     id?: number;
     name: string;
     fantasyName: string;
     cpfCnpj: string;
-    phone?: string;
+    phone: string;
     email: string;
     cep: string;
     street: string;
@@ -18,6 +17,5 @@
     createdAt?: string | Date;
     updatedAt?: string | Date;
     parentCompanyId?: number;
-    type?: string;
-    childCompanies?: Prisma.CompanyUncheckedCreateNestedManyWithoutParentCompanyInput;
+    type: string;
 }

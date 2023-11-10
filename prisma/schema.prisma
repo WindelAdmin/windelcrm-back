@@ -16,7 +16,7 @@ model Company {
   name            String           @unique
   fantasyName     String
   cpfCnpj         String           @unique
-  phone           String?          @unique
+  phone           String           @unique
   email           String           @unique
   cep             String
   street          String
@@ -25,13 +25,12 @@ model Company {
   city            String
   uf              String
   type            String
-  isActive        Boolean?
-  createdAt       DateTime?        @default(now()) @db.Timestamptz(3)
+  isActive        Boolean?         @default(true)
+  createdAt       DateTime         @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime?        @db.Timestamptz(3)
   parentCompanyId Int?             @map("parentCompany")
   parentCompany   Company?         @relation("ChildCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
   childCompanies  Company[]        @relation("ChildCompanies")
-  isReseller      Boolean?         @default(false)
   users           User[]
   persons         Person[]
   deparments      Department[]
@@ -41,6 +40,7 @@ model Company {
   employee        Employee[]
   workSchedule    WorkSchedule[]
   audit           Audit[]
+  UserCompany     UserCompany[]
 
   @@map("company")
 }
@@ -49,6 +49,7 @@ model User {
   id              Int              @id @default(autoincrement())
   companyId       Int?
   company         Company?         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  subcompanies    UserCompany[]
   email           String           @unique
   password        String
   name            String
@@ -71,10 +72,22 @@ model Permission {
   type            String
   isActive        Boolean
   userPermissions UserPermission[]
+  roles           RolePermission[]
   createdAt       DateTime         @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime?        @db.Timestamptz(3)
 
   @@map("permission")
+}
+
+model UserCompany {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  companyId Int
+  user      User     @relation(fields: [userId], references: [id])
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@map("user_company")
 }
 
 model UserPermission {
@@ -86,7 +99,6 @@ model UserPermission {
   permissionId Int
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now()) @db.Timestamptz(3)
-  updatedAt    DateTime?  @db.Timestamptz(3)
 
   @@map("user_permission")
 }
@@ -106,6 +118,26 @@ model Person {
   updatedAt     DateTime?       @db.Timestamptz(3)
 
   @@map("person")
+}
+
+model PersonAddress {
+  id            Int       @id @default(autoincrement())
+  companyId     Int
+  company       Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  cep           String?
+  street        String
+  number        String?   @default("S/N")
+  district      String?
+  city          String
+  uf            String
+  isResidential Boolean?  @default(true)
+  isMain        Boolean?  @default(true)
+  personId      Int       @unique
+  person        Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime? @db.Timestamptz(3)
+
+  @@map("person_address")
 }
 
 model Employee {
@@ -159,37 +191,26 @@ model Department {
 }
 
 model Role {
-  id           Int        @id @default(autoincrement())
-  companyId    Int
-  company      Company?   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  description  String
-  departmentId Int        @unique
-  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  employee     Employee[]
-  createdAt    DateTime   @default(now()) @db.Timestamptz(3)
-  updatedAt    DateTime?  @db.Timestamptz(3)
+  id              Int              @id @default(autoincrement())
+  companyId       Int
+  company         Company?         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  description     String
+  departmentId    Int              @unique
+  department      Department       @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  employee        Employee[]
+  rolePermissions RolePermission[]
+  createdAt       DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime?        @db.Timestamptz(3)
 
   @@map("role")
 }
 
-model PersonAddress {
-  id            Int       @id @default(autoincrement())
-  companyId     Int
-  company       Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  cep           String?
-  street        String?
-  number        String?   @default("S/N")
-  district      String?
-  city          String
-  uf            String
-  isResidential Boolean?  @default(true)
-  isMain        Boolean?  @default(true)
-  personId      Int       @unique
-  person        Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
-  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
-  updatedAt     DateTime? @db.Timestamptz(3)
-
-  @@map("person_address")
+model RolePermission {
+  id           Int         @id @default(autoincrement())
+  role         Role?       @relation(fields: [roleId], references: [id])
+  roleId       Int
+  permissionId Int
+  permissions  Permission? @relation(fields: [permissionId], references: [id])
 }
 
 model Audit {
