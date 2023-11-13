@@ -15,7 +15,21 @@ export default abstract class AbstractRepository {
     this.entityName = e.charAt(0).toLowerCase() + e.slice(1)
   }
 
-  async validateExistById(id: number): Promise<boolean> {
+  async createAudit(before: any, after: any) {
+    const uCxt = this.userContext.getUserContext()
+
+    this.prismaService.audit.create({
+      data: {
+        userId: uCxt.id,
+        userEmail: uCxt.email,
+        companyId: uCxt.companyId,
+        before: before,
+        after: after
+      }
+    })
+  }
+
+  async validateExistId(id: number): Promise<boolean> {
     return (await this.prismaService[this.entityName].findFirst({ where: { id, companyId: this.userContext.getUserContext().companyId } })) ? true : false
   }
 }

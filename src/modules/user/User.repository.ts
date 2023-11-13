@@ -12,7 +12,9 @@ export default class UserRepository extends AbstractRepository {
   }
 
   async create(data: UserCreateDto): Promise<void> {
-    await this.prismaService.user.create({
+    const uCxt = this.userContext.getUserContext()
+
+    const user = await this.prismaService.user.create({
       data: {
         name: data.name,
         email: data.email,
@@ -22,71 +24,51 @@ export default class UserRepository extends AbstractRepository {
             data: data.permissions.map((p) => {
               return {
                 permissionId: p,
-                companyId: data.companyId
+                companyId: uCxt.companyId
               }
             })
           }
         },
         company: {
           connect: {
-            id: data.companyId
+            id: uCxt.companyId
           }
         }
       }
     })
 
-    const uCxt = this.userContext.getUserContext()
-    this.prismaService.audit.create({
-      data: {
-        userId: uCxt.id,
-        userEmail: uCxt.email,
-        companyId: uCxt.companyId,
-        after: data as any
-      }
-    })
+    await this.createAudit(null, { ...user, password: undefined })
   }
 
   async update(id: number, data: UserUpdateDto): Promise<void> {
+    const uCxt = this.userContext.getUserContext()
+
     const beforeData = await this.prismaService.user.findUnique({ where: { id } })
 
-    await this.prismaService.user.update({
+    const user = await this.prismaService.user.update({
       where: {
-        id: id
+        id: id,
+        companyId: uCxt.companyId
       },
       data: { ...data, updatedAt: now() }
     })
 
-    const uCxt = this.userContext.getUserContext()
-    this.prismaService.audit.create({
-      data: {
-        userId: uCxt.id,
-        userEmail: uCxt.email,
-        companyId: uCxt.companyId,
-        after: data as any,
-        before: beforeData
-      }
-    })
+    await this.createAudit({ ...beforeData, password: undefined }, { ...user, password: undefined })
   }
 
   async delete(id: number): Promise<void> {
+    const uCxt = this.userContext.getUserContext()
+
     const beforeData = await this.prismaService.user.findUnique({ where: { id } })
 
     await this.prismaService.user.delete({
       where: {
-        id
+        id,
+        companyId: uCxt.companyId
       }
     })
 
-    const uCxt = this.userContext.getUserContext()
-    this.prismaService.audit.create({
-      data: {
-        userId: uCxt.id,
-        userEmail: uCxt.email,
-        companyId: uCxt.companyId,
-        after: null,
-        before: beforeData
-      }
-    })
+    await this.createAudit({ ...beforeData, password: undefined }, null)
   }
 
   async findById(id: number) {
@@ -139,5 +121,15 @@ export default class UserRepository extends AbstractRepository {
         }
       }
     })
+  }
+
+  async validateExistEmail(email: string): Promise<Boolean> {
+    return (await this.prismaService.user.findFirst({
+      where: {
+        email
+      }
+    }))
+      ? true
+      : false
   }
 }

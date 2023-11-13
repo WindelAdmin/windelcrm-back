@@ -12,13 +12,7 @@ export default class UserFindAllService implements IUseCase<void, UserResponseDt
   async execute(): Promise<UserResponseDto[]> {
     try {
       const users = await this.userRepository.findAll()
-
-      return users.map((u) => ({
-        ...u,
-        lastAccess: u.lastAccess?.toISOString(),
-        createdAt: u.createdAt.toISOString(),
-        updatedAt: u.updatedAt?.toISOString()
-      }))
+      return users
     } catch (err) {
       this.logger.error(err)
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)

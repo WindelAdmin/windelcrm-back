@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 
-import { PrismaService } from '@src/infra/persistence/Prisma.service'
-import { UnauthorizedError } from '@src/shared/errors/unauthorized.error'
 import * as bcrypt from 'bcrypt'
-import { UserResponseDto } from '../user/dtos/UserResponse.dto'
+import { PrismaService } from 'src/infra/persistence/Prisma.service'
 import { AuthUserDto } from './dtos/auth-request.dto'
 import { UserPayloadDto } from './dtos/user-payload.dto'
 import { UserTokenDto } from './dtos/user-token.dto'
@@ -26,12 +24,12 @@ export class AuthService {
     }
   }
 
-  async validateUser(email: string, password: string, companyId?: number): Promise<UserResponseDto> {
-    const user = (await this.prismaService.user.findUnique({
+  async validateUser(email: string, password: string) {
+    const user = await this.prismaService.user.findUnique({
       where: {
         email: email
       }
-    }))
+    })
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password)
@@ -39,17 +37,12 @@ export class AuthService {
       if (isPasswordValid) {
         return {
           id: user.id,
-          companyId: !companyId ? user.companyId : companyId,
-          name: user.name,
-          email: user.email,
-          isActive: user.isActive,
-          isLogged: user.isLogged,
-          permissions: undefined,
-          createdAt: user.createdAt.toISOString(),
+          companyId: user.companyId,
+          email: user.email
         }
       }
     }
 
-    throw new UnauthorizedError('Email address or password provided is incorrect.')
+    throw new HttpException('Email ou senhas incorreto(s).', HttpStatus.UNAUTHORIZED)
   }
 }

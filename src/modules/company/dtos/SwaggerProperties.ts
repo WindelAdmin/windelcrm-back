@@ -11,6 +11,7 @@ export const CompanySwaggerProperties = {
   complement: { example: 'próximo ao hospital', description: 'Complemento do endereço da empresa (opcional)' },
   city: { example: 'Caxias do Sul', description: 'Cidade do endereço da empresa' },
   uf: { example: 'RS', description: 'Unidade Federativa do endereço da empresa' },
+  type: { example: 'M', description: 'Tipo de empresa: Matriz, Filial ou Revenda.' },
   isActive: { example: true, description: 'Status para ativar ou destivar a empresa do sistema' },
   createdAt: { example: '2023-01-01', description: 'Data de criação da empresa' },
   updatedAt: { example: '2023-01-02', description: 'Data de da última alteração da empresa' }

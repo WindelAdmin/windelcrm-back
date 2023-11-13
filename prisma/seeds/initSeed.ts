@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function seedUser() {
@@ -28,11 +28,11 @@ async function seedUser() {
     isActive: true
   }
 
-
   const userData = {
     name: 'Master',
     email: 'master@outlook.com',
-    password: await bcrypt.hash('1q2w3e4r', 10)
+    password: await bcrypt.hash('1q2w3e4r', 10),
+    companyId: 1
   }
 
   await prisma.company.create({

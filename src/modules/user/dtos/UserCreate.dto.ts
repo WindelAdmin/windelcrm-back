@@ -7,12 +7,10 @@ import { UserSwaggerProperties } from './SwaggerProperties'
 export default class UserCreateDto {
   @ApiProperty(UserSwaggerProperties.id)
   @Validate((v) => {
-    if(typeof v !== 'number'){
-      return UserDtoErrorMessages.COMPANY_ID_IS_NUMBER 
+    if (typeof v !== 'number') {
+      return UserDtoErrorMessages.COMPANY_ID_IS_NUMBER
     }
   })
-  @IsNotEmpty({message: UserDtoErrorMessages.COMPANY_ID_IS_NOT_EMPTY})
-  companyId: number
   
   @Matches(RegexEmail, { message: UserDtoErrorMessages.EMAIL_INVALID })
   @ApiProperty(UserSwaggerProperties.email)
@@ -27,24 +25,22 @@ export default class UserCreateDto {
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message: UserDtoErrorMessages.PASSWORD_TO_WEAK
   })
-  @IsNotEmpty({ message: UserDtoErrorMessages. PASSWORD_IS_NOT_EMPTY })
+  @IsNotEmpty({ message: UserDtoErrorMessages.PASSWORD_IS_NOT_EMPTY })
   @ApiProperty(UserSwaggerProperties.password)
   password: string
 
-  @IsString(
-    {
-      message: UserDtoErrorMessages.NAME_IS_STRING
-    }
-  )
+  @IsString({
+    message: UserDtoErrorMessages.NAME_IS_STRING
+  })
   @IsNotEmpty({ message: UserDtoErrorMessages.NAME_IS_NOT_EMPTY })
   @ApiProperty(UserSwaggerProperties.name)
   name: string
 
   @IsArray({
-     message: UserDtoErrorMessages.PERMISSIONS_IS_INVALID
+    message: UserDtoErrorMessages.PERMISSIONS_IS_INVALID
   })
   @IsNotEmpty({
-      message: UserDtoErrorMessages.PERMISSIONS_IS_NOT_EMPTY
+    message: UserDtoErrorMessages.PERMISSIONS_IS_NOT_EMPTY
   })
   @ApiProperty(UserSwaggerProperties.permissions)
   permissions?: [number]

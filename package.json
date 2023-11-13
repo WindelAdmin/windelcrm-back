@@ -24,7 +24,7 @@
     "psm-mig": "npx prisma migrate -dev",
     "psm-gen": "npx prisma generate",
     "psm-update": "npx prisma migrate dev & npx prisma generate",
-    "psm-seeds": "node prisma/seeds/init.ts"
+    "psm-seed": "ts-node prisma/seeds/initSeed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsString } from 'class-validator'
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class LoginRequestBodyDto {
   @IsEmail()
@@ -8,5 +8,6 @@ export class LoginRequestBodyDto {
   password: string
 
   @IsNumber()
+  @IsOptional()
   companyId?: number
 }

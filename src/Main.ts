@@ -1,11 +1,11 @@
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AppModule as AppCore } from '@src/App.module'
 import * as moment from 'moment-timezone'
-import { AppModule } from './App.module'
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppCore)
   moment.tz.setDefault('America/Sao_Paulo')
 
   app.useGlobalPipes(

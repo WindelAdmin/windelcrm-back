@@ -211,6 +211,8 @@ model RolePermission {
   roleId       Int
   permissionId Int
   permissions  Permission? @relation(fields: [permissionId], references: [id])
+
+  @@map("role_permission")
 }
 
 model Audit {

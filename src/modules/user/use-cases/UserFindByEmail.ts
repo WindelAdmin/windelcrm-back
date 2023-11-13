@@ -5,20 +5,15 @@ import { UserResponseDto } from '../dtos/UserResponse.dto'
 
 @Injectable()
 export default class UserFindByEmailService implements IUseCase<string, UserResponseDto> {
-
-    private logger = new Logger(UserFindByEmailService.name)
-
+  private logger = new Logger(UserFindByEmailService.name)
 
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: string): Promise<UserResponseDto> {
-     try {
+    try {
       const user = await this.userRepository.findByEmail(input)
       return {
         ...user,
-        lastAccess: user.lastAccess?.toISOString(),
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt?.toISOString(),
         permissions: user.userPermissions.map((uP) => uP.permission)
       }
     } catch (err) {

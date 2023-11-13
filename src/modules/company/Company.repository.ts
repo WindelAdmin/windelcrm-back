@@ -12,41 +12,24 @@ export default class CompanyRepository extends AbstractRepository {
   }
 
   async create(data: CompanyCreateDto): Promise<void> {
-    await this.prismaService.company.create({
+    const companyCreated = await this.prismaService.company.create({
       data
     })
 
-    const uCxt = this.userContext.getUserContext()
-    this.prismaService.audit.create({
-      data: {
-        userId: uCxt.id,
-        userEmail: uCxt.email,
-        companyId: uCxt.companyId,
-        after: data as any
-      }
-    })
+    await this.createAudit(null, companyCreated)
   }
 
   async update(id: number, data: CompanyUpdateDto): Promise<void> {
     const beforeData = await this.prismaService.company.findUnique({ where: { id } })
 
-    await this.prismaService.user.update({
+    const companyUpdated = await this.prismaService.user.update({
       where: {
         id: id
       },
       data: { ...data, updatedAt: now() }
     })
 
-    const uCxt = this.userContext.getUserContext()
-    this.prismaService.audit.create({
-      data: {
-        userId: uCxt.id,
-        userEmail: uCxt.email,
-        companyId: uCxt.companyId,
-        after: data as any,
-        before: beforeData
-      }
-    })
+    await this.createAudit(beforeData, companyUpdated)
   }
 
   async delete(id: number): Promise<void> {
@@ -58,16 +41,7 @@ export default class CompanyRepository extends AbstractRepository {
       }
     })
 
-    const uCxt = this.userContext.getUserContext()
-    this.prismaService.audit.create({
-      data: {
-        userId: uCxt.id,
-        userEmail: uCxt.email,
-        companyId: uCxt.companyId,
-        after: null,
-        before: beforeData
-      }
-    })
+    await this.createAudit(beforeData, null)
   }
 
   async findById(id: number) {

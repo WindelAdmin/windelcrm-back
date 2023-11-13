@@ -1,30 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { RegexCpfCnpj, RegexEmail, RegexPhone, RegexStringNumber } from '@src/shared/types/Regex.type'
-import { IsDefined, IsOptional, IsString, Length, Matches } from 'class-validator'
+import { RegexEmail, RegexPhone, RegexStringNumber } from '@src/shared/types/Regex.type'
+import { IsIn, IsNotEmpty, IsOptional, IsString, Length, Matches } from 'class-validator'
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum'
 import { CompanySwaggerProperties } from './SwaggerProperties'
 
-
 export default class CompanyUpdateDto {
-  @IsOptional()
-  @IsString({ message: CompanyDtoErrorMessages.NAME_IS_STRING })
-  @ApiProperty(CompanySwaggerProperties.name)
-  name?: string
-
-  @IsOptional()
-  @IsString({ message: CompanyDtoErrorMessages.FANTASY_NAME_IS_STRING })
-  @ApiProperty(CompanySwaggerProperties.fantasyName)
-   @IsDefined()
-  fantasyName?: string
-
-  @IsOptional()
-  @IsString()
-  @Matches(RegexCpfCnpj, {
-    message: CompanyDtoErrorMessages.CPF_CNPJ_INVALID
-  })
-  @ApiProperty(CompanySwaggerProperties.cpfCnpj)
-  cpfCnpj?: string
-
   @IsOptional()
   @IsString({ message: CompanyDtoErrorMessages.PHONE_IS_STRING })
   @Matches(RegexPhone, { message: CompanyDtoErrorMessages.PHONE_INVALID })
@@ -68,4 +48,10 @@ export default class CompanyUpdateDto {
   @Length(2, 2, { message: CompanyDtoErrorMessages.ADDRESS_UF_MIN_MAX_LENGTH })
   @ApiProperty(CompanySwaggerProperties.uf)
   uf?: string
+
+  @IsNotEmpty({ message: CompanyDtoErrorMessages.TYPE_IS_NOT_EMPTY })
+  @Length(1)
+  @IsIn(['M', 'F', 'R'], { message: CompanyDtoErrorMessages.TYPE_IS_INVALID })
+  @ApiProperty(CompanySwaggerProperties.type)
+  type: string
 }

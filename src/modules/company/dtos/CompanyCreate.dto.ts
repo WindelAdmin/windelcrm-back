@@ -72,5 +72,6 @@ export default class CompanyCreateDto {
   @IsNotEmpty({ message: CompanyDtoErrorMessages.TYPE_IS_NOT_EMPTY })
   @Length(1)
   @IsIn(['M', 'F', 'R'], { message: CompanyDtoErrorMessages.TYPE_IS_INVALID })
+  @ApiProperty(CompanySwaggerProperties.type)
   type: string
 }

@@ -11,8 +11,7 @@ export default class UserFindByIdService implements IUseCase<number, UserRespons
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(id: number): Promise<UserResponseDto> {
-
-    if (!(await this.userRepository.validateExistById(id))) {
+    if (!(await this.userRepository.validateExistId(id))) {
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
@@ -20,9 +19,6 @@ export default class UserFindByIdService implements IUseCase<number, UserRespons
       const user = await this.userRepository.findById(id)
       return {
         ...user,
-        lastAccess: user.lastAccess?.toISOString(),
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt?.toISOString(),
         permissions: user.userPermissions.map((uP) => uP.permission)
       }
     } catch (err) {

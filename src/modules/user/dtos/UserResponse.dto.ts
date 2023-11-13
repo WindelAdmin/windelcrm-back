@@ -11,7 +11,7 @@ export class UserResponseDto {
   @ApiProperty(UserSwaggerProperties.email)
   email: string
   @ApiProperty(UserSwaggerProperties.name)
-  name: string
+  name?: string
 
   @ApiProperty(UserSwaggerProperties.profilePhoto)
   profilePhoto?: string
@@ -29,11 +29,11 @@ export class UserResponseDto {
   isActive?: boolean
 
   @ApiProperty(UserSwaggerProperties.lastAccess)
-  lastAccess?: string
+  lastAccess?: string | Date
 
   @ApiProperty(UserSwaggerProperties.createdAt)
-  createdAt?: string
+  createdAt?: string | Date
 
   @ApiProperty(UserSwaggerProperties.updatedAt)
-  updatedAt?: string
+  updatedAt?: string | Date
 }

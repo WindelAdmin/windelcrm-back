@@ -17,7 +17,7 @@ export default class UserUpdateService implements IUseCase<Input, void> {
   constructor(private readonly userRepository: UserRepository, private readonly userContext: UserContext) {}
 
   async execute(input: Input): Promise<void> {
-    if (!(await this.userRepository.validateExistById(input.id))) {
+    if (!(await this.userRepository.validateExistId(input.id))) {
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 

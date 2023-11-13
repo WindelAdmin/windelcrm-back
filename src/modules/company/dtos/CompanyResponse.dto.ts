@@ -24,6 +24,8 @@ export default class CompanyResponseDto {
   city: string
   @ApiProperty(CompanySwaggerProperties.uf)
   uf: string
+  @ApiProperty(CompanySwaggerProperties.type)
+  type: string
   @ApiProperty(CompanySwaggerProperties.createdAt)
   createdAt: string
   @ApiProperty(CompanySwaggerProperties.updatedAt)

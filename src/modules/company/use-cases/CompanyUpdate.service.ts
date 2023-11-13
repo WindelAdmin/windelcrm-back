@@ -2,8 +2,6 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessages'
 import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
-import { Builder } from 'builder-pattern'
-import CompanyModel from '../Company.model'
 import CompanyRepository from '../Company.repository'
 import CompanyUpdateDto from '../dtos/CompanyUpdate.dto'
 
@@ -18,30 +16,20 @@ export default class CompanyUpdateService implements IUseCase<Input, void> {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
   async execute(input: Input): Promise<void> {
-    const model = Builder<CompanyModel>(input.data).build()
-
-    if (!(await this.companyRepository.validateExistById(input.id))) {
+    if (!(await this.companyRepository.validateExistId(input.id))) {
       throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
     }
 
-    if (model.name && (await this.companyRepository.validateExistName(model.name))) {
-      throw new HttpException(HttpCompanyMessages.NAME_DUPLICATED, HttpStatus.CONFLICT)
-    }
-
-    if (model.cpfCnpj && (await this.companyRepository.validateExistCfpCnpj(model.cpfCnpj))) {
-      throw new HttpException(HttpCompanyMessages.CPF_CNPJ_DUPLICATED, HttpStatus.CONFLICT)
-    }
-
-    if (model.email && (await this.companyRepository.validateExistEmail(model.email))) {
+    if (input.data.email && (await this.companyRepository.validateExistEmail(input.data.email))) {
       throw new HttpException(HttpCompanyMessages.EMAIL_DUPLICATED, HttpStatus.CONFLICT)
     }
 
-    if (model.phone && (await this.companyRepository.validateExistPhone(model.phone))) {
+    if (input.data.phone && (await this.companyRepository.validateExistPhone(input.data.phone))) {
       throw new HttpException(HttpCompanyMessages.PHONE_DUPLICATED, HttpStatus.CONFLICT)
     }
 
     try {
-      await this.companyRepository.update(input.id, model)
+      await this.companyRepository.update(input.id, input.data)
     } catch (err) {
       this.logger.error(err)
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
