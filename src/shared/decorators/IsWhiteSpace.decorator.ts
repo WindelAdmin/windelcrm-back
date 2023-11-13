@@ -9,7 +9,7 @@ import {
 @ValidatorConstraint({ name: 'isWhitespace', async: false })
 class IsWhitespaceConstraint implements ValidatorConstraintInterface {
   validate(value: any, _args: ValidationArguments) {
-    if (typeof value === 'string') {
+    if (typeof value !== 'string') {
       return false;
     }
     return value.trim() !== '';
