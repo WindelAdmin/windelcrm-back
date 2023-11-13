@@ -1,17 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { IsWhitespace } from '@src/shared/decorators/IsWhiteSpace.decorator'
 import { RegexEmail } from '@src/shared/types/Regex.type'
-import { IsArray, IsNotEmpty, IsString, Matches, MinLength, Validate } from 'class-validator'
+import { IsArray, IsNotEmpty, IsString, Matches, MinLength } from 'class-validator'
 import { UserDtoErrorMessages } from './ErrorMessages.enum'
 import { UserSwaggerProperties } from './SwaggerProperties'
 
 export default class UserCreateDto {
-  @ApiProperty(UserSwaggerProperties.id)
-  @Validate((v) => {
-    if (typeof v !== 'number') {
-      return UserDtoErrorMessages.COMPANY_ID_IS_NUMBER
-    }
-  })
-  
   @Matches(RegexEmail, { message: UserDtoErrorMessages.EMAIL_INVALID })
   @ApiProperty(UserSwaggerProperties.email)
   email: string
@@ -29,10 +23,9 @@ export default class UserCreateDto {
   @ApiProperty(UserSwaggerProperties.password)
   password: string
 
-  @IsString({
-    message: UserDtoErrorMessages.NAME_IS_STRING
-  })
+  @IsString({ message: UserDtoErrorMessages.NAME_IS_STRING })
   @IsNotEmpty({ message: UserDtoErrorMessages.NAME_IS_NOT_EMPTY })
+  @IsWhitespace({message: UserDtoErrorMessages.NAME_IS_NOT_WHITE_SPACE})
   @ApiProperty(UserSwaggerProperties.name)
   name: string
 

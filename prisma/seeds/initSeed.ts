@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import * as bcrypt from 'bcrypt'
+import { CryptoService } from '@src/modules/crypto/Crypto.service'
+
+const cryptoService = new CryptoService()
 const prisma = new PrismaClient()
 
 async function seedUser() {
@@ -31,7 +33,7 @@ async function seedUser() {
   const userData = {
     name: 'Master',
     email: 'master@outlook.com',
-    password: await bcrypt.hash('1q2w3e4r', 10),
+    password: await cryptoService.encrypt('1q2w3e4r'),
     companyId: 1
   }
 

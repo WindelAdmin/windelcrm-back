@@ -5,6 +5,7 @@ import { LoginValidationMiddleware } from 'src/infra/http/middleware/login-valid
 import { JwtStrategy } from 'src/infra/http/strategies/jwt.strategy'
 import { LocalStrategy } from 'src/infra/http/strategies/local.strategy'
 import PrismaModule from 'src/infra/persistence/Prisma.module'
+import { CryptoService } from '../crypto/Crypto.service'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 
@@ -18,7 +19,7 @@ import { AuthService } from './auth.service'
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy]
+  providers: [AuthService, LocalStrategy, JwtStrategy, CryptoService]
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

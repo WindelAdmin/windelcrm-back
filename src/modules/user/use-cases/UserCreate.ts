@@ -1,16 +1,22 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
 import { UserContext } from '@src/modules/context/UserContext'
+import { CryptoService } from '@src/modules/crypto/Crypto.service'
 import { HttpUserMessages } from '@src/shared/http-messages/HttpUserMessages'
-import bcrypt from 'bcrypt'
 import UserRepository from '../User.repository'
 import UserCreateDto from '../dtos/UserCreate.dto'
 
 @Injectable()
 export default class UserCreateService implements IUseCase<UserCreateDto, void> {
   private readonly logger = new Logger(UserCreateService.name)
+  @Inject()
+  private readonly userRepository: UserRepository;
+  @Inject()
+  private readonly userContext: UserContext
+  @Inject()
+  private readonly cryptoService: CryptoService
 
-  constructor(private readonly userRepository: UserRepository, private readonly userContext: UserContext) {}
+  constructor() {}
 
   async execute(input: UserCreateDto): Promise<void> {
     if (await this.userRepository.validateExistEmail(input.email)) {
@@ -18,7 +24,7 @@ export default class UserCreateService implements IUseCase<UserCreateDto, void> 
     }
 
     try {
-      input.password = await bcrypt.hash(input.password, 10)
+      input.password = await  this.cryptoService.encrypt(input.password)
       await this.userRepository.create(input)
     } catch (err) {
       this.logger.error(err)
