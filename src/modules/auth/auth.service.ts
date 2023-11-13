@@ -1,15 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 
-import * as bcrypt from 'bcrypt'
 import { PrismaService } from 'src/infra/persistence/Prisma.service'
+import { CryptoService } from '../crypto/Crypto.service'
 import { AuthUserDto } from './dtos/auth-request.dto'
 import { UserPayloadDto } from './dtos/user-payload.dto'
 import { UserTokenDto } from './dtos/user-token.dto'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService, private prismaService: PrismaService) {}
+  constructor(private readonly jwtService: JwtService, private prismaService: PrismaService, private readonly cryptoService: CryptoService) {}
 
   async login(user: AuthUserDto): Promise<UserTokenDto> {
     const payload: UserPayloadDto = {
@@ -20,11 +20,18 @@ export class AuthService {
     }
 
     return {
-      access_token: this.jwtService.sign(payload)
+      access_token: this.jwtService.sign(payload),
+      data: {
+        id: payload.userId,
+        email: payload.email,
+        name: payload.name,
+        companyId: payload.companyId
+      }
     }
   }
 
   async validateUser(email: string, password: string) {
+          
     const user = await this.prismaService.user.findUnique({
       where: {
         email: email
@@ -32,7 +39,7 @@ export class AuthService {
     })
 
     if (user) {
-      const isPasswordValid = await bcrypt.compare(password, user.password)
+      const isPasswordValid = await this.cryptoService.compare(user.password, password)
 
       if (isPasswordValid) {
         return {
