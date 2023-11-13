@@ -2,6 +2,7 @@ import { Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from '@nes
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { LocalAuthGuard } from 'src/infra/http/guards/local-auth.guard'
 import { IsPublic } from 'src/shared/decorators/is-public.decorator'
+import { CryptoService } from '../crypto/Crypto.service'
 import { AuthService } from './auth.service'
 import { AuthLoginDto } from './dtos/auth-login.dto'
 import { AuthRequestDto } from './dtos/auth-request.dto'
@@ -10,7 +11,7 @@ import { UserTokenDto } from './dtos/user-token.dto'
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly cryptoService: CryptoService) {}
 
   @ApiTags('login')
   @ApiBody({

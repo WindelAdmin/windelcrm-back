@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { RegexCpfCnpj, RegexEmail, RegexPhone, RegexStringNumber } from '@src/shared/types/Regex.type'
 import { IsIn, IsNotEmpty, IsOptional, IsString, Length, Matches } from 'class-validator'
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum'
@@ -55,7 +55,7 @@ export default class CompanyCreateDto {
 
   @IsOptional()
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_COMPLEMENT_IS_STRING })
-  @ApiProperty(CompanySwaggerProperties.complement)
+  @ApiPropertyOptional(CompanySwaggerProperties.complement)
   complement?: string
 
   @IsString({ message: CompanyDtoErrorMessages.ADDRESS_CITY_IS_STRING })
