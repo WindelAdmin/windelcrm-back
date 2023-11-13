@@ -16,9 +16,7 @@ export default class UserCreateDto {
   @MinLength(4, {
     message: UserDtoErrorMessages.PASSWORD_IS_SHORT
   })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: UserDtoErrorMessages.PASSWORD_TO_WEAK
-  })
+
   @IsNotEmpty({ message: UserDtoErrorMessages.PASSWORD_IS_NOT_EMPTY })
   @ApiProperty(UserSwaggerProperties.password)
   password: string
