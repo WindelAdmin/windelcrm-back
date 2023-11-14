@@ -9,6 +9,7 @@ export enum CompanyDtoErrorMessages {
   EMAIL_INVALID = 'Campo email inválido.',
   PHONE_IS_STRING = 'Campo phone precisa ser uma string.',
   PHONE_INVALID = 'Campo phone inválido.',
+  phone_IS_NOT_EMPTY = 'Campo phone é obrigatório.',
   CPF_CNPJ_IS_NOT_EMPTY = 'Campo cpfCnpj é obrigatório.',
   CPF_CNPJ_INVALID = 'Campo cpfCnpj inválido.', 
   CNPJ_IS_STRING = 'Campo cnpj precisa ser uma string.',
