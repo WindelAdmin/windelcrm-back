@@ -22,7 +22,7 @@ export default class CompanyRepository extends AbstractRepository {
   async update(id: number, data: CompanyUpdateDto): Promise<void> {
     const beforeData = await this.prismaService.company.findUnique({ where: { id } })
 
-    const companyUpdated = await this.prismaService.user.update({
+    const companyUpdated = await this.prismaService.company.update({
       where: {
         id: id
       },
