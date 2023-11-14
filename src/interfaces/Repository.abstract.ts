@@ -1,6 +1,6 @@
 import { Inject } from '@nestjs/common'
 import { PrismaService } from '@src/infra/persistence/Prisma.service'
-import { UserContext } from '@src/modules/context/UserContext'
+import { UserContext } from '@src/modules/contexts/UserContext'
 
 export default abstract class AbstractRepository {
   protected entityName: string

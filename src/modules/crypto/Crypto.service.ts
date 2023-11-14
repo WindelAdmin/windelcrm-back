@@ -6,7 +6,7 @@ import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
 export class CryptoService {
   private readonly algorithm = 'aes-256-ctr'
   private readonly secretKey = process.env.CRYPTO_KEY
-
+  
   encrypt(text: string): string {
     const iv = randomBytes(16)
     const cipher = createCipheriv(this.algorithm, Buffer.from(this.secretKey), iv)

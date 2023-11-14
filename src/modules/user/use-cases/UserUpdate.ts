@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
-import { UserContext } from '@src/modules/context/UserContext'
+import { UserContext } from '@src/modules/contexts/UserContext'
 import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
 import UserRepository from '../User.repository'
 import { UserUpdateDto } from '../dtos/UserUpdate.dto'

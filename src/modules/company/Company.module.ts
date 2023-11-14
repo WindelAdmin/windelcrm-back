@@ -1,7 +1,7 @@
 
   import { Module } from '@nestjs/common';
 import PrismaModule from '@src/infra/persistence/Prisma.module';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../contexts/UserContext';
 import CompanyController from './Company.controller';
 import CompanyRepository from './Company.repository';
 import CompanyCreateService from './use-cases/CompanyCreate.service';

@@ -28,11 +28,9 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
     await this.userCreateService.execute(data)
   }
 
-  @Patch()
+  @Patch(':id')
     @ApiBody({ type: UserUpdateDto })
   async update(@Param('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
-    console.log(id);
-    
     await this.userUpdateService.execute({ id, data })
   }
 

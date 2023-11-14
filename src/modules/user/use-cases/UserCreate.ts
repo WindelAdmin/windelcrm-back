@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@src/interfaces/IUseCase'
-import { UserContext } from '@src/modules/context/UserContext'
+import { UserContext } from '@src/modules/contexts/UserContext'
 import { CryptoService } from '@src/modules/crypto/Crypto.service'
 import { HttpUserMessages } from '@src/shared/http-messages/HttpUserMessages'
 import UserRepository from '../User.repository'
