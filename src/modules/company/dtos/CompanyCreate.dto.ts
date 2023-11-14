@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { RegexCpfCnpj, RegexEmail, RegexPhone, RegexStringNumber } from '@src/shared/types/Regex.type'
+import { RegexCep, RegexCpfCnpj, RegexEmail, RegexPhone } from '@src/shared/types/Regex.type'
 import { IsIn, IsNotEmpty, IsOptional, IsString, Length, Matches } from 'class-validator'
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum'
 import { CompanySwaggerProperties } from './SwaggerProperties'
@@ -16,9 +16,6 @@ export default class CompanyCreateDto {
   fantasyName: string
 
   @IsString()
-  @IsNotEmpty({
-    message: CompanyDtoErrorMessages.CPF_CNPJ_IS_NOT_EMPTY
-  })
   @Matches(RegexCpfCnpj, {
     message: CompanyDtoErrorMessages.CPF_CNPJ_INVALID
   })
@@ -29,15 +26,11 @@ export default class CompanyCreateDto {
   @ApiProperty(CompanySwaggerProperties.phone)
   phone: string
 
-  @IsString({ message: CompanyDtoErrorMessages.EMAIL_INVALID })
-  @IsNotEmpty({ message: CompanyDtoErrorMessages.EMAIL_IS_NOT_EMPTY })
   @Matches(RegexEmail, { message: CompanyDtoErrorMessages.EMAIL_INVALID })
   @ApiProperty(CompanySwaggerProperties.email)
   email: string
 
-  @IsString({ message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_STRING })
-  @IsNotEmpty({ message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_NOT_EMPTY })
-  @Matches(RegexStringNumber, { message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_STRING_NUMBER })
+  @Matches(RegexCep, { message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_INVALID })
   @ApiProperty(CompanySwaggerProperties.cep)
   cep: string
 

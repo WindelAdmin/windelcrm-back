@@ -1,25 +1,22 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
-import { RegexEmail, RegexPhone, RegexStringNumber } from '@src/shared/types/Regex.type'
+import { RegexCep, RegexEmail, RegexPhone } from '@src/shared/types/Regex.type'
 import { IsIn, IsNotEmpty, IsOptional, IsString, Length, Matches } from 'class-validator'
 import { CompanyDtoErrorMessages } from './ErrorMessages.enum'
 import { CompanySwaggerProperties } from './SwaggerProperties'
 
 export default class CompanyUpdateDto {
   @IsOptional()
-  @IsString({ message: CompanyDtoErrorMessages.PHONE_IS_STRING })
   @Matches(RegexPhone, { message: CompanyDtoErrorMessages.PHONE_INVALID })
   @ApiPropertyOptional(CompanySwaggerProperties.phone)
   phone?: string
 
   @IsOptional()
-  @IsString({ message: CompanyDtoErrorMessages.EMAIL_INVALID })
   @Matches(RegexEmail, { message: CompanyDtoErrorMessages.EMAIL_INVALID })
   @ApiPropertyOptional(CompanySwaggerProperties.email)
   email?: string
 
   @IsOptional()
-  @IsString({ message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_STRING })
-  @Matches(RegexStringNumber, { message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_STRING_NUMBER })
+  @Matches(RegexCep, { message: CompanyDtoErrorMessages.ADDRESS_CEP_IS_INVALID })
   @ApiPropertyOptional(CompanySwaggerProperties.cep)
   cep?: string
 
