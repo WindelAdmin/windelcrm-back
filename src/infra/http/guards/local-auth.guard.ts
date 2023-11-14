@@ -12,7 +12,7 @@ export class LocalAuthGuard extends AuthGuard('local') {
     return super.canActivate(context)
   }
 
-  handleRequest(err: any, user: any): any {
+  override handleRequest(err: any, user: any): any {
     if (err || !user) {
       throw new UnauthorizedException(err?.message)
     }

@@ -4,7 +4,6 @@ import { LocalAuthGuard } from 'src/infra/http/guards/local-auth.guard'
 import { IsPublic } from 'src/shared/decorators/is-public.decorator'
 import { CryptoService } from '../crypto/Crypto.service'
 import { AuthService } from './auth.service'
-import { AuthLoginDto } from './dtos/auth-login.dto'
 import { AuthRequestDto } from './dtos/auth-request.dto'
 import { AuthTokenResponseDto } from './dtos/auth-tokenResponse.dto'
 import { UserTokenDto } from './dtos/user-token.dto'
@@ -16,7 +15,6 @@ export class AuthController {
   @ApiTags('login')
   @ApiBody({
     description: 'Credenciais do usuário para autenticação',
-    type: AuthLoginDto
   })
   @ApiResponse({
     status: HttpStatus.OK,
