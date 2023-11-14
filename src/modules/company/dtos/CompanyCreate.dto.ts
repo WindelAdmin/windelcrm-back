@@ -25,9 +25,7 @@ export default class CompanyCreateDto {
   @ApiProperty(CompanySwaggerProperties.cpfCnpj)
   cpfCnpj: string
 
-  @IsString({ message: CompanyDtoErrorMessages.PHONE_IS_STRING })
   @Matches(RegexPhone, { message: CompanyDtoErrorMessages.PHONE_INVALID })
-  @IsNotEmpty({ message: CompanyDtoErrorMessages.phone_IS_NOT_EMPTY })
   @ApiProperty(CompanySwaggerProperties.phone)
   phone: string
 
