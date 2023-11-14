@@ -29,7 +29,7 @@ export default class CompanyController implements IController<CompanyCreateDto, 
     await this.companyCreateService.execute(data)
   }
 
-  @Patch()
+  @Patch(':id')
   @ApiBody({ type: CompanyUpdateDto })
   async update(@Param('id') id: number, @Body() @BodyChecked() data: CompanyUpdateDto): Promise<void> {
     await this.companyUpdateService.execute({ id, data })
