@@ -56,6 +56,10 @@ export default class CompanyRepository extends AbstractRepository {
     return await this.prismaService.company.findMany()
   }
 
+  override async validateExistId(id: number): Promise<boolean> {
+    return (await this.prismaService[this.entityName].findFirst({ where: { id} })) ? true : false
+  }
+
   async validateExistName(name: string): Promise<Boolean> {
     return (await this.prismaService.company.findFirst({
       where: {
