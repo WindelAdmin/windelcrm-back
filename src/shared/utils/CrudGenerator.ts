@@ -52,14 +52,62 @@ function generate(className) {
   const repositoryTemplate = `
   import { Injectable } from '@nestjs/common'
   import { Prisma } from '@prisma/client'
+  import { now } from '@src/shared/utils/DateUtils'
   import AbstractRepository from '@src/interfaces/Repository.abstract'
   import  ${className}  from './${className}.model'
+  import ${className}CreateDto from './dtos/${className}Create.dto'
+import ${className}UpdateDto from './dtos/${className}Update.dto'
 
   @Injectable()
   export default class  ${className}Repository extends AbstractRepository<${className} >{
     constructor() {
     super(Prisma.ModelName.${className})
     }
+
+    async create(data: ${className}CreateDto): Promise<void> {
+    const ${classNameLowerCase}Created = await this.prismaService.${classNameLowerCase}.create({
+      data
+    })
+
+    await this.createAudit(null, ${classNameLowerCase}Created)
+  }
+
+  async update(id: number, data: ${className}UpdateDto): Promise<void> {
+    const beforeData = await this.prismaService.${classNameLowerCase}.findUnique({ where: { id } })
+
+    const ${classNameLowerCase}Updated = await this.prismaService.${classNameLowerCase}.update({
+      where: {
+        id: id
+      },
+      data: { ...data, updatedAt: now() }
+    })
+
+    await this.createAudit(beforeData, ${classNameLowerCase}Updated)
+  }
+
+  async delete(id: number): Promise<void> {
+    const beforeData = await this.prismaService.${classNameLowerCase}.findUnique({ where: { id } })
+
+    await this.prismaService.${classNameLowerCase}.delete({
+      where: {
+        id
+      }
+    })
+
+    await this.createAudit(beforeData, null)
+  }
+
+  async findById(id: number) {
+    return await this.prismaService.${classNameLowerCase}.findUnique({
+      where: {
+        id
+      }
+    })
+  }
+
+  async findAll() {
+    return await this.prismaService.${classNameLowerCase}.findMany()
+  }
   }
   `
 

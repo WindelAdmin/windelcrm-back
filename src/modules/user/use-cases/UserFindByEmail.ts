@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
-import IUseCase from '@src/interfaces/IUseCase'
+import IUseCase from '@src/interfaces/UseCase.interface'
 import UserRepository from '../User.repository'
 import { UserResponseDto } from '../dtos/UserResponse.dto'
 
