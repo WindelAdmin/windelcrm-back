@@ -11,12 +11,12 @@ export class LoginValidationMiddleware implements NestMiddleware {
   
   async use(req: Request, res: Response, next: NextFunction): Promise<void> {
     const body = req.body;
-
+    
     const loginRequestBody = new LoginRequestBodyDto()
-    loginRequestBody.email = this.cryptoService.decrypt(body.email)
-    loginRequestBody.password = this.cryptoService.decrypt(body.password)
+    loginRequestBody.email = await this.cryptoService.decrypt(body.email)
+    loginRequestBody.password = await this.cryptoService.decrypt(body.password)
     loginRequestBody.companyId = body?.companyId
-
+    
     const validations = await validate(loginRequestBody)
 
     if (validations.length) {

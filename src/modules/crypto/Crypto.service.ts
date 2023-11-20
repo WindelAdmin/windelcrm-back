@@ -1,30 +1,68 @@
-// crypto.service.ts
 import { Injectable } from '@nestjs/common'
-import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
-
+import * as crypto from 'crypto'
 @Injectable()
 export class CryptoService {
-  private readonly algorithm = 'aes-256-ctr'
-  private readonly secretKey = process.env.CRYPTO_KEY
-  
-  encrypt(text: string): string {
-    const iv = randomBytes(16)
-    const cipher = createCipheriv(this.algorithm, Buffer.from(this.secretKey), iv)
-    let encrypted = cipher.update(text, 'utf8', 'hex')
-    encrypted += cipher.final('hex')
-    return Buffer.from(JSON.stringify({ hash: encrypted, iv: iv })).toString('base64')
+  aesKey: ArrayBuffer 
+
+  constructor(){
+    this.aesKey = this.hexStringToArrayBuffer(process.env.CRYPTO_KEY as string)
+  }
+  async generateKey(): Promise<CryptoKey | any> {
+
+    if (!this.aesKey) {
+      console.error('Chave AES não encontrada ou inválida.')
+      return null
+    }
+    
+    try {
+      const cryptoKey = await crypto.subtle.importKey('raw', this.aesKey, { name: 'AES-CTR' }, false, ['encrypt', 'decrypt'])
+
+        return cryptoKey
+    } catch (error) {
+      console.error('Erro ao importar a chave:', error)
+    }
   }
 
-  decrypt(encryptedText: string): string {
-    const hashObj = JSON.parse(Buffer.from(encryptedText, 'base64').toString())
-    const decipher = createDecipheriv(this.algorithm, Buffer.from(this.secretKey), Buffer.from(hashObj.iv))
-    let decrypted = decipher.update(hashObj.hash, 'hex', 'utf8')
-    decrypted += decipher.final('utf8')
-    return decrypted
+  hexStringToArrayBuffer(hexString: string): ArrayBuffer {
+    const bufferLength = hexString.length / 2
+    const buffer = new ArrayBuffer(bufferLength)
+    const uint8Array = new Uint8Array(buffer)
+
+    for (let i = 0; i < bufferLength; i++) {
+      const byte = parseInt(hexString.substr(i * 2, 2), 16)
+      uint8Array[i] = byte
+    }
+
+    return buffer
   }
 
-  compare(encryptedText: string, referenceText: string): boolean {
-    const decryptedText = this.decrypt(encryptedText)
-    return decryptedText === referenceText
+  arrayBufferToHexString(buffer: ArrayBuffer): string {
+    const byteArray = new Uint8Array(buffer)
+    const hexArray = Array.from(byteArray).map((byte) => byte.toString(16).padStart(2, '0'))
+    return hexArray.join('')
+  }
+
+  async encrypt(data: string): Promise<string> {
+    const counter = new Uint8Array(16)
+    const encodedData = new TextEncoder().encode(data)
+
+    const encryptedData = await crypto.subtle.encrypt({ name: 'AES-CTR', counter: counter, length: 64 }, await this.generateKey(), encodedData)
+
+    return this.arrayBufferToHexString(encryptedData)
+  }
+
+  async decrypt(encryptedData: string) {
+    const counter = new Uint8Array(16)
+    const decryptedData = await crypto.subtle.decrypt(
+      { name: 'AES-CTR', counter: counter, length: 64 },
+      await this.generateKey(),
+      this.hexStringToArrayBuffer(encryptedData)
+    )
+
+    return new TextDecoder('utf-8').decode(decryptedData)
+  }
+
+  async compare(data: string, hex: string): Promise<boolean> {
+    return await this.encrypt(data) === hex
   }
 }

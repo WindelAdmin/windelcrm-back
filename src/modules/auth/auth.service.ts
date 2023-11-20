@@ -33,14 +33,14 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.prismaService.user.findUnique({
       where: {
-        email: this.cryptoService.decrypt(email)
+        email: await this.cryptoService.decrypt(email)
       }
     })
 
-    const passwordDecrypted =  this.cryptoService.decrypt(user.password);
+    const passwordDecrypted = await this.cryptoService.decrypt(user.password)
 
     if (user) {
-      const isPasswordValid = await this.cryptoService.compare(password, passwordDecrypted)
+      const isPasswordValid = await this.cryptoService.compare(passwordDecrypted, password)
 
       if (isPasswordValid) {
         return {
