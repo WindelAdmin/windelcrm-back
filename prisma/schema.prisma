@@ -29,8 +29,8 @@ model Company {
   createdAt       DateTime         @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime?        @db.Timestamptz(3)
   parentCompanyId Int?             @map("parentCompany")
-  parentCompany   Company?         @relation("ChildCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
-  childCompanies  Company[]        @relation("ChildCompanies")
+  parentCompany   Company?         @relation("SubCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
+  subCompanies    Company[]        @relation("SubCompanies")
   users           User[]
   persons         Person[]
   deparments      Department[]

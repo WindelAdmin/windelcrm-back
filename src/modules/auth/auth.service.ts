@@ -20,13 +20,21 @@ export class AuthService {
       companyId: user.companyId
     }
 
+    const company = await this.prismaService.company.findUnique({
+      where: { id: payload.companyId }
+    })
+
     return {
       token: this.jwtService.sign(payload),
-      data: {
+      userData: {
         id: payload.userId,
         email: payload.email,
-        name: payload.name,
-        companyId: payload.companyId
+        name: payload.name
+      },
+      companyData: {
+        id: company.id,
+        name: company.name,
+        cnpj: company.cpfCnpj
       }
     }
   }
@@ -55,7 +63,7 @@ export class AuthService {
     throw new HttpException('Email ou senhas incorreto(s).', HttpStatus.UNAUTHORIZED)
   }
 
-  async preLogin(email: string, password: string) : Promise<PreLoginResponseDto> {
+  async preLogin(email: string, password: string): Promise<PreLoginResponseDto> {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: await this.cryptoService.decrypt(email)
@@ -70,9 +78,8 @@ export class AuthService {
       }
     })
 
-    const passwordDecrypted = await this.cryptoService.decrypt(user.password)
-
     if (user) {
+      const passwordDecrypted = await this.cryptoService.decrypt(user.password)
       const isPasswordValid = await this.cryptoService.compare(passwordDecrypted, password)
 
       if (isPasswordValid) {
@@ -95,6 +102,6 @@ export class AuthService {
       }
     }
 
-    throw new HttpException('Email ou senhas incorreto(s).', HttpStatus.UNAUTHORIZED)
+    throw new HttpException('Email ou senha incorreto(s).', HttpStatus.UNAUTHORIZED)
   }
 }

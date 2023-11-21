@@ -1,6 +1,14 @@
-import { AuthUserDto } from './auth-request.dto';
 
 export interface UserTokenDto {
   token: string,
-  data: AuthUserDto
+  userData: {
+    id: number,
+    name: string,
+    email: string
+  },
+  companyData: {
+    id: number,
+    name: string,
+    cnpj: string
+  }
 }
