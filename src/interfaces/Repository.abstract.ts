@@ -30,6 +30,6 @@ export default abstract class AbstractRepository {
   }
 
   async validateExistId(id: number): Promise<boolean> {
-    return (await this.prismaService[this.entityName].findFirst({ where: { id, companyId: this.userContext.getUserContext().companyId } })) ? true : false
+    return (await this.prismaService[this.entityName].findFirst({ where: { id } })) ? true : false
   }
 }

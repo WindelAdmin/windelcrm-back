@@ -17,6 +17,10 @@ export class UserUpdateDto {
   permissions?: [number]
 
   @IsOptional()
+  @ApiProperty(UserSwaggerProperties.isLogged)
+  isLogged?: boolean
+
+  @IsOptional()
   @ApiProperty(UserSwaggerProperties.isActive)
   isActive?: boolean
 }

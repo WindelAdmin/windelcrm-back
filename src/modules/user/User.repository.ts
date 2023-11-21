@@ -41,14 +41,11 @@ export default class UserRepository extends AbstractRepository {
   }
 
   async update(id: number, data: UserUpdateDto): Promise<void> {
-    const uCxt = this.userContext.getUserContext()
-
     const beforeData = await this.prismaService.user.findUnique({ where: { id } })
 
     const user = await this.prismaService.user.update({
       where: {
-        id: id,
-        companyId: uCxt.companyId
+        id: id
       },
       data: { ...data, updatedAt: now() }
     })

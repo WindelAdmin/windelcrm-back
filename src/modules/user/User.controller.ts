@@ -29,7 +29,7 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
   }
 
   @Patch(':id')
-    @ApiBody({ type: UserUpdateDto })
+  @ApiBody({ type: UserUpdateDto })
   async update(@Param('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
     await this.userUpdateService.execute({ id, data })
   }
