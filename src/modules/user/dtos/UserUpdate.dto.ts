@@ -14,7 +14,7 @@ export class UserUpdateDto {
   @IsOptional()
   @IsArray({ message: UserDtoErrorMessages.PERMISSIONS_IS_INVALID })
   @ApiProperty(UserSwaggerProperties.permissions)
-  permissions?: [number]
+  permissions?: number[]
 
   @IsOptional()
   @ApiProperty(UserSwaggerProperties.isLogged)
