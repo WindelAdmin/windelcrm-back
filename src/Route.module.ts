@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { RouterModule } from '@nestjs/core'
-import CompanyModule from './modules/company/Company.module'
-import { UserModule } from './modules/user/User.module'
+import CompanyModule from '@src/modules/core/company/Company.module'
+import { UserModule } from '@src/modules/core/user/User.module'
 
 @Module({
   imports: [

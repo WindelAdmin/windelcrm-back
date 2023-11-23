@@ -10,6 +10,9 @@
     "sourceMap": true,
     "paths": {
       "@src/*": ["src/*"],
+      "@modules/*": ["src/modules/*"],
+      "@infra/*": ["src/infra/*"],
+      "@shared/*": ["src/shared/*"],
     },
     "outDir": "./dist",
     "baseUrl": "./",

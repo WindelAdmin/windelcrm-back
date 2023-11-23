@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NestMiddleware } from '@nestjs/common'
-import { LoginRequestBodyDto } from '@src/modules/auth/dtos/login-request-body.dto'
-import { CryptoService } from '@src/modules/crypto/Crypto.service'
+import { LoginRequestBodyDto } from '@src/modules/aux/auth/dtos/login-request-body.dto'
+import { CryptoService } from '@src/modules/generic/crypto/Crypto.service'
 import { validate } from 'class-validator'
 import { NextFunction, Request, Response } from 'express'
 

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { CryptoService } from '../../src/modules/crypto/Crypto.service'
+import { CryptoService } from '../../src/modules/generic/crypto/Crypto.service'
 
 const cryptoService = new CryptoService()
 const prisma = new PrismaClient()
