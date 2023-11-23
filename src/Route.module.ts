@@ -13,7 +13,15 @@ import { UserModule } from '@src/modules/core/user/User.module'
       {
         path: 'company',
         module: CompanyModule
-      }
+      },
+      {
+        path: 'person',
+        children: [
+          {
+            path: 'employee'
+          }
+        ]
+      },
     ])
   ]
 })

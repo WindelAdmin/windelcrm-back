@@ -1,33 +1,35 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { CompanySwaggerProperties } from './SwaggerProperties'
 
 export default class CompanyResponseDto {
+  @ApiProperty(CompanySwaggerProperties.id)
+  id: number
   @ApiProperty(CompanySwaggerProperties.name)
   name: string
   @ApiProperty(CompanySwaggerProperties.fantasyName)
   fantasyName: string
   @ApiProperty(CompanySwaggerProperties.cpfCnpj)
   cpfCnpj: string
-  @ApiProperty(CompanySwaggerProperties.phone)
-  phone?: string
-  @ApiProperty(CompanySwaggerProperties.email)
-  email: string
-  @ApiProperty(CompanySwaggerProperties.cep)
-  cep: string
-  @ApiProperty(CompanySwaggerProperties.street)
-  street: string
-  @ApiProperty(CompanySwaggerProperties.number)
-  number: string
-  @ApiProperty(CompanySwaggerProperties.complement)
-  complement: string
-  @ApiProperty(CompanySwaggerProperties.city)
-  city: string
-  @ApiProperty(CompanySwaggerProperties.uf)
-  uf: string
   @ApiProperty(CompanySwaggerProperties.type)
   type: string
-  @ApiProperty(CompanySwaggerProperties.createdAt)
-  createdAt: string
-  @ApiProperty(CompanySwaggerProperties.updatedAt)
-  updatedAt: string
+  @ApiPropertyOptional(CompanySwaggerProperties.phone)
+  phone?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.email)
+  email?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.cep)
+  cep?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.street)
+  street?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.number)
+  number?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.complement)
+  complement?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.city)
+  city?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.uf)
+  uf?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.createdAt)
+  createdAt?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.updatedAt)
+  updatedAt?: string
 }

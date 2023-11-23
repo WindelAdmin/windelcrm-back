@@ -1,19 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
-import { ApiBody, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post } from '@nestjs/common'
+import { ApiResponse, ApiTags } from '@nestjs/swagger'
 import { BodyChecked } from '@shared/decorators/BodyChecked.decorator'
 import IController from '@shared/interfaces/Controller.interface'
 import UserCreateDto from './dtos/UserCreate.dto'
+import { UserDeleteDto } from './dtos/UserDeleteDto'
 import { UserResponseDto } from './dtos/UserResponse.dto'
 import { UserUpdateDto } from './dtos/UserUpdate.dto'
-import UserCreateService from './use-cases/UserCreate'
-import UserDeleteService from './use-cases/UserDelete'
-import UserFindAllService from './use-cases/UserFindAll'
-import UserFindByIdService from './use-cases/UserFindById'
-import UserUpdateService from './use-cases/UserUpdate'
+import UserCreateService from './use-cases/UserCreate.service'
+import UserDeleteService from './use-cases/UserDelete.service'
+import UserFindAllService from './use-cases/UserFindAll.service'
+import UserFindByIdService from './use-cases/UserFindById.service'
+import UserUpdateService from './use-cases/UserUpdate.service'
 
 @ApiTags('user')
 @Controller()
-export class UserController implements IController<UserCreateDto, UserUpdateDto, any, UserResponseDto> {
+export class UserController implements IController<UserCreateDto, UserUpdateDto, UserDeleteDto, UserResponseDto> {
   constructor(
     readonly userCreateService: UserCreateService,
     readonly userUpdateService: UserUpdateService,
@@ -23,28 +24,31 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
   ) {}
 
   @Post()
-  @ApiBody({ type: UserCreateDto })
+  @ApiResponse({ status: HttpStatus.CREATED })
   async create(@Body() @BodyChecked() data: UserCreateDto): Promise<void> {
     await this.userCreateService.execute(data)
   }
 
   @Patch(':id')
-  @ApiBody({ type: UserUpdateDto })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async update(@Param('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
     await this.userUpdateService.execute({ id, data })
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
-    await this.userDeleteService.execute(id)
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  async delete(@Param() params: UserDeleteDto): Promise<void> {
+    await this.userDeleteService.execute(params.id)
   }
 
   @Get()
+  @ApiResponse({ status: HttpStatus.OK, type: [UserResponseDto] })
   async findAll(): Promise<UserResponseDto[]> {
     return await this.userFindAllService.execute()
   }
 
   @Get(':id')
+  @ApiResponse({ status: HttpStatus.OK, type: UserResponseDto })
   async findById(@Param('id') id: number): Promise<UserResponseDto> {
     return await this.userFindByIdService.execute(id)
   }

@@ -1,39 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { UserSwaggerProperties } from './SwaggerProperties'
 
 export class UserResponseDto {
   @ApiProperty(UserSwaggerProperties.id)
   id: number
-
   @ApiProperty(UserSwaggerProperties.id)
   companyId: number
-
   @ApiProperty(UserSwaggerProperties.email)
   email: string
   @ApiProperty(UserSwaggerProperties.name)
   name?: string
-
-  @ApiProperty(UserSwaggerProperties.profilePhoto)
+  @ApiPropertyOptional(UserSwaggerProperties.profilePhoto)
   profilePhoto?: string
-
-  @ApiProperty(UserSwaggerProperties.isLogged)
+  @ApiPropertyOptional(UserSwaggerProperties.isLogged)
   isLogged?: boolean
-
-  @ApiProperty(UserSwaggerProperties.permissionsResponse)
+  @ApiPropertyOptional(UserSwaggerProperties.permissionsResponse)
   permissions?: {
     id: number
     description: string
   }[]
-
-  @ApiProperty(UserSwaggerProperties.isActive)
+  @ApiPropertyOptional(UserSwaggerProperties.isActive)
   isActive?: boolean
-
-  @ApiProperty(UserSwaggerProperties.lastAccess)
+  @ApiPropertyOptional(UserSwaggerProperties.lastAccess)
   lastAccess?: string | Date
-
-  @ApiProperty(UserSwaggerProperties.createdAt)
+  @ApiPropertyOptional(UserSwaggerProperties.createdAt)
   createdAt?: string | Date
-
-  @ApiProperty(UserSwaggerProperties.updatedAt)
+  @ApiPropertyOptional(UserSwaggerProperties.updatedAt)
   updatedAt?: string | Date
 }

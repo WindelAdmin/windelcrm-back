@@ -1,6 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
-import { ApiBody, ApiTags } from '@nestjs/swagger'
-import { BodyChecked } from '@shared/decorators/BodyChecked.decorator'
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post } from '@nestjs/common'
+import { ApiResponse, ApiTags } from '@nestjs/swagger'
 import IController from '@shared/interfaces/Controller.interface'
 import CompanyCreateDto from './dtos/CompanyCreate.dto'
 import { CompanyDeleteDto } from './dtos/CompanyDeleteDto'
@@ -24,31 +23,31 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   ) {}
 
   @Post()
-  @ApiBody({ type: CompanyCreateDto })
-  async create(@Body() @BodyChecked() data: CompanyCreateDto): Promise<void> {
+  @ApiResponse({ status: HttpStatus.CREATED })
+  async create(@Body() data: CompanyCreateDto): Promise<void> {
     await this.companyCreateService.execute(data)
   }
 
   @Patch(':id')
-  @ApiBody({ type: CompanyUpdateDto })
-  async update(@Param('id') id: number, @Body() @BodyChecked() data: CompanyUpdateDto): Promise<void> {
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
+  async update(@Param('id') id: number, @Body() data: CompanyUpdateDto): Promise<void> {
     await this.companyUpdateService.execute({ id, data })
   }
 
   @Delete(':id')
-  @ApiBody({ type: CompanyDeleteDto })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async delete(@Param() params: CompanyDeleteDto): Promise<void> {
     await this.companyDeleteService.execute(+params.id)
   }
 
   @Get()
-  @ApiBody({ isArray: true, type: CompanyResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: [CompanyResponseDto] })
   async findAll(): Promise<CompanyResponseDto[]> {
     return await this.companyFindAllService.execute()
   }
 
   @Get(':id')
-  @ApiBody({ type: CompanyResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: CompanyResponseDto })
   async findById(@Param('id') id: number): Promise<CompanyResponseDto> {
     return await this.companyFindByIdService.execute(+id)
   }
