@@ -1,22 +1,27 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import AbstractRepository from '@shared/interfaces/Repository.abstract'
 import { now } from '@shared/utils/DateUtils'
+import { HttpInternalServerErrorException } from '@src/shared/exceptions/Http.exception'
 import CompanyCreateDto from './dtos/CompanyCreate.dto'
 import CompanyUpdateDto from './dtos/CompanyUpdate.dto'
 
 @Injectable()
 export default class CompanyRepository extends AbstractRepository {
+  private logger = new Logger(CompanyRepository.name)
+
   constructor() {
     super(Prisma.ModelName.Company)
   }
 
   async create(data: CompanyCreateDto): Promise<void> {
-    const companyCreated = await this.prismaService.company.create({
-      data
-    })
-
-    await this.createAudit(null, companyCreated)
+    try {
+      const companyCreated = await this.prismaService.company.create({ data })
+      await this.createAudit(null, companyCreated)
+    } catch (err) {
+      this.logger.error(err)
+      HttpInternalServerErrorException(err.message)
+    }
   }
 
   async update(id: number, data: CompanyUpdateDto): Promise<void> {
@@ -57,7 +62,7 @@ export default class CompanyRepository extends AbstractRepository {
   }
 
   override async validateExistId(id: number): Promise<boolean> {
-    return (await this.prismaService[this.entityName].findFirst({ where: { id} })) ? true : false
+    return (await this.prismaService[this.entityName].findFirst({ where: { id } })) ? true : false
   }
 
   async validateExistName(name: string): Promise<Boolean> {

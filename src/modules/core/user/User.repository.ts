@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import AbstractRepository from '@shared/interfaces/Repository.abstract'
 import { now } from '@shared/utils/DateUtils'
+import { HttpInternalServerErrorException } from '@src/shared/exceptions/Http.exception'
 import UserCreateDto from './dtos/UserCreate.dto'
 import { UserUpdateDto } from './dtos/UserUpdate.dto'
 
 @Injectable()
 export default class UserRepository extends AbstractRepository {
+  private logger = new Logger(UserRepository.name)
+
   constructor() {
     super(Prisma.ModelName.User)
   }
@@ -14,30 +17,35 @@ export default class UserRepository extends AbstractRepository {
   async create(data: UserCreateDto): Promise<void> {
     const uCxt = this.userContext.getUserContext()
 
-    const user = await this.prismaService.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        userPermissions: {
-          createMany: {
-            data: data.permissions.map((p) => {
-              return {
-                permissionId: p,
-                companyId: uCxt.companyId
-              }
-            })
-          }
-        },
-        company: {
-          connect: {
-            id: uCxt.companyId
+    try {
+      const user = await this.prismaService.user.create({
+        data: {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          userPermissions: {
+            createMany: {
+              data: data.permissions.map((p) => {
+                return {
+                  permissionId: p,
+                  companyId: uCxt.companyId
+                }
+              })
+            }
+          },
+          company: {
+            connect: {
+              id: uCxt.companyId
+            }
           }
         }
-      }
-    })
+      })
 
-    await this.createAudit(null, { ...user, password: undefined })
+      await this.createAudit(null, { ...user, password: undefined })
+    } catch (err) {
+      this.logger.error(err)
+      HttpInternalServerErrorException(err.message)
+    }
   }
 
   async update(id: number, data: UserUpdateDto): Promise<void> {
