@@ -21,7 +21,7 @@ import { UserModule } from '@src/modules/core/user/User.module'
             path: 'employee'
           }
         ]
-      },
+      }
     ])
   ]
 })

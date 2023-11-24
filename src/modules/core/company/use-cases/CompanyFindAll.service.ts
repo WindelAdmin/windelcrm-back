@@ -4,22 +4,22 @@ import CompanyRepository from '../Company.repository'
 import CompanyResponseDto from '../dtos/CompanyResponse.dto'
 
 @Injectable()
-export default class CompanyFindAllService implements IUseCase<void, CompanyResponseDto[]> {
+export default class CompanyFindAllService implements IUseCase {
   private logger = new Logger(CompanyFindAllService.name)
 
   constructor(private readonly companyRepository: CompanyRepository) {}
 
   async execute(): Promise<CompanyResponseDto[]> {
-    try{
-    const companies = await this.companyRepository.findAll()
-    return companies.map((company) => ({
+    try {
+      const companies = await this.companyRepository.findAll()
+      return companies.map((company) => ({
         ...company,
         createdAt: company.createdAt.toISOString(),
         updatedAt: company.updatedAt?.toISOString()
       }))
-    }catch(err) {
+    } catch (err) {
       this.logger.error(err)
-      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 }

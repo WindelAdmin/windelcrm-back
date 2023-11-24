@@ -1,10 +1,14 @@
-import { JestConfigWithTsJest, pathsToModuleNameMapper } from "ts-jest";
-import { compilerOptions } from "./tsconfig.paths.json";
+import { JestConfigWithTsJest, pathsToModuleNameMapper } from 'ts-jest'
 
 const jestConfig: JestConfigWithTsJest = {
-  preset: "ts-jest",
-  moduleDirectories: ["node_modules", "<rootDir>"],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths)
- }
+  preset: 'ts-jest',
+  moduleDirectories: ['node_modules', '<rootDir>'],
+  moduleNameMapper: pathsToModuleNameMapper({
+    '@src/*': ['src/*'],
+    '@modules/*': ['src/modules/*'],
+    '@infra/*': ['src/infra/*'],
+    '@shared/*': ['src/shared/*']
+  })
+}
 
-export default jestConfig;
+export default jestConfig

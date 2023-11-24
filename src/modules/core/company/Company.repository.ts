@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import AbstractRepository from '@shared/interfaces/Repository.abstract'
 import { now } from '@shared/utils/DateUtils'
-import { HttpInternalServerErrorException } from '@src/shared/exceptions/Http.exception'
+import { HttpInternalServerErrorException } from '@src/shared/exceptions/HttpInternalServerError.exception'
 import CompanyCreateDto from './dtos/CompanyCreate.dto'
 import CompanyUpdateDto from './dtos/CompanyUpdate.dto'
 
@@ -20,21 +20,26 @@ export default class CompanyRepository extends AbstractRepository {
       await this.createAudit(null, companyCreated)
     } catch (err) {
       this.logger.error(err)
-      HttpInternalServerErrorException(err.message)
+      throw new HttpInternalServerErrorException(err.message)
     }
   }
 
   async update(id: number, data: CompanyUpdateDto): Promise<void> {
-    const beforeData = await this.prismaService.company.findUnique({ where: { id } })
+    try {
+      const beforeData = await this.prismaService.company.findUnique({ where: { id } })
 
-    const companyUpdated = await this.prismaService.company.update({
-      where: {
-        id: id
-      },
-      data: { ...data, updatedAt: now() }
-    })
+      const companyUpdated = await this.prismaService.company.update({
+        where: {
+          id: id
+        },
+        data: { ...data, updatedAt: now() }
+      })
 
-    await this.createAudit(beforeData, companyUpdated)
+      await this.createAudit(beforeData, companyUpdated)
+    } catch (err) {
+      this.logger.error(err)
+      throw new HttpInternalServerErrorException(err.message)
+    }
   }
 
   async delete(id: number): Promise<void> {

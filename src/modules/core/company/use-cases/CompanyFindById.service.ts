@@ -5,7 +5,7 @@ import CompanyRepository from '../Company.repository'
 import CompanyResponseDto from '../dtos/CompanyResponse.dto'
 
 @Injectable()
-export default class CompanyFindByIdService implements IUseCase<number, CompanyResponseDto> {
+export default class CompanyFindByIdService implements IUseCase {
   private logger = new Logger(CompanyFindByIdService.name)
 
   constructor(private readonly companyRepository: CompanyRepository) {}
