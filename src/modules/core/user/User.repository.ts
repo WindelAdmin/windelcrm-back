@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import AbstractRepository from '@shared/interfaces/Repository.abstract'
 import { now } from '@shared/utils/DateUtils'
-import { HttpInternalServerErrorException } from '@src/shared/exceptions/Http.exception'
+import { HttpInternalServerErrorException } from '@src/shared/exceptions/HttpInternalServerError.exception'
 import UserCreateDto from './dtos/UserCreate.dto'
 import { UserUpdateDto } from './dtos/UserUpdate.dto'
 
@@ -44,7 +44,7 @@ export default class UserRepository extends AbstractRepository {
       await this.createAudit(null, { ...user, password: undefined })
     } catch (err) {
       this.logger.error(err)
-      HttpInternalServerErrorException(err.message)
+      throw new HttpInternalServerErrorException(err.message)
     }
   }
 

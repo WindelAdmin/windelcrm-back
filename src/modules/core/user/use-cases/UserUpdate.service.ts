@@ -11,7 +11,7 @@ interface Input {
 }
 
 @Injectable()
-export default class UserUpdateService implements IUseCase<Input, void> {
+export default class UserUpdateService implements IUseCase {
   private readonly logger = new Logger(UserUpdateService.name)
 
   constructor(private readonly userRepository: UserRepository, private readonly userContext: UserContext) {}

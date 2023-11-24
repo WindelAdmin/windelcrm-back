@@ -28,6 +28,10 @@ export default class CompanyResponseDto {
   city?: string
   @ApiPropertyOptional(CompanySwaggerProperties.uf)
   uf?: string
+  @ApiPropertyOptional(CompanySwaggerProperties.parentCompanyId)
+  parentCompanyId?: number
+  @ApiPropertyOptional(CompanySwaggerProperties.isActive)
+  isActive?: boolean
   @ApiPropertyOptional(CompanySwaggerProperties.createdAt)
   createdAt?: string
   @ApiPropertyOptional(CompanySwaggerProperties.updatedAt)

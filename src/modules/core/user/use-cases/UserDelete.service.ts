@@ -4,7 +4,7 @@ import IUseCase from '@shared/interfaces/UseCase.interface'
 import UserRepository from '../User.repository'
 
 @Injectable()
-export default class UserDeleteService implements IUseCase<number, void> {
+export default class UserDeleteService implements IUseCase {
   private logger = new Logger(UserDeleteService.name)
 
   constructor(private readonly userRepository: UserRepository) {}

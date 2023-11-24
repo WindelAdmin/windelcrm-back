@@ -31,7 +31,7 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   @Patch(':id')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async update(@Param('id') id: number, @Body() data: CompanyUpdateDto): Promise<void> {
-    await this.companyUpdateService.execute({ id, data })
+    await this.companyUpdateService.execute(id, data )
   }
 
   @Delete(':id')

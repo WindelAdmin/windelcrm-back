@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import IUseCase from '@shared/interfaces/UseCase.interface'
 import CompanyRepository from '../Company.repository'
 import CompanyResponseDto from '../dtos/CompanyResponse.dto'
@@ -10,16 +10,11 @@ export default class CompanyFindAllService implements IUseCase {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
   async execute(): Promise<CompanyResponseDto[]> {
-    try {
-      const companies = await this.companyRepository.findAll()
-      return companies.map((company) => ({
-        ...company,
-        createdAt: company.createdAt.toISOString(),
-        updatedAt: company.updatedAt?.toISOString()
-      }))
-    } catch (err) {
-      this.logger.error(err)
-      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+    const companies = await this.companyRepository.findAll()
+    return companies.map((company) => ({
+      ...company,
+      createdAt: company.createdAt.toISOString(),
+      updatedAt: company.updatedAt?.toISOString()
+    }))
   }
 }
