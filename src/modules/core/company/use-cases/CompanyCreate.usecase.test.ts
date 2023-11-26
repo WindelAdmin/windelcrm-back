@@ -1,6 +1,6 @@
 import CompanyRepository from '@src/modules/core/company/Company.repository'
 import CompanyCreateDto from '@src/modules/core/company/dtos/CompanyCreate.dto'
-import CompanyCreateService from '@src/modules/core/company/use-cases/CompanyCreate.service'
+import CompanyCreateService from '@src/modules/core/company/use-cases/CompanyCreate.usecase'
 import { HttpConflictException } from '@src/shared/exceptions/HttpConflict.exception'
 import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessages'
 

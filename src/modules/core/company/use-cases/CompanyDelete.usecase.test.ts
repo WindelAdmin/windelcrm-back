@@ -1,5 +1,5 @@
 import CompanyRepository from '@src/modules/core/company/Company.repository'
-import CompanyDeleteService from '@src/modules/core/company/use-cases/CompanyDelete.service'
+import CompanyDeleteService from '@src/modules/core/company/use-cases/CompanyDelete.usecase'
 import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessages'
 

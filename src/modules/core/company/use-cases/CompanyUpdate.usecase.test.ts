@@ -1,6 +1,6 @@
 import CompanyRepository from '@src/modules/core/company/Company.repository'
 import CompanyUpdateDto from '@src/modules/core/company/dtos/CompanyUpdate.dto'
-import CompanyUpdateService from '@src/modules/core/company/use-cases/CompanyUpdate.service'
+import CompanyUpdateService from '@src/modules/core/company/use-cases/CompanyUpdate.usecase'
 import { HttpConflictException } from '@src/shared/exceptions/HttpConflict.exception'
 import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessages'

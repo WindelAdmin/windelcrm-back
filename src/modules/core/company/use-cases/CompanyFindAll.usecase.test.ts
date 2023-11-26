@@ -1,5 +1,5 @@
 import CompanyRepository from '@src/modules/core/company/Company.repository'
-import CompanyFindAllService from '@src/modules/core/company/use-cases/CompanyFindAll.service'
+import CompanyFindAllService from '@src/modules/core/company/use-cases/CompanyFindAll.usecase'
 
 describe('CompanyFindAllService', () => {
   let companyFindAllService: CompanyFindAllService

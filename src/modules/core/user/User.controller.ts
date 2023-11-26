@@ -6,11 +6,11 @@ import UserCreateDto from './dtos/UserCreate.dto'
 import { UserDeleteDto } from './dtos/UserDeleteDto'
 import { UserResponseDto } from './dtos/UserResponse.dto'
 import { UserUpdateDto } from './dtos/UserUpdate.dto'
-import UserCreateService from './use-cases/UserCreate.service'
-import UserDeleteService from './use-cases/UserDelete.service'
-import UserFindAllService from './use-cases/UserFindAll.service'
-import UserFindByIdService from './use-cases/UserFindById.service'
-import UserUpdateService from './use-cases/UserUpdate.service'
+import UserCreateService from './use-cases/UserCreate.usecase'
+import UserDeleteService from './use-cases/UserDelete.usecase'
+import UserFindAllService from './use-cases/UserFindAll.usecase'
+import UserFindByIdService from './use-cases/UserFindById.usecase'
+import UserUpdateService from './use-cases/UserUpdate.usecase'
 
 @ApiTags('user')
 @Controller()

@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/Main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --coverage",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -21,10 +21,10 @@
     "generate:module": "yarn run generate:module-script",
     "generate:module-script": "read -p 'Destino do Módulo: ' moduleName && nest generate module $moduleName && nest generate controller $moduleName/$moduleNameController --no-spec --flat && nest generate repositories $moduleName/context --no-spec --flat && nest generate service $moduleName/rules/rule --no-spec --flat",
     "gcrud": "node src/shared/utils/CrudGenerator.ts",
-    "psm-mig": "npx prisma migrate dev",
-    "psm-gen": "npx prisma generate",
-    "psm-update": "npx prisma migrate dev & npx prisma generate",
-    "psm-seed": "ts-node prisma/seeds/initSeed.ts"
+    "psm:mig": "npx prisma migrate dev",
+    "psm:gen": "npx prisma generate",
+    "psm:update": "npx prisma migrate dev & npx prisma generate",
+    "psm:seed": "ts-node prisma/seeds/initSeed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -55,7 +55,7 @@
     "@nestjs/testing": "^9.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.13",
-    "@types/jest": "29.5.1",
+    "@types/jest": "^29.5.10",
     "@types/node": "18.16.12",
     "@types/supertest": "^2.0.11",
     "@types/swagger-ui-express": "^4.1.3",

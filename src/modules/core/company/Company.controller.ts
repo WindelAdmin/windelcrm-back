@@ -5,11 +5,11 @@ import CompanyCreateDto from './dtos/CompanyCreate.dto'
 import { CompanyDeleteDto } from './dtos/CompanyDeleteDto'
 import CompanyResponseDto from './dtos/CompanyResponse.dto'
 import CompanyUpdateDto from './dtos/CompanyUpdate.dto'
-import CompanyCreateService from './use-cases/CompanyCreate.service'
-import CompanyDeleteService from './use-cases/CompanyDelete.service'
-import CompanyFindAllService from './use-cases/CompanyFindAll.service'
-import CompanyFindByIdService from './use-cases/CompanyFindById.service'
-import CompanyUpdateService from './use-cases/CompanyUpdate.service'
+import CompanyCreateService from './use-cases/CompanyCreate.usecase'
+import CompanyDeleteService from './use-cases/CompanyDelete.usecase'
+import CompanyFindAllService from './use-cases/CompanyFindAll.usecase'
+import CompanyFindByIdService from './use-cases/CompanyFindById.usecase'
+import CompanyUpdateService from './use-cases/CompanyUpdate.usecase'
 
 @ApiTags('company')
 @Controller()
@@ -31,7 +31,7 @@ export default class CompanyController implements IController<CompanyCreateDto, 
   @Patch(':id')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async update(@Param('id') id: number, @Body() data: CompanyUpdateDto): Promise<void> {
-    await this.companyUpdateService.execute(id, data )
+    await this.companyUpdateService.execute(id, data)
   }
 
   @Delete(':id')

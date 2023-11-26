@@ -16,14 +16,13 @@ export default class UserCreateDto {
   @MinLength(4, {
     message: UserDtoErrorMessages.PASSWORD_IS_SHORT
   })
-
   @IsNotEmpty({ message: UserDtoErrorMessages.PASSWORD_IS_NOT_EMPTY })
   @ApiProperty(UserSwaggerProperties.password)
   password: string
 
   @IsString({ message: UserDtoErrorMessages.NAME_IS_STRING })
   @IsNotEmpty({ message: UserDtoErrorMessages.NAME_IS_NOT_EMPTY })
-  @IsWhitespace({message: UserDtoErrorMessages.NAME_IS_NOT_WHITE_SPACE})
+  @IsWhitespace({ message: UserDtoErrorMessages.NAME_IS_NOT_WHITE_SPACE })
   @ApiProperty(UserSwaggerProperties.name)
   name: string
 
@@ -34,5 +33,5 @@ export default class UserCreateDto {
     message: UserDtoErrorMessages.PERMISSIONS_IS_NOT_EMPTY
   })
   @ApiProperty(UserSwaggerProperties.permissions)
-  permissions?: [number]
+  permissions?: number[]
 }
