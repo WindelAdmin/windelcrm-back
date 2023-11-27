@@ -1,8 +1,8 @@
 import { CryptoService } from '@src/modules/generic/crypto/Crypto.service'
 import { HttpConflictException } from '@src/shared/exceptions/HttpConflict.exception'
-import UserRepository from '../User.repository'
-import UserCreateDto from '../dtos/UserCreate.dto'
-import UserCreateService from './UserCreate.usecase'
+import UserRepository from '../../../../../src/modules/core/user/User.repository'
+import UserCreateDto from '../../../../../src/modules/core/user/dtos/UserCreate.dto'
+import UserCreateService from '../../../../../src/modules/core/user/use-cases/UserCreate.usecase'
 
 const userDataMock = {
   email: 'jhon@example.com',
