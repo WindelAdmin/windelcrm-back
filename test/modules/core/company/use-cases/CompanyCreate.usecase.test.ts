@@ -27,7 +27,7 @@ describe('CompanyCreateService', () => {
     companyCreateService = new CompanyCreateService(companyRepository)
   })
 
-  it('should create Company', async () => {
+  test('should create Company', async () => {
     jest.spyOn(companyRepository, 'validateExistName').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistCfpCnpj').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(false)
@@ -38,7 +38,7 @@ describe('CompanyCreateService', () => {
     expect(companyRepository.create).toHaveBeenCalledWith(input)
   })
 
-  it('should throw a HttpConflictException if company name already exists', async () => {
+  test('should throw a HttpConflictException if company name already exists', async () => {
     jest.spyOn(companyRepository, 'validateExistName').mockResolvedValue(true)
 
     try {
@@ -51,7 +51,7 @@ describe('CompanyCreateService', () => {
     expect(companyRepository.validateExistName).toHaveBeenCalledWith(input.name)
   })
 
-  it('should throw a HttpConflictException if company CPF/CNPJ already exists', async () => {
+  test('should throw a HttpConflictException if company CPF/CNPJ already exists', async () => {
     jest.spyOn(companyRepository, 'validateExistName').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistCfpCnpj').mockResolvedValue(true)
 
@@ -66,7 +66,7 @@ describe('CompanyCreateService', () => {
     expect(companyRepository.validateExistCfpCnpj).toHaveBeenCalledWith(input.cpfCnpj)
   })
 
-  it('should throw a HttpConflictException if company Email already exists', async () => {
+  test('should throw a HttpConflictException if company Email already exists', async () => {
     jest.spyOn(companyRepository, 'validateExistName').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistCfpCnpj').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(true)
@@ -83,12 +83,12 @@ describe('CompanyCreateService', () => {
     expect(companyRepository.validateExistEmail).toHaveBeenCalledWith(input.email)
   })
 
-  it('should throw a HttpConflictException if company Phone already exists', async () => {
+  test('should throw a HttpConflictException if company Phone already exists', async () => {
     jest.spyOn(companyRepository, 'validateExistName').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistCfpCnpj').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistPhone').mockResolvedValue(true)
-
+    
     try {
       await companyCreateService.execute(input)
     } catch (error) {

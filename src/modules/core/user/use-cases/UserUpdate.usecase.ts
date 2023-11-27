@@ -1,7 +1,7 @@
-import { UserContext } from '@modules/aux/contexts/User.context'
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { HttpMessages } from '@shared/http-messages/HttpMessages'
 import IUseCase from '@shared/interfaces/UseCase.interface'
+import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 import UserRepository from '../User.repository'
 import { UserUpdateDto } from '../dtos/UserUpdate.dto'
 
@@ -12,20 +12,13 @@ interface Input {
 
 @Injectable()
 export default class UserUpdateService implements IUseCase {
-  private readonly logger = new Logger(UserUpdateService.name)
-
-  constructor(private readonly userRepository: UserRepository, private readonly userContext: UserContext) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: Input): Promise<void> {
     if (!(await this.userRepository.validateExistId(input.id))) {
-      throw new HttpException(HttpMessages.RECORD_NOT_FOUND, HttpStatus.NOT_FOUND)
+      throw new HttpNotFoundException(HttpMessages.ID_NOT_EXIST)
     }
 
-    try {
-      await this.userRepository.update(input.id, input.data)
-    } catch (err) {
-      this.logger.error(err)
-      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
-    }
+       await this.userRepository.update(input.id, input.data)
   }
 }

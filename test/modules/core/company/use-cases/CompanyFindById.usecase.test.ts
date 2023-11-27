@@ -34,7 +34,7 @@ describe('CompanyFindByIdService', () => {
   })
 
   describe('execute', () => {
-    it('should return company response', async () => {
+    test('should return company response', async () => {
       jest.spyOn(companyRepository, 'findById').mockResolvedValue(data)
 
       const result = await companyFindByIdService.execute(mockCompanyId)
@@ -46,7 +46,7 @@ describe('CompanyFindByIdService', () => {
       })
     })
 
-    it('should return company response with updateAt undefined', async () => {
+    test('should return company response with updateAt undefined', async () => {
       jest.spyOn(companyRepository, 'findById').mockResolvedValue({
         ...data,
         updatedAt: undefined
@@ -61,7 +61,7 @@ describe('CompanyFindByIdService', () => {
       })
     })
 
-    it('should throw HttpNotFoundException if company is not found', async () => {
+    test('should throw HttpNotFoundException if company is not found', async () => {
       const mockCompanyId = 1
       jest.spyOn(companyRepository, 'findById').mockResolvedValue(null)
 

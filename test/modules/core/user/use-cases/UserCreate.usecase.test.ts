@@ -21,7 +21,7 @@ describe('UserCreateService', () => {
     userCreateService = new UserCreateService(userRepositoryMock, cryptoService)
   })
 
-  it('Should create a user', async () => {
+  test('Should create a user', async () => {
     jest.spyOn(userRepositoryMock, 'validateExistEmail').mockResolvedValue(false)
     jest.spyOn(userRepositoryMock, 'create').mockResolvedValue()
 
@@ -31,7 +31,7 @@ describe('UserCreateService', () => {
     expect(userRepositoryMock.create).toHaveBeenCalledWith(userDataMock)
   })
 
-  it('Should throw HttpConflictException', async () => {
+  test('Should throw HttpConflictException', async () => {
     jest.spyOn(userRepositoryMock, 'validateExistEmail').mockResolvedValue(true)
 
     await expect(userCreateService.execute(userDataMock)).rejects.toThrowError(HttpConflictException)

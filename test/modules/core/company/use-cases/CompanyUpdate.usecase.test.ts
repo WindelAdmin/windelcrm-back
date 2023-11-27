@@ -29,7 +29,7 @@ describe('CompanyUpdateService', () => {
     companyUpdateService = new CompanyUpdateService(companyRepository)
   })
 
-  it('should update company', async () => {
+  test('should update company', async () => {
     jest.spyOn(companyRepository, 'validateExistId').mockResolvedValue(true)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistPhone').mockResolvedValue(false)
@@ -43,7 +43,7 @@ describe('CompanyUpdateService', () => {
     expect(companyRepository.update).toHaveBeenCalledWith(id, data)
   })
 
-  it('should throw HttpExceptionNotFound on update company', async () => {
+  test('should throw HttpExceptionNotFound on update company', async () => {
     jest.spyOn(companyRepository, 'validateExistId').mockResolvedValue(false)
 
     await companyUpdateService.execute(id, data).catch((error) => {
@@ -54,7 +54,7 @@ describe('CompanyUpdateService', () => {
     expect(companyRepository.validateExistId).toHaveBeenCalledWith(id)
   })
 
-  it('should throw HttpConflictException on update email company', async () => {
+  test('should throw HttpConflictException on update email company', async () => {
     jest.spyOn(companyRepository, 'validateExistId').mockResolvedValue(true)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(true)
 
@@ -67,7 +67,7 @@ describe('CompanyUpdateService', () => {
     expect(companyRepository.validateExistEmail).toHaveBeenCalledWith(data.email)
   })
 
-  it('should throw HttpConflictException on update phone company', async () => {
+  test('should throw HttpConflictException on update phone company', async () => {
     jest.spyOn(companyRepository, 'validateExistId').mockResolvedValue(true)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistPhone').mockResolvedValue(true)

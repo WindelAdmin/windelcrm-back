@@ -11,7 +11,7 @@ describe('CompanyFindAllService', () => {
   })
 
   describe('execute', () => {
-    it('should return company list response', async () => {
+    test('should return company list response', async () => {
       const data = [
         {
           id: 1,

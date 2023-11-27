@@ -14,7 +14,7 @@ describe('CompanyDeleteService', () => {
     companyDeleteService = new CompanyDeleteService(companyRepository)
   })
 
-  it('should delete company', async () => {
+  test('should delete company', async () => {
     jest.spyOn(companyRepository, 'validateExistId').mockResolvedValueOnce(true)
     jest.spyOn(companyRepository, 'delete').mockResolvedValueOnce()
 
@@ -24,7 +24,7 @@ describe('CompanyDeleteService', () => {
     expect(companyRepository.delete).toHaveBeenCalledWith(id)
   })
 
-  it('should throw HttpNotFoundException on delete company', async () => {
+  test('should throw HttpNotFoundException on delete company', async () => {
     jest.spyOn(companyRepository, 'validateExistId').mockResolvedValueOnce(false)
 
     try {
