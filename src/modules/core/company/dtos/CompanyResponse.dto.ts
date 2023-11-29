@@ -33,7 +33,7 @@ export default class CompanyResponseDto {
   @ApiPropertyOptional(CompanySwaggerProperties.isActive)
   isActive?: boolean
   @ApiPropertyOptional(CompanySwaggerProperties.createdAt)
-  createdAt?: string
+  createdAt?: string | Date
   @ApiPropertyOptional(CompanySwaggerProperties.updatedAt)
-  updatedAt?: string
+  updatedAt?: string | Date
 }

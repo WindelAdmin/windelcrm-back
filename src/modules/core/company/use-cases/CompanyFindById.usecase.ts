@@ -15,10 +15,6 @@ export default class CompanyFindByIdService implements IUseCase {
     const company = await this.companyRepository.findById(id)
     if (!company) throw new HttpNotFoundException(HttpCompanyMessages.ID_NOT_EXIST)
 
-    return {
-      ...company,
-      createdAt: company.createdAt.toISOString(),
-      updatedAt: company.updatedAt?.toISOString()
-    }
+    return company
   }
 }

@@ -28,13 +28,13 @@ export default class CompanyController implements IController<CompanyCreateDto, 
     await this.companyCreateService.execute(data)
   }
 
-  @Patch(':id')
+  @Patch('=:id')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async update(@Param('id') id: number, @Body() data: CompanyUpdateDto): Promise<void> {
     await this.companyUpdateService.execute(id, data)
   }
 
-  @Delete(':id')
+  @Delete('=:id')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async delete(@Param() params: CompanyDeleteDto): Promise<void> {
     await this.companyDeleteService.execute(+params.id)
@@ -46,7 +46,7 @@ export default class CompanyController implements IController<CompanyCreateDto, 
     return await this.companyFindAllService.execute()
   }
 
-  @Get(':id')
+  @Get('=:id')
   @ApiResponse({ status: HttpStatus.OK, type: CompanyResponseDto })
   async findById(@Param('id') id: number): Promise<CompanyResponseDto> {
     return await this.companyFindByIdService.execute(+id)
