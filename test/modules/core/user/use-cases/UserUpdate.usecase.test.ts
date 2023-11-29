@@ -35,11 +35,11 @@ describe('UserUpdateService', () => {
     await expect(userUpdateService.execute(input)).resolves.not.toThrow()
   })
 
-  it('Should throw HttpException with NOT_FOUND status when invalid id is provided', async () => {
+  it('Should throw HttpNotFoundException when invalid id is provided', async () => {
     const input = { id: 1, data: { name: 'Sousa' } as UserUpdateDto }
 
     jest.spyOn(userRepository, 'validateExistId').mockResolvedValue(false)
 
-    await expect(userUpdateService.execute(input)).rejects.toThrowError(new HttpNotFoundException(HttpMessages.RECORD_NOT_FOUND))
+    await expect(userUpdateService.execute(input)).rejects.toThrow(new HttpNotFoundException(HttpMessages.ID_NOT_EXIST))
   })
 })

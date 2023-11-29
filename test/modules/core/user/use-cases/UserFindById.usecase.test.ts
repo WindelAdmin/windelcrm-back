@@ -7,41 +7,55 @@ import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessag
 const mockCompanyId = 1
 const userResponseDtoMock = {
   id: 1,
-  name: 'Company Namee',
-  email: "Wesleytuck@outlook.com",
+  name: 'Company Name',
+  email: 'wesleytuck@outlook.com',
   companyId: 1,
+  profilePhoto: undefined,
+  isLogged: true,
+  lastAccess: new Date(),
+  isActive: true,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  permissions: [
+    {
+      id: 1,
+      description: 'Permission 01',
+      type: 'Route',
+      isActive: true
+    }
+  ]
 } as UserResponseDto
 
- const userPrismaResultMock = {
+const userPrismaResultMock = {
+  id: 1,
+  name: 'Company Name',
+  email: 'wesleytuck@outlook.com',
+  companyId: 1,
+  password: 'bga523$75jhdy!',
+  profilePhoto: undefined,
+  isLogged: true,
+  lastAccess: new Date(),
+  isActive: true,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  userPermissions: [
+    {
+      id: 1,
+      companyId: 1,
+      userId: 1,
+      permissionId: 1,
+      createdAt: new Date(),
+      permission: {
         id: 1,
-        name: 'Company Namee',
-        email: "Wesleytuck@outlook.com",
-        companyId: 1,
-        password: 'adadad',
-        profilePhoto: undefined,
-        isLogged: true,
-        lastAccess: new Date(),
+        description: 'Permission 01',
+        type: 'Route',
         isActive: true,
         createdAt: new Date(),
-        updatedAt: new Date(),
-        userPermissions: [
-          { 
-            id: 1,
-            companyId: 1,
-            userId: 1,
-            permissionId: 1,
-            createdAt: new Date(),
-            permission: { 
-              id: 1,
-              description: 'Desteaa', 
-              type: 'Route',
-              isActive: true,
-              createdAt: new Date(),
-              updatedAt: new Date()
-           }
-          }
-          ]
+        updatedAt: new Date()
       }
+    }
+  ]
+}
 
 describe('UserFindByIdService', () => {
   let userFindByIdService: UserFindByIdService
@@ -54,37 +68,29 @@ describe('UserFindByIdService', () => {
 
   describe('execute', () => {
     test('should return user response', async () => {
-     
       jest.spyOn(userRepository, 'findById').mockResolvedValue(userPrismaResultMock)
 
       const result = await userFindByIdService.execute(mockCompanyId)
 
-      expect(result).toEqual({
-        ...userPrismaResultMock,
-        permissions: expect.any(Array)
-      })
+      expect(result).toEqual(userResponseDtoMock)
     })
 
-    test('should return company response with updateAt undefined', async () => {
-      jest.spyOn(userRepository, 'findById').mockResolvedValue(expect.any({
-        createdAt: new Date(),
-        updateAt: undefined
-      } as Object))
+    test('should return user response with updateAt undefined', async () => {
+      jest.spyOn(userRepository, 'findById').mockResolvedValue({
+        ...userPrismaResultMock,
+        updatedAt: undefined
+      })
 
       const result = await userFindByIdService.execute(mockCompanyId)
 
-      expect(result).toEqual({
-        ...UserResponseDto,
-        createdAt: expect.any(String),
-        updatedAt: undefined
-      })
+      expect(result.updatedAt).toBeUndefined()
+      expect(result.permissions).toEqual(userResponseDtoMock.permissions)
     })
 
-    test('should throw HttpNotFoundException if company is not found', async () => {
-      const mockCompanyId = 1
+    test('should throw HttpNotFoundException if user is not found', async () => {
       jest.spyOn(userRepository, 'findById').mockResolvedValue(null)
 
-      await expect(userFindByIdService.execute(mockCompanyId)).rejects.toThrowError(new HttpNotFoundException(HttpCompanyMessages.ID_NOT_EXIST))
+      await expect(userFindByIdService.execute(mockCompanyId)).rejects.toThrow(new HttpNotFoundException(HttpCompanyMessages.ID_NOT_EXIST))
     })
   })
 })
