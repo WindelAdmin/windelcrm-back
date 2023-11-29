@@ -4,7 +4,7 @@ import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.excep
 import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessages'
 
 const mockCompanyId = 1
-const data = {
+const companyMock = {
   id: 1,
   name: 'Company Namee',
   cpfCnpj: '12345678901',
@@ -35,36 +35,20 @@ describe('CompanyFindByIdService', () => {
 
   describe('execute', () => {
     test('should return company response', async () => {
-      jest.spyOn(companyRepository, 'findById').mockResolvedValue(data)
-
+      jest.spyOn(companyRepository, 'findById').mockResolvedValue(companyMock)
       const result = await companyFindByIdService.execute(mockCompanyId)
-
-      expect(result).toEqual({
-        ...data,
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
-      })
+      expect(result).toEqual(companyMock)
     })
 
     test('should return company response with updateAt undefined', async () => {
-      jest.spyOn(companyRepository, 'findById').mockResolvedValue({
-        ...data,
-        updatedAt: undefined
-      })
-
+      let dataResponse = {...companyMock,  updatedAt: undefined}
+      jest.spyOn(companyRepository, 'findById').mockResolvedValue(dataResponse)
       const result = await companyFindByIdService.execute(mockCompanyId)
-
-      expect(result).toEqual({
-        ...data,
-        createdAt: expect.any(String),
-        updatedAt: undefined
-      })
+      expect(result).toEqual(dataResponse)
     })
 
     test('should throw HttpNotFoundException if company is not found', async () => {
-      const mockCompanyId = 1
       jest.spyOn(companyRepository, 'findById').mockResolvedValue(null)
-
       await expect(companyFindByIdService.execute(mockCompanyId)).rejects.toThrowError(new HttpNotFoundException(HttpCompanyMessages.ID_NOT_EXIST))
     })
   })

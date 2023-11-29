@@ -88,7 +88,7 @@ describe('CompanyCreateService', () => {
     jest.spyOn(companyRepository, 'validateExistCfpCnpj').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistEmail').mockResolvedValue(false)
     jest.spyOn(companyRepository, 'validateExistPhone').mockResolvedValue(true)
-    
+
     try {
       await companyCreateService.execute(input)
     } catch (error) {
