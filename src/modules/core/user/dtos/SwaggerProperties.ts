@@ -1,5 +1,5 @@
 export const UserSwaggerProperties = {
-  id: { example: '1', description: 'Id do registro', type: Number },
+  id: { example: 1, description: 'Id do registro', type: Number },
   companyId: { example: '1', description: 'Id da empresa vinculada ao usuário', type: Number },
   name: { example: 'Empresa Exemplo', description: 'Nome para identificação da pessoa', type: String},
   email: { example: 'jhon@example.com', description: 'E-mail que será usado como usuário', type: String },

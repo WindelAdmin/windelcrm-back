@@ -29,13 +29,13 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
     await this.userCreateService.execute(data)
   }
 
-  @Patch(':id')
+  @Patch('=:id')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async update(@Param('id') id: number, @Body() @BodyChecked() data: UserUpdateDto): Promise<void> {
     await this.userUpdateService.execute({ id, data })
   }
 
-  @Delete(':id')
+  @Delete('=:id')
   @ApiResponse({ status: HttpStatus.NO_CONTENT })
   async delete(@Param() params: UserDeleteDto): Promise<void> {
     await this.userDeleteService.execute(params.id)
@@ -47,7 +47,7 @@ export class UserController implements IController<UserCreateDto, UserUpdateDto,
     return await this.userFindAllService.execute()
   }
 
-  @Get(':id')
+  @Get('=:id')
   @ApiResponse({ status: HttpStatus.OK, type: UserResponseDto })
   async findById(@Param('id') id: number): Promise<UserResponseDto> {
     return await this.userFindByIdService.execute(id)

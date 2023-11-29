@@ -17,7 +17,9 @@ export class UserResponseDto {
   @ApiPropertyOptional(UserSwaggerProperties.permissionsResponse)
   permissions?: {
     id: number
-    description: string
+    description: string,
+    type: string,
+    isActive: boolean
   }[]
   @ApiPropertyOptional(UserSwaggerProperties.isActive)
   isActive?: boolean

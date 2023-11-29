@@ -77,7 +77,7 @@ export default class UserRepository extends AbstractRepository {
   }
 
   async findById(id: number) {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: {
         id,
         companyId: this.userContext.getUserContext().companyId
@@ -90,10 +90,11 @@ export default class UserRepository extends AbstractRepository {
         }
       }
     })
+    return user;
   }
 
   async findAll() {
-    const users = await this.prismaService.user.findMany({
+    return await this.prismaService.user.findMany({
       where: {
         companyId: this.userContext.getUserContext().companyId
       },
@@ -103,13 +104,6 @@ export default class UserRepository extends AbstractRepository {
             permission: true
           }
         }
-      }
-    })
-
-    return users.map((user) => {
-      return {
-        ...user,
-        permissions: user.userPermissions.map((uP) => uP.permission)
       }
     })
   }
