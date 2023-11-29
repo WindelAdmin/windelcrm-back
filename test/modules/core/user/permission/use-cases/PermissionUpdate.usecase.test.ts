@@ -3,6 +3,8 @@ import PermissionUpdate from '@src/modules/core/user/permission/use-cases/Permis
 import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
 
+jest.mock('@src/modules/core/user/permission/Permission.repository')
+
 describe('PermissionUpdate', () => {
   let permissionUpdated: PermissionUpdate
   let permissionRepository: PermissionRepository

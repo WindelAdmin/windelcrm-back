@@ -42,6 +42,8 @@ const companiesListMock = [
   }
 ]
 
+jest.mock('@src/modules/core/company/Company.repository')
+
 describe('CompanyFindAllService', () => {
   let companyFindAllService: CompanyFindAllService
   let companyRepository: CompanyRepository
@@ -55,13 +57,15 @@ describe('CompanyFindAllService', () => {
     test('should return company list response', async () => {
       jest.spyOn(companyRepository, 'findAll').mockResolvedValue(companiesListMock)
       const result = await companyFindAllService.execute()
-      expect(result).toEqual(companiesListMock.map((company) => {
-        return  {
-          ...company,
-          createdAt: company.createdAt.toISOString(),
-          updatedAt: company.updatedAt?.toISOString()
-        }
-      }))
+      expect(result).toEqual(
+        companiesListMock.map((company) => {
+          return {
+            ...company,
+            createdAt: company.createdAt.toISOString(),
+            updatedAt: company.updatedAt?.toISOString()
+          }
+        })
+      )
     })
   })
 })

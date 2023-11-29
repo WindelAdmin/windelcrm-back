@@ -18,6 +18,8 @@ const input: CompanyCreateDto = {
   uf: 'RS'
 }
 
+jest.mock('@src/modules/core/company/Company.repository')
+
 describe('CompanyCreateService', () => {
   let companyCreateService: CompanyCreateService
   let companyRepository: CompanyRepository

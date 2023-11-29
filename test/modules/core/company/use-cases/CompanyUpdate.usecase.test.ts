@@ -20,6 +20,8 @@ const data = {
   uf: 'RS'
 } as CompanyUpdateDto
 
+jest.mock('@src/modules/core/company/Company.repository')
+
 describe('CompanyUpdateService', () => {
   let companyUpdateService: CompanyUpdateService
   let companyRepository: CompanyRepository

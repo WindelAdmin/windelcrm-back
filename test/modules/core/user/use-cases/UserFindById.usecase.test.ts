@@ -57,6 +57,8 @@ const userPrismaResultMock = {
   ]
 }
 
+jest.mock('@src/modules/core/user/User.repository')
+
 describe('UserFindByIdService', () => {
   let userFindByIdService: UserFindByIdService
   let userRepository: UserRepository

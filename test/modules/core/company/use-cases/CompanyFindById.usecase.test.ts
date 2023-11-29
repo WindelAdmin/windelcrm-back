@@ -24,6 +24,8 @@ const companyMock = {
   updatedAt: new Date()
 }
 
+jest.mock('@src/modules/core/company/Company.repository')
+
 describe('CompanyFindByIdService', () => {
   let companyFindByIdService: CompanyFindByIdService
   let companyRepository: CompanyRepository
@@ -41,7 +43,7 @@ describe('CompanyFindByIdService', () => {
     })
 
     test('should return company response with updateAt undefined', async () => {
-      let dataResponse = {...companyMock,  updatedAt: undefined}
+      let dataResponse = { ...companyMock, updatedAt: undefined }
       jest.spyOn(companyRepository, 'findById').mockResolvedValue(dataResponse)
       const result = await companyFindByIdService.execute(mockCompanyId)
       expect(result).toEqual(dataResponse)

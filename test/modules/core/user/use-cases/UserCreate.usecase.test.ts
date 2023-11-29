@@ -1,8 +1,8 @@
-import { CryptoService } from '@src/modules/generic/crypto/Crypto.service'
+import UserRepository from '@modules/core/user/User.repository'
+import UserCreateDto from '@modules/core/user/dtos/UserCreate.dto'
+import UserCreateService from '@modules/core/user/use-cases/UserCreate.usecase'
+import { CryptoService } from '@modules/generic/crypto/Crypto.service'
 import { HttpConflictException } from '@src/shared/exceptions/HttpConflict.exception'
-import UserRepository from '../../../../../src/modules/core/user/User.repository'
-import UserCreateDto from '../../../../../src/modules/core/user/dtos/UserCreate.dto'
-import UserCreateService from '../../../../../src/modules/core/user/use-cases/UserCreate.usecase'
 
 const userDataMock = {
   email: 'jhon@example.com',
@@ -11,13 +11,15 @@ const userDataMock = {
   permissions: [4, 7]
 } as UserCreateDto
 
+jest.mock('@src/modules/core/user/User.repository')
+
 describe('UserCreateService', () => {
   let userCreateService: UserCreateService
-  let userRepositoryMock: jest.Mocked<UserRepository>
+  let userRepositoryMock: UserRepository
 
   beforeEach(() => {
-    const cryptoService = new CryptoService() as jest.Mocked<CryptoService>
-    userRepositoryMock = new UserRepository() as jest.Mocked<UserRepository>
+    const cryptoService = new CryptoService()
+    userRepositoryMock = new UserRepository()
     userCreateService = new UserCreateService(userRepositoryMock, cryptoService)
   })
 

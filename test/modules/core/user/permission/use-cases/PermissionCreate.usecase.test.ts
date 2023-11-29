@@ -1,6 +1,8 @@
 import PermissionRepository from '@src/modules/core/user/permission/Permission.repository'
 import PermissionCreate from '@src/modules/core/user/permission/use-cases/PermissionCreate.usecase'
 
+jest.mock('@src/modules/core/user/permission/Permission.repository')
+
 describe('PermissionCreate', () => {
   let permissionCreate: PermissionCreate
   let permissionRepository: PermissionRepository

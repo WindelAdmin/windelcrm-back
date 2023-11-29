@@ -3,6 +3,8 @@ import PermissionFindById from '@src/modules/core/user/permission/use-cases/Perm
 import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
 
+jest.mock('@src/modules/core/user/permission/Permission.repository')
+
 describe('PermissionFindById', () => {
   let permissionFindById: PermissionFindById
   let permissionRepository: PermissionRepository

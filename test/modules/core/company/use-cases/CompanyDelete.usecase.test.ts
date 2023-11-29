@@ -5,6 +5,8 @@ import { HttpCompanyMessages } from '@src/shared/http-messages/HttpCompanyMessag
 
 const id = 1
 
+jest.mock('@src/modules/core/company/Company.repository')
+
 describe('CompanyDeleteService', () => {
   let companyRepository: CompanyRepository
   let companyDeleteService: CompanyDeleteService
