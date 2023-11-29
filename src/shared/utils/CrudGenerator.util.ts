@@ -3,11 +3,11 @@ const fs = require('fs')
 function generate(className) {
   const classNameLowerCase = className.charAt(0).toLowerCase() + className.slice(1)
 
-  const entityTemplate = `
+  /* const entityTemplate = `
   import { Prisma } from '@prisma/client'
 
   export default class ${className}Model implements Prisma.${className}UncheckedCreateInput {}
-`
+` */
   const dtoCreateTemplate = `
   import { ApiProperty } from '@nestjs/swagger'
   import { IsNotEmpty } from 'class-validator'
@@ -53,13 +53,12 @@ function generate(className) {
   import { Injectable } from '@nestjs/common'
   import { Prisma } from '@prisma/client'
   import { now } from '@src/shared/utils/DateUtils'
-  import AbstractRepository from '@src/interfaces/Repository.abstract'
-  import  ${className}  from './${className}.model'
+  import AbstractRepository from '@shared/interfaces/Repository.abstract'
   import ${className}CreateDto from './dtos/${className}Create.dto'
 import ${className}UpdateDto from './dtos/${className}Update.dto'
 
   @Injectable()
-  export default class  ${className}Repository extends AbstractRepository<${className} >{
+  export default class  ${className}Repository extends AbstractRepository {
     constructor() {
     super(Prisma.ModelName.${className})
     }
@@ -112,125 +111,114 @@ import ${className}UpdateDto from './dtos/${className}Update.dto'
   `
 
   const createTemplate = `
-  import { Injectable, Logger } from '@nestjs/common';
+  import { Injectable } from '@nestjs/common';
   import ${className}Repository from '../${className}.repository';
-  import IUseCase from '@src/interfaces/IUseCase';
+  import IUseCase from '@shared/interfaces/UseCase.interface';
   import ${className}CreateDto from '../dtos/${className}Create.dto'
-  import { Builder } from 'builder-pattern'
-  import ${className}Model from '../${className}.model'
 
   @Injectable()
-  export default class ${className}CreateService implements IUseCase<${className}CreateDto, void>{
-
-    private logger = new Logger(${className}CreateService.name)
+  export default class ${className}Create implements IUseCase<${className}CreateDto, void>{
 
     constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
     async execute(input: ${className}CreateDto): Promise<void> {
-      const model = Builder<${className}Model>(input).build();
-      await this.${classNameLowerCase}Repository.create(model).catch((err) => {
-        this.logger.error(err)
-      })
+      await this.${classNameLowerCase}Repository.create(input)
     }
   }
   `
 
   const updateTemplate = `
-  import { Injectable, Logger } from '@nestjs/common';
+  import { Injectable } from '@nestjs/common';
   import ${className}Repository from '../${className}.repository';
-  import IUseCase from '@src/interfaces/IUseCase';
+  import IUseCase from '@shared/interfaces/UseCase.interface';
   import ${className}UpdateDto from '../dtos/${className}Update.dto'
-  import { Builder } from 'builder-pattern'
-  import ${className}Model from '../${className}.model'
-
-  interface Input {
-    id: number;
-    data: ${className}UpdateDto
-  }
+  import { HttpMessages } from '@shared/http-messages/HttpMessages'
+  import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 
   @Injectable()
-  export default class ${className}UpdateService implements IUseCase<Input, void>{
-    private logger = new Logger(${className}UpdateService.name)
-
+  export default class ${className}Update implements IUseCase {
     constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
-    async execute(input: Input): Promise<void> {
-      const model = Builder<${className}Model>(input.data).build();
-      await this.${classNameLowerCase}Repository.update(input.id, model).catch((err) => {
-        this.logger.error(err)
-      })
+    async execute(id: number, data: ${className}UpdateDto): Promise<void> {
+      if (!(await this.${classNameLowerCase}Repository.validateExistId(input.id))) {
+      throw new HttpNotFoundException(HttpMessages.ID_NOT_EXIST)
+    }
+
+       await this.${classNameLowerCase}Repository.update(id, data)
     }
   }
   `
 
   const deleteTemplate = `
-  import { Injectable, Logger } from '@nestjs/common';
+  import { Injectable } from '@nestjs/common';
   import ${className}Repository from '../${className}.repository';
-  import IUseCase from '@src/interfaces/IUseCase';
+  import { HttpMessages } from '@shared/http-messages/HttpMessages'
+  import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
+  import IUseCase from '@shared/interfaces/UseCase.interface';
 
   @Injectable()
-  export default class ${className}DeleteService implements IUseCase<number, void>{
-
-    private logger = new Logger(${className}DeleteService.name)
+  export default class ${className}Delete implements IUseCase {
 
     constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
     async execute(id: number): Promise<void> {
-      await this.${classNameLowerCase}Repository.delete(id).catch((err) => {
-        this.logger.error(err)
-      })
+       if (!(await this.${classNameLowerCase}Repository.validateExistId(id))) {
+          throw new HttpNotFoundException(HttpMessages.RECORD_NOT_FOUND)
+        }
+
+      await this.${classNameLowerCase}Repository.delete(id)
     }
   }`
 
   const findByIdTemplate = `
-  import { Injectable, Logger } from '@nestjs/common';
+  import { Injectable } from '@nestjs/common';
   import ${className}Repository from '../${className}.repository';
-  import IUseCase from '@src/interfaces/IUseCase';
+  import { HttpMessages } from '@shared/http-messages/HttpMessages'
+  import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
+  import IUseCase from '@shared/interfaces/UseCase.interface';
   import ${className}ResponseDto from '../dtos/${className}Response.dto'
 
   @Injectable()
-  export default class ${className}FindByIdService implements IUseCase<number, ${className}ResponseDto>{
-    private logger = new Logger(${className}FindByIdService.name)
-
+  export default class ${className}FindById implements IUseCase {
     constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
     async execute(id: number): Promise<${className}ResponseDto> {
-      return await this.${classNameLowerCase}Repository.findById(id).catch((err) => {
-        this.logger.error(err)
-      }) as ${className}ResponseDto;
+      const ${classNameLowerCase} = await this.${classNameLowerCase}Repository.findById(id)
+
+      if(${classNameLowerCase}) {
+        return ${classNameLowerCase}
+      } else {
+         throw new HttpNotFoundException(HttpMessages.ID_NOT_EXIST)
+      }
     }
   }
   `
 
   const findAllTemplate = `
-  import { Injectable, Logger } from '@nestjs/common';
+  import { Injectable } from '@nestjs/common';
   import ${className}Repository from '../${className}.repository';
-  import IUseCase from '@src/interfaces/IUseCase';
+  import IUseCase from '@shared/interfaces/UseCase.interface';
   import ${className}ResponseDto from '../dtos/${className}Response.dto'
 
   @Injectable()
-  export default class ${className}FindAllService implements IUseCase<void, ${className}ResponseDto[]>{
-    private logger = new Logger(${className}FindAllService.name)
-
+  export default class ${className}FindAll implements IUseCase {
     constructor(private readonly ${classNameLowerCase}Repository: ${className}Repository){}
 
     async execute(): Promise<${className}ResponseDto[]> {
-      return await this.${classNameLowerCase}Repository.findAll().catch((err) => {
-        this.logger.error(err)
-      }) as ${className}ResponseDto[]
+        return await this.${classNameLowerCase}Repository.findAll()
     }
   }
   `
 
   const controllerTemplate = `
-  import { Controller, Delete, Get, Param, Patch, Post, Query, Body } from '@nestjs/common'
-  import { ApiBody, ApiTags } from '@nestjs/swagger'
-  import  IController from '@src/interfaces/Controller.interface'
-  import ${className}CreateService from './use-cases/${className}Create.service'
-  import ${className}DeleteService from './use-cases/${className}Delete.service'
-  import ${className}UpdateService from './use-cases/${className}Update.service'
-  import ${className}FindByIdService from './use-cases/${className}FindById.service'
-  import ${className}FindAllService from './use-cases/${className}FindAll.service'
+  import { Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Body } from '@nestjs/common'
+  import { ApiResponse, ApiTags } from '@nestjs/swagger'
+  import  IController from '@shared/interfaces/Controller.interface'
+  import ${className}Create from './use-cases/${className}Create.usecase'
+  import ${className}Delete from './use-cases/${className}Delete.usecase'
+  import ${className}Update from './use-cases/${className}Update.usecase'
+  import ${className}FindById from './use-cases/${className}FindById.usecase'
+  import ${className}FindAll from './use-cases/${className}FindAll.usecase'
   import ${className}CreateDto from './dtos/${className}Create.dto'
   import ${className}DeleteDto from './dtos/${className}Delete.dto'
   import ${className}UpdateDto from './dtos/${className}Update.dto'
@@ -241,38 +229,40 @@ import ${className}UpdateDto from './dtos/${className}Update.dto'
   export default class ${className}Controller implements IController<${className}CreateDto, ${className}UpdateDto, ${className}DeleteDto, ${className}ResponseDto> {
 
     constructor(
-      readonly ${classNameLowerCase}CreateService: ${className}CreateService, 
-      readonly ${classNameLowerCase}UpdateService: ${className}UpdateService, 
-      readonly ${classNameLowerCase}DeleteService: ${className}DeleteService,
-      readonly ${classNameLowerCase}FindByIdService: ${className}FindByIdService, 
-      readonly ${classNameLowerCase}FindAllService: ${className}FindAllService) {}
+      readonly ${classNameLowerCase}Create: ${className}Create, 
+      readonly ${classNameLowerCase}Update: ${className}Update, 
+      readonly ${classNameLowerCase}Delete: ${className}Delete,
+      readonly ${classNameLowerCase}FindById: ${className}FindById, 
+      readonly ${classNameLowerCase}FindAll: ${className}FindAll) {}
 
     @Post()
-    @ApiBody({ type: ${className}CreateDto })
+    @ApiResponse({ status: HttpStatus.CREATED })
     async create(@Body() data: ${className}CreateDto): Promise<void> {
-      await this.${classNameLowerCase}CreateService.execute(data)
+      await this.${classNameLowerCase}Create.execute(data)
     }
 
-    @Patch()
-    @ApiBody({ type: ${className}UpdateDto })
-    async update(@Query('id') id: number, @Body() data: ${className}UpdateDto): Promise<void> {
-      await this.${classNameLowerCase}UpdateService.execute({ id, data })
+    @Patch('id/:id')
+    @ApiResponse({ status: HttpStatus.NO_CONTENT })
+    async update(@Param('id') id: number, @Body() data: ${className}UpdateDto): Promise<void> {
+      await this.${classNameLowerCase}Update.execute( id, data )
     }
 
-    @Delete(':id')
-    @ApiBody({ type: ${className}DeleteDto })
+    @Delete('id/:id')
+    @ApiResponse({ status: HttpStatus.NO_CONTENT })
     async delete(@Param() params: ${className}DeleteDto): Promise<void> {
-      await this.${classNameLowerCase}DeleteService.execute(+params.id)
+      await this.${classNameLowerCase}Delete.execute(+params.id)
     }
 
     @Get()
+    @ApiResponse({ status: HttpStatus.OK, type: [${className}ResponseDto] })
     async findAll(): Promise<${className}ResponseDto[]> {
-      return await this.${classNameLowerCase}FindAllService.execute()
+      return await this.${classNameLowerCase}FindAll.execute()
     }
 
-    @Get(':id')
+    @Get('id/:id')
+    @ApiResponse({ status: HttpStatus.OK, type: ${className}ResponseDto })
     async findById(@Param('id') id: number): Promise<${className}ResponseDto> {
-      return await this.${classNameLowerCase}FindByIdService.execute(+id)
+      return await this.${classNameLowerCase}FindById.execute(+id)
     }
   }
   `
@@ -280,24 +270,24 @@ import ${className}UpdateDto from './dtos/${className}Update.dto'
   const moduleTemplate = `
   import { Module } from '@nestjs/common';
   import PrismaModule from '@src/infra/persistence/Prisma.module'
-  import { UserContext } from '@src/modules/context/UserContext';
+  import { UserContext } from '@src/modules/aux/contexts/User.context';
   import ${className}Controller from './${className}.controller';
-  import ${className}CreateService from './use-cases/${className}Create.service';
-  import ${className}UpdateService from './use-cases/${className}Update.service';
-  import ${className}DeleteService from './use-cases/${className}Delete.service';
-  import ${className}FindByIdService from './use-cases/${className}FindById.service';
-  import ${className}FindAllService from './use-cases/${className}FindAll.service';
+  import ${className}Create from './use-cases/${className}Create.usecase';
+  import ${className}Update from './use-cases/${className}Update.usecase';
+  import ${className}Delete from './use-cases/${className}Delete.usecase';
+  import ${className}FindById from './use-cases/${className}FindById.usecase';
+  import ${className}FindAll from './use-cases/${className}FindAll.usecase';
   import ${className}Repository from './${className}.repository';
 
   @Module({
     imports: [PrismaModule],
     controllers: [${className}Controller],
     providers: [
-      ${className}CreateService, 
-      ${className}UpdateService, 
-      ${className}DeleteService, 
-      ${className}FindByIdService, 
-      ${className}FindAllService,
+      ${className}Create, 
+      ${className}Update, 
+      ${className}Delete, 
+      ${className}FindById, 
+      ${className}FindAll,
       ${className}Repository,
       UserContext
     ],
@@ -310,8 +300,8 @@ import ${className}UpdateDto from './dtos/${className}Update.dto'
     fs.mkdirSync(`./src/${classNameLowerCase}/use-cases`)
     fs.mkdirSync(`./src/${classNameLowerCase}/dtos`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/${className}.model.ts`, entityTemplate, 'utf-8')
-    console.log(`${className}Model gerado com sucesso.`)
+    /* fs.writeFileSync(`./src/${classNameLowerCase}/${className}.model.ts`, entityTemplate, 'utf-8')
+    console.log(`${className}Model gerado com sucesso.`) */
 
     fs.writeFileSync(`./src/${classNameLowerCase}/dtos/${className}Create.dto.ts`, dtoCreateTemplate, 'utf-8')
     console.log(`${className}CreateDto gerado com sucesso.`)
@@ -334,19 +324,19 @@ import ${className}UpdateDto from './dtos/${className}Update.dto'
     fs.writeFileSync(`./src/${classNameLowerCase}/${className}.repository.ts`, repositoryTemplate, 'utf-8')
     console.log(`${className}Repository gerado com sucesso.`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Create.service.ts`, createTemplate, 'utf-8')
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Create.usecase.ts`, createTemplate, 'utf-8')
     console.log(`${className}Create gerado com sucesso.`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Update.service.ts`, updateTemplate, 'utf-8')
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Update.usecase.ts`, updateTemplate, 'utf-8')
     console.log(`${className}Update gerado com sucesso.`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Delete.service.ts`, deleteTemplate, 'utf-8')
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}Delete.usecase.ts`, deleteTemplate, 'utf-8')
     console.log(`${className}Delete gerado com sucesso.`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}FindById.service.ts`, findByIdTemplate, 'utf-8')
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}FindById.usecase.ts`, findByIdTemplate, 'utf-8')
     console.log(`${className}FindById gerado com sucesso.`)
 
-    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}FindAll.service.ts`, findAllTemplate, 'utf-8')
+    fs.writeFileSync(`./src/${classNameLowerCase}/use-cases/${className}FindAll.usecase.ts`, findAllTemplate, 'utf-8')
     console.log(`${className}FindAll gerado com sucesso.`)
 
     fs.writeFileSync(`./src/${classNameLowerCase}/${className}.controller.ts`, controllerTemplate, 'utf-8')
