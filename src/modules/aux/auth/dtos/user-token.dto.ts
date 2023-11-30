@@ -1,3 +1,4 @@
+import UserPermissionResponseDto from '@src/modules/core/user/dtos/UserPermissionResponse.dto'
 
 export interface UserTokenDto {
   token: string,
@@ -5,6 +6,7 @@ export interface UserTokenDto {
     id: number,
     name: string,
     email: string
+    permissions: UserPermissionResponseDto[]
   },
   companyData: {
     id: number,

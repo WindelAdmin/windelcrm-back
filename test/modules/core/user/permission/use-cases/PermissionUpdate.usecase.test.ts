@@ -1,4 +1,5 @@
 import PermissionRepository from '@src/modules/core/user/permission/Permission.repository'
+import PermissionUpdateDto from '@src/modules/core/user/permission/dtos/PermissionUpdate.dto'
 import PermissionUpdate from '@src/modules/core/user/permission/use-cases/PermissionUpdate.usecase'
 import { HttpNotFoundException } from '@src/shared/exceptions/HttpNotFound.exception'
 import { HttpMessages } from '@src/shared/http-messages/HttpMessages'
@@ -14,15 +15,19 @@ describe('PermissionUpdate', () => {
   })
 
   test('should update permission', async () => {
-    let dataMock = { description: 'Tela de Clientes', type: 'R', isActive: true }
+    let dataMock = { description: 'Tela de Clientes', type: 'R', name: 'page.home' } as PermissionUpdateDto
+
     jest.spyOn(permissionRepository, 'validateExistId').mockResolvedValue(true)
     jest.spyOn(permissionRepository, 'update').mockResolvedValue()
+
     await permissionUpdated.execute(1, dataMock)
+    
     expect(permissionRepository.update).toHaveBeenCalledWith(1, dataMock)
   })
 
   test('should throw HttpConflictException on update if id is not found', async () => {
     jest.spyOn(permissionRepository, 'validateExistId').mockResolvedValue(false)
+    
     await expect(permissionUpdated.execute(1, expect.any(Object))).rejects.toThrow(new HttpNotFoundException(HttpMessages.ID_NOT_EXIST))
   })
 })

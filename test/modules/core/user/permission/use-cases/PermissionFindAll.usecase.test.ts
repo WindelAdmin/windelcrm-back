@@ -12,9 +12,12 @@ describe('PermissionFindById', () => {
   })
 
   test('should find permission by id', async () => {
-    let dataMock = [{ id: 1, description: 'Tela de Clientes', type: 'R', isActive: true, createdAt: new Date(), updatedAt: new Date() }]
+    let dataMock = [{ id: 1, description: 'Tela de Clientes', type: 'R', isActive: true, name: undefined, createdAt: new Date(), updatedAt: new Date() }]
+
     jest.spyOn(permissionRepository, 'findAll').mockResolvedValue(dataMock)
+
     const result = await permissionFindAll.execute()
+
     expect(permissionRepository.findAll).toHaveBeenCalled()
     expect(result).toEqual(dataMock)
   })

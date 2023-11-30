@@ -43,11 +43,19 @@ async function seedUser() {
     updatedAt: '2023-11-10T20:08:16.348Z'
   }
 
-  const permissionData = {
-    description: 'Master',
+  const permissionData = [{
+    id: 1,
+    description: 'Página inicial do sistema',
     type: 'R',
+    name: 'page.dashboard',
     isActive: true
-  }
+  },{
+    id: 2,
+    description: 'Botão qualquer da página incial do sistema',
+    type: 'C',
+    name: 'page.dashboard.button-random',
+    isActive: true
+  }]
 
   const userData = {
     name: 'Master',
@@ -56,7 +64,7 @@ async function seedUser() {
     companyId: 1
   }
 
-   const user2Data = {
+  const user2Data = {
     name: 'Usuário Multi',
     email: 'user_multi@outlook.com',
     password: await cryptoService.encrypt('1q2w3e4r'),
@@ -64,29 +72,56 @@ async function seedUser() {
   }
 
   await prisma.company.create({
-    data: {...companyData}
+    data: { ...companyData }
   })
 
   await prisma.company.create({
-    data: {...companyFilialData, parentCompanyId: 1}
+    data: { ...companyFilialData, parentCompanyId: 1 }
   })
 
-
-  await prisma.user.create({
-    data: userData
-  })
-
-  await prisma.user.create({
-    data: {...user2Data, subcompanies: {
-      create: {
-        companyId: 2
-      }
-    }}
-  })
-
-
-  await prisma.permission.create({
+  await prisma.permission.createMany({
     data: permissionData
+  })
+
+  await prisma.user.create({
+    data: {
+      ...userData,
+      userPermissions: {
+        createMany: {
+          data: [
+            {
+              permissionId: 1
+            },
+            {
+              permissionId: 2
+            }
+          ]
+        }
+      }
+    }
+  })
+
+  await prisma.user.create({
+    data: {
+      ...user2Data,
+      userPermissions: {
+        createMany: {
+          data: [
+            {
+              permissionId: 1,
+            },
+            {
+              permissionId: 2
+            }
+          ]
+        }
+      },
+      subcompanies: {
+        create: {
+          companyId: 2
+        }
+      }
+    }
   })
 }
 

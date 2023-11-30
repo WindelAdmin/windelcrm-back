@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
 import { PermissionDtoErrorMessages } from './ErrorMessages.enum'
 import { PermissionSwaggerProperties } from './SwaggerProperties'
@@ -13,4 +13,8 @@ export default class PermissionCreateDto {
   @IsString({ message: PermissionDtoErrorMessages.TYPE_IS_STRING })
   @ApiProperty(PermissionSwaggerProperties.type)
   type: string
+
+  @IsString({ message: PermissionDtoErrorMessages.NAME_IS_STRING })
+  @ApiPropertyOptional(PermissionSwaggerProperties.name)
+  name: string
 }

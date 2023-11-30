@@ -12,12 +12,12 @@ datasource db {
 }
 
 model Company {
-  id              Int              @id @default(autoincrement())
-  name            String           @unique
+  id              Int             @id @default(autoincrement())
+  name            String          @unique
   fantasyName     String
-  cpfCnpj         String           @unique
-  phone           String           @unique
-  email           String           @unique
+  cpfCnpj         String          @unique
+  phone           String          @unique
+  email           String          @unique
   cep             String
   street          String
   number          String
@@ -25,17 +25,16 @@ model Company {
   city            String
   uf              String
   type            String
-  isActive        Boolean?         @default(true)
-  createdAt       DateTime         @default(now()) @db.Timestamptz(3)
-  updatedAt       DateTime?        @db.Timestamptz(3)
-  parentCompanyId Int?             @map("parentCompany")
-  parentCompany   Company?         @relation("SubCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
-  subCompanies    Company[]        @relation("SubCompanies")
+  isActive        Boolean?        @default(true)
+  createdAt       DateTime        @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime?       @db.Timestamptz(3)
+  parentCompanyId Int?            @map("parentCompany")
+  parentCompany   Company?        @relation("SubCompanies", fields: [parentCompanyId], references: [id], onDelete: Cascade)
+  subCompanies    Company[]       @relation("SubCompanies")
   users           User[]
   persons         Person[]
   deparments      Department[]
   roles           Role[]
-  userPermissions UserPermission[]
   personAddress   PersonAddress[]
   employee        Employee[]
   workSchedule    WorkSchedule[]
@@ -68,6 +67,7 @@ model User {
 
 model Permission {
   id              Int              @id @default(autoincrement())
+  name            String
   description     String
   type            String
   isActive        Boolean
@@ -92,13 +92,12 @@ model UserCompany {
 
 model UserPermission {
   id           Int        @id @default(autoincrement())
-  companyId    Int
-  company      Company?   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   userId       Int
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   permissionId Int
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
   createdAt    DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime   @default(now()) @db.Timestamptz(3)
 
   @@map("user_permission")
 }

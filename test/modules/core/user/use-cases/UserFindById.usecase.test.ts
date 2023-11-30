@@ -12,10 +12,10 @@ const userResponseDtoMock = {
   companyId: 1,
   profilePhoto: undefined,
   isLogged: true,
-  lastAccess: new Date(),
+  lastAccess: expect.any(Date),
   isActive: true,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: expect.any(Date),
+  updatedAt: expect.any(Date),
   permissions: [
     {
       id: 1,
@@ -34,24 +34,25 @@ const userPrismaResultMock = {
   password: 'bga523$75jhdy!',
   profilePhoto: undefined,
   isLogged: true,
-  lastAccess: new Date(),
+  lastAccess: expect.any(Date),
   isActive: true,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: expect.any(Date),
+  updatedAt: expect.any(Date),
   userPermissions: [
     {
       id: 1,
       companyId: 1,
       userId: 1,
       permissionId: 1,
-      createdAt: new Date(),
+      createdAt: expect.any(Date),
       permission: {
         id: 1,
         description: 'Permission 01',
         type: 'Route',
+        componentName: undefined,
         isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date),
       }
     }
   ]

@@ -17,6 +17,7 @@ export class AuthService {
       userId: user.id,
       email: user.email,
       name: user.name,
+      permissions: user.permissions,
       companyId: user.companyId
     }
 
@@ -29,7 +30,8 @@ export class AuthService {
       userData: {
         id: payload.userId,
         email: payload.email,
-        name: payload.name
+        name: payload.name,
+        permissions: payload.permissions
       },
       companyData: {
         id: company.id,
@@ -43,6 +45,18 @@ export class AuthService {
     const user = await this.prismaService.user.findUnique({
       where: {
         email: await this.cryptoService.decrypt(email)
+      },
+      include: {
+        userPermissions: {
+          select: {
+            permission: {
+              select: {
+                type: true,
+                name: true
+              }
+            }
+          }
+        }
       }
     })
 
@@ -55,7 +69,13 @@ export class AuthService {
         return {
           id: user.id,
           companyId: user.companyId,
-          email: user.email
+          email: user.email,
+          permissions: user.userPermissions.map((p) => {
+            return {
+              name: p.permission.name,
+              type: p.permission.type
+            }
+          })
         }
       }
     }
